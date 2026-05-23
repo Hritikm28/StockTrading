@@ -2,13 +2,12 @@ name: Weekly Strategy Review
 
 on:
   schedule:
-    # 1:30 AM UTC every Sunday = 7:00 AM IST
     - cron: '30 1 * * 0'
-  workflow_dispatch:   # allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 permissions:
-  contents: write      # to commit review files
-  issues: write        # to create/update the weekly GitHub Issue
+  contents: write
+  issues: write
 
 jobs:
   review:
@@ -25,7 +24,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
+          cache: pip
 
       - name: Install dependencies
         run: pip install -r requirements_cloud.txt
@@ -35,60 +34,23 @@ jobs:
 
       - name: Commit review files
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add signals/
           git diff --cached --quiet || git commit -m "review: weekly $(date -u +'%Y-%m-%d')"
           git push
 
-      - name: Read review markdown
-        id: read_md
+      - name: Create GitHub Issue with review report
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TODAY=$(date -u +'%Y-%m-%d')
           MD_FILE="signals/weekly_review_${TODAY}.md"
           if [ -f "$MD_FILE" ]; then
-            # GitHub Actions has a 65535 char env var limit — truncate if needed
-            CONTENT=$(head -c 60000 "$MD_FILE")
-            echo "md_content<<GITHUB_ISSUE_BODY_EOF" >> $GITHUB_OUTPUT
-            echo "$CONTENT"                           >> $GITHUB_OUTPUT
-            echo "GITHUB_ISSUE_BODY_EOF"              >> $GITHUB_OUTPUT
-            echo "found=true"  >> $GITHUB_OUTPUT
+            gh issue create \
+              --title "Weekly Review - ${TODAY}" \
+              --body-file "$MD_FILE" \
+              --label "weekly-review" || echo "Issue creation failed - label may not exist yet"
           else
-            echo "found=false" >> $GITHUB_OUTPUT
+            echo "No review file found for ${TODAY}"
           fi
-
-      - name: Close previous weekly review issues
-        if: steps.read_md.outputs.found == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const issues = await github.rest.issues.listForRepo({
-              owner: context.repo.owner,
-              repo:  context.repo.repo,
-              state: 'open',
-              labels: 'weekly-review',
-              per_page: 20,
-            });
-            for (const issue of issues.data) {
-              await github.rest.issues.update({
-                owner:        context.repo.owner,
-                repo:         context.repo.repo,
-                issue_number: issue.number,
-                state:        'closed',
-              });
-            }
-
-      - name: Create weekly review GitHub Issue
-        if: steps.read_md.outputs.found == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const body = `${{ steps.read_md.outputs.md_content }}`;
-            const today = new Date().toISOString().split('T')[0];
-            await github.rest.issues.create({
-              owner:  context.repo.owner,
-              repo:   context.repo.repo,
-              title:  `📊 Weekly Review — ${today}`,
-              body:   body,
-              labels: ['weekly-review'],
-            });

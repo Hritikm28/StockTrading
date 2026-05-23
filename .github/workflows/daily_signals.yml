@@ -2,12 +2,11 @@ name: Daily Trading Signals
 
 on:
   schedule:
-    # 3:00 AM UTC = 8:30 AM IST, Mon–Fri
     - cron: '0 3 * * 1-5'
-  workflow_dispatch:   # allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 permissions:
-  contents: write      # needed to git push signals back to repo
+  contents: write
 
 jobs:
   generate-signals:
@@ -24,53 +23,20 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
+          cache: pip
 
       - name: Install dependencies
         run: pip install -r requirements_cloud.txt
 
-      - name: Run daily signal generator (full sophisticated pipeline)
+      - name: Run full trading signal pipeline
         run: python daily_runner.py --quick
 
-      - name: Publish signals to signals/ directory
-        run: |
-          python - <<'PYEOF'
-          import pandas as pd, json, shutil
-          from pathlib import Path
-          from datetime import date
-
-          today = date.today().strftime('%Y-%m-%d')
-          dst   = Path('signals')
-          dst.mkdir(exist_ok=True)
-
-          # ── Copy CSV ──────────────────────────────────────────────────────
-          src_csv = Path('paper_trading/records') / f'signals_{today}.csv'
-          if src_csv.exists():
-              df = pd.read_csv(src_csv)
-              # Normalise column names so weekly_review.py always finds 'price'
-              if 'current_price' in df.columns and 'price' not in df.columns:
-                  df = df.rename(columns={'current_price': 'price'})
-              if 'date' not in df.columns:
-                  df.insert(0, 'date', today)
-              df.to_csv(dst / f'{today}_approved.csv', index=False)
-              df.to_csv(dst / 'latest.csv', index=False)
-              print(f"Published {len(df)} approved signals → signals/{today}_approved.csv")
-          else:
-              print(f"No approved signals today ({src_csv} not found). Writing empty latest.csv.")
-              pd.DataFrame(columns=['date','symbol','signal','composite_score',
-                                    'confidence','price','stop_loss','target',
-                                    'risk_reward','regime']).to_csv(dst / 'latest.csv', index=False)
-
-          # ── Copy JSON ─────────────────────────────────────────────────────
-          src_json = Path('daily_reports') / f'report_{today}.json'
-          if src_json.exists():
-              shutil.copy(src_json, dst / f'{today}_summary.json')
-              print(f"Published report → signals/{today}_summary.json")
-          PYEOF
+      - name: Publish signals to signals folder
+        run: python publish_signals.py
 
       - name: Commit and push signals
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add signals/
           git diff --cached --quiet || git commit -m "signals: $(date -u +'%Y-%m-%d') auto-generated"

@@ -1,0 +1,41 @@
+name: Daily Trading Signals
+
+on:
+  schedule:
+    # 3:00 AM UTC = 8:30 AM IST, Mon–Fri
+    - cron: '0 3 * * 1-5'
+  workflow_dispatch:   # allows manual trigger from GitHub UI
+
+permissions:
+  contents: write      # needed to git push signals back to repo
+
+jobs:
+  generate-signals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements_cloud.txt
+
+      - name: Run daily signal generator
+        run: python cloud_daily_runner.py
+
+      - name: Commit and push signals
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add signals/
+          git diff --cached --quiet || git commit -m "signals: $(date -u +'%Y-%m-%d') auto-generated"
+          git push

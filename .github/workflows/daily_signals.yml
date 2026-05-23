@@ -11,7 +11,7 @@ permissions:
 jobs:
   generate-signals:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
@@ -28,11 +28,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements_cloud.txt
 
-      - name: Run full trading signal pipeline
-        run: python daily_runner.py --quick
-
-      - name: Publish signals to signals folder
-        run: python publish_signals.py
+      - name: Run trading signal pipeline
+        run: python cloud_daily_runner.py
 
       - name: Commit and push signals
         run: |

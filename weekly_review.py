@@ -67,15 +67,30 @@ def fetch_price(symbol: str, target_date: date) -> float | None:
 
 
 def load_approved_signals(lookback: int = LOOKBACK_DAYS) -> pd.DataFrame:
-    """Load all approved signal CSVs from the past `lookback` days."""
+    """Load all approved signal CSVs from the past `lookback` days.
+    Handles both naming conventions:
+      - signals/YYYY-MM-DD_approved.csv  (from daily_runner.py via workflow)
+      - paper_trading/records/signals_YYYY-MM-DD.csv  (direct local run)
+    Also normalises 'current_price' → 'price' for consistency.
+    """
     today = date.today()
     frames = []
+    search_dirs = [
+        (SIGNALS_DIR,                     "{d}_approved.csv"),
+        (Path("paper_trading") / "records", "signals_{d}.csv"),
+    ]
     for i in range(lookback):
-        d = today - timedelta(days=i)
-        path = SIGNALS_DIR / f"{d.strftime('%Y-%m-%d')}_approved.csv"
-        if path.exists():
-            df = pd.read_csv(path)
-            frames.append(df)
+        d     = today - timedelta(days=i)
+        d_str = d.strftime('%Y-%m-%d')
+        for directory, pattern in search_dirs:
+            path = directory / pattern.format(d=d_str)
+            if path.exists():
+                df = pd.read_csv(path)
+                # Normalise price column name
+                if 'current_price' in df.columns and 'price' not in df.columns:
+                    df = df.rename(columns={'current_price': 'price'})
+                frames.append(df)
+                break   # don't double-count the same day
     if not frames:
         return pd.DataFrame()
     return pd.concat(frames, ignore_index=True)

@@ -281,28 +281,66 @@ class PortfolioRiskGate:
                 pass
         return pd.Series(dtype=float)
 
+    def _fetch_yf(self, symbol: str, days: int = 30) -> pd.DataFrame:
+        """Fetch recent OHLCV from yfinance as fallback."""
+        try:
+            import yfinance as yf
+            from datetime import timedelta
+            end   = date.today()
+            start = end - timedelta(days=days)
+            df = yf.download(symbol, start=start, end=end,
+                             progress=False, auto_adjust=False)
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = df.columns.get_level_values(0)
+            return df if not df.empty else pd.DataFrame()
+        except Exception:
+            return pd.DataFrame()
+
     def _get_atr(self, symbol: str) -> float:
         nse_sym = symbol.replace('.NS', '').upper()
         fpath = self.config.DATA_DIR / f"{nse_sym}.parquet"
+        # Try local parquet first
         if fpath.exists():
             try:
                 df = pd.read_parquet(fpath)
                 df = df.sort_index()
-                tr = (df['High'] - df['Low']).rolling(14).mean()
-                return float(tr.iloc[-1])
+                val = float((df['High'] - df['Low']).rolling(14).mean().iloc[-1])
+                if not np.isnan(val) and val > 0:
+                    return val
             except Exception:
                 pass
+        # Fallback: yfinance
+        try:
+            df = self._fetch_yf(symbol, days=60)
+            if not df.empty:
+                val = float((df['High'] - df['Low']).rolling(14).mean().iloc[-1])
+                if not np.isnan(val) and val > 0:
+                    return val
+        except Exception:
+            pass
         return 0.0
 
     def _get_current_price(self, symbol: str) -> float:
         nse_sym = symbol.replace('.NS', '').upper()
         fpath = self.config.DATA_DIR / f"{nse_sym}.parquet"
+        # Try local parquet first
         if fpath.exists():
             try:
                 df = pd.read_parquet(fpath)
-                return float(df['Close'].iloc[-1])
+                val = float(df['Close'].iloc[-1])
+                if not np.isnan(val) and val > 0:
+                    return val
             except Exception:
                 pass
+        # Fallback: yfinance
+        try:
+            df = self._fetch_yf(symbol, days=5)
+            if not df.empty:
+                val = float(df['Close'].iloc[-1])
+                if not np.isnan(val) and val > 0:
+                    return val
+        except Exception:
+            pass
         return 0.0
 
     def filter_and_size(
@@ -385,7 +423,7 @@ class PortfolioRiskGate:
             current_price = self._get_current_price(symbol)
             atr = self._get_atr(symbol)
 
-            if current_price <= 0:
+            if not current_price or current_price <= 0 or np.isnan(current_price):
                 rejected.append({'symbol': symbol, 'reason': 'no_price'})
                 continue
 

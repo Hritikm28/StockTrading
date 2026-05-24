@@ -488,8 +488,8 @@ class DailyRunner:
         if not quick_mode:
             print(f"\n[1/4] Running ML ensemble on {len(symbols)} stocks...")
             ml_scores = self.ml_generator.generate(symbols, as_of_date)
-            ml_buy = sum(1 for s, c in ml_scores.items() if s[0] > 0.3)
-            ml_sell = sum(1 for s, c in ml_scores.items() if s[0] < -0.3)
+            ml_buy = sum(1 for s, c in ml_scores.items() if c[0] > 0.3)
+            ml_sell = sum(1 for s, c in ml_scores.items() if c[0] < -0.3)
             print(f"      ML signals: {ml_buy} BUY views, {ml_sell} SELL views")
         else:
             print("\n[1/4] Quick mode — skipping ML training, using alphas only")

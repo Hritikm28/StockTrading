@@ -16,9 +16,27 @@ from numba import jit
 import streamlit as st
 from transformers import pipeline
 import xgboost as xgb
-from pykalman import KalmanFilter
-import pywt
-import torch
+
+try:
+    from pykalman import KalmanFilter
+    KALMAN_AVAILABLE = True
+except ImportError:
+    KALMAN_AVAILABLE = False
+    KalmanFilter = None
+
+try:
+    import pywt
+    PYWT_AVAILABLE = True
+except ImportError:
+    PYWT_AVAILABLE = False
+    pywt = None
+
+try:
+    import torch
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
+    torch = None
 from pathlib import Path
 import pickle
 import threading
@@ -110,7 +128,10 @@ except ImportError:
     PYWT_AVAILABLE = False
 
 # Device detection (for sentiment models)
-DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+if TORCH_AVAILABLE:
+    DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+else:
+    DEVICE = 'cpu'
 
 # ============================================================================
 # FEATURE CACHE (Disk-based caching for 300s+ speedup per stock)

@@ -1,0 +1,181 @@
+{
+  "date": "2026-05-25",
+  "regime": "SIDEWAYS",
+  "vix": 15.0,
+  "total_scored": 29,
+  "approved": 8,
+  "rejected": 2,
+  "buy_signals": [
+    "TATASTEEL.NS",
+    "MARUTI.NS",
+    "TITAN.NS",
+    "SUNPHARMA.NS",
+    "DRREDDY.NS",
+    "POWERGRID.NS",
+    "NTPC.NS",
+    "HINDUNILVR.NS"
+  ],
+  "sell_signals": [],
+  "signals": [
+    {
+      "symbol": "TATASTEEL.NS",
+      "signal": "BUY",
+      "composite_score": 0.814,
+      "confidence": 70.0,
+      "price": 209.19,
+      "stop_loss": 200.34,
+      "target": 222.46,
+      "risk_reward": 1.5,
+      "atr_pct": 2.11,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.9,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-25"
+    },
+    {
+      "symbol": "MARUTI.NS",
+      "signal": "BUY",
+      "composite_score": 0.633,
+      "confidence": 65.0,
+      "price": 12987.0,
+      "stop_loss": 12452.29,
+      "target": 13789.07,
+      "risk_reward": 1.5,
+      "atr_pct": 2.06,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-25"
+    },
+    {
+      "symbol": "TITAN.NS",
+      "signal": "BUY",
+      "composite_score": 0.621,
+      "confidence": 65.0,
+      "price": 4079.8,
+      "stop_loss": 3831.16,
+      "target": 4452.76,
+      "risk_reward": 1.5,
+      "atr_pct": 3.05,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.6,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-25"
+    },
+    {
+      "symbol": "SUNPHARMA.NS",
+      "signal": "BUY",
+      "composite_score": 0.6,
+      "confidence": 60.0,
+      "price": 1844.6,
+      "stop_loss": 1766.14,
+      "target": 1962.29,
+      "risk_reward": 1.5,
+      "atr_pct": 2.13,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-25"
+    },
+    {
+      "symbol": "DRREDDY.NS",
+      "signal": "BUY",
+      "composite_score": 0.6,
+      "confidence": 65.0,
+      "price": 1307.2,
+      "stop_loss": 1244.73,
+      "target": 1400.91,
+      "risk_reward": 1.5,
+      "atr_pct": 2.39,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.3,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-25"
+    },
+    {
+      "symbol": "POWERGRID.NS",
+      "signal": "BUY",
+      "composite_score": 0.565,
+      "confidence": 63.8,
+      "price": 294.3,
+      "stop_loss": 282.0,
+      "target": 312.75,
+      "risk_reward": 1.5,
+      "atr_pct": 2.09,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.3,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-25"
+    },
+    {
+      "symbol": "NTPC.NS",
+      "signal": "BUY",
+      "composite_score": 0.535,
+      "confidence": 61.2,
+      "price": 388.65,
+      "stop_loss": 372.07,
+      "target": 413.52,
+      "risk_reward": 1.5,
+      "atr_pct": 2.13,
+      "scores": {
+        "mean_rev": 0.5,
+        "momentum": 0.6,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.4
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-25"
+    },
+    {
+      "symbol": "HINDUNILVR.NS",
+      "signal": "BUY",
+      "composite_score": 0.508,
+      "confidence": 60.0,
+      "price": 2203.6,
+      "stop_loss": 2108.09,
+      "target": 2346.87,
+      "risk_reward": 1.5,
+      "atr_pct": 2.17,
+      "scores": {
+        "mean_rev": 0.5,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.4
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-25"
+    }
+  ]
+}

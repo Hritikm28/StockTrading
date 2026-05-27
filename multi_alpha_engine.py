@@ -153,42 +153,55 @@ class MultiAlphaEngine:
     """
 
     # Regime-specific alpha weights — what works in each regime
+    # New signals added: delivery_pct, option_chain, corp_event
     REGIME_WEIGHTS = {
         'BULL': {
-            'ml_score':    0.30,  # ML trend-following dominant
-            'momentum':    0.25,  # 12-1 momentum shines in bull markets
-            'fii_dii':     0.15,  # Flow momentum confirms trend
-            'pead':        0.15,  # Earnings beat follow-through
-            'mean_rev':    0.05,  # Less useful in strong trends
-            'bulk_deal':   0.06,
-            'insider':     0.04,
+            'ml_score':     0.27,  # ML trend-following dominant
+            'momentum':     0.22,  # 12-1 momentum shines in bull markets
+            'fii_dii':      0.13,  # Flow momentum confirms trend
+            'pead':         0.13,  # Earnings beat follow-through
+            'mean_rev':     0.04,  # Less useful in strong trends
+            'bulk_deal':    0.05,
+            'insider':      0.03,
+            'delivery_pct': 0.05,  # Institutional accumulation confirmation
+            'option_chain': 0.05,  # PCR + max pain
+            'corp_event':   0.03,  # Catalyst signals
         },
         'BEAR': {
-            'ml_score':    0.25,
-            'momentum':    0.05,  # Momentum destroys capital in bear markets
-            'fii_dii':     0.20,  # FII selling is the bear driver
-            'pead':        0.10,
-            'mean_rev':    0.25,  # Bear market bounces — mean rev is key
-            'bulk_deal':   0.10,
-            'insider':     0.05,
+            'ml_score':     0.22,
+            'momentum':     0.04,  # Momentum destroys capital in bear markets
+            'fii_dii':      0.17,  # FII selling is the bear driver
+            'pead':         0.08,
+            'mean_rev':     0.22,  # Bear market bounces
+            'bulk_deal':    0.08,
+            'insider':      0.04,
+            'delivery_pct': 0.06,  # Distribution pattern shows real selling
+            'option_chain': 0.06,  # PCR extremes predict reversals
+            'corp_event':   0.03,
         },
         'SIDEWAYS': {
-            'ml_score':    0.25,
-            'momentum':    0.10,
-            'fii_dii':     0.12,
-            'pead':        0.18,
-            'mean_rev':    0.20,  # Mean reversion dominant in sideways
-            'bulk_deal':   0.10,
-            'insider':     0.05,
+            'ml_score':     0.22,
+            'momentum':     0.08,
+            'fii_dii':      0.10,
+            'pead':         0.15,
+            'mean_rev':     0.17,  # Mean reversion dominant
+            'bulk_deal':    0.09,
+            'insider':      0.04,
+            'delivery_pct': 0.06,
+            'option_chain': 0.06,
+            'corp_event':   0.03,
         },
         'CRISIS': {
-            'ml_score':    0.15,  # ML unreliable in extreme events
-            'momentum':    0.05,
-            'fii_dii':     0.30,  # FII flows are the dominant factor
-            'pead':        0.05,
-            'mean_rev':    0.30,  # Deep oversold bounces
-            'bulk_deal':   0.10,
-            'insider':     0.05,
+            'ml_score':     0.13,  # ML unreliable in extreme events
+            'momentum':     0.04,
+            'fii_dii':      0.26,  # FII flows are the dominant factor
+            'pead':         0.04,
+            'mean_rev':     0.26,  # Deep oversold bounces
+            'bulk_deal':    0.08,
+            'insider':      0.04,
+            'delivery_pct': 0.07,  # Panic selling vs institutional buying
+            'option_chain': 0.05,  # PCR extremes signal reversal
+            'corp_event':   0.03,
         },
     }
 
@@ -280,28 +293,26 @@ class MultiAlphaEngine:
             weighted_score += ml_normalised * weights['ml_score']
             total_weight += weights['ml_score']
 
-        # India alpha contributions
+        # India alpha contributions (all signals including new ones)
         alpha_name_map = {
-            'momentum': 'momentum',
-            'fii_dii':  'fii_dii',
-            'pead':     'pead',
-            'mean_rev': 'mean_rev',
-            'bulk_deal':'bulk_deal',
-            'insider':  'insider',
+            'momentum':     'momentum',
+            'fii_dii':      'fii_dii',
+            'pead':         'pead',
+            'mean_rev':     'mean_rev',
+            'bulk_deal':    'bulk_deal',
+            'insider':      'insider',
+            'fo_ban':       'fo_ban',
+            'delivery_pct': 'delivery_pct',
+            'option_chain': 'option_chain',
+            'corp_event':   'corp_event',
         }
         for alpha_key, weight_key in alpha_name_map.items():
-            comp = components.get(alpha_key, {})
+            comp  = components.get(alpha_key, {})
             score = comp.get('score', 0.0)
             conf  = comp.get('confidence', 0.0)
-            if conf > 0:
+            if conf > 0 and weight_key in weights:
                 weighted_score += score * weights[weight_key]
-                total_weight += weights[weight_key]
-
-        # F&O ban — always included if confidence > 0
-        fo = components.get('fo_ban', {})
-        if fo.get('confidence', 0) > 0:
-            weighted_score += fo.get('score', 0.0) * 0.07
-            total_weight += 0.07
+                total_weight   += weights[weight_key]
 
         # Normalise
         composite_score = weighted_score / total_weight if total_weight > 0 else 0.0

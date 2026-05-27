@@ -138,7 +138,7 @@ class FIIDIIAlpha:
             return df
 
         except Exception as e:
-            print(f"   ⚠️ FII/DII fetch error: {e}")
+            print(f"   [WARN] FII/DII fetch error: {e}")
             return None
 
     @classmethod
@@ -240,7 +240,7 @@ class BulkDealAlpha:
             return df
 
         except Exception as e:
-            print(f"   ⚠️ Bulk deals fetch error: {e}")
+            print(f"   [WARN] Bulk deals fetch error: {e}")
             return None
 
     @classmethod
@@ -353,8 +353,7 @@ class InsiderAlpha:
             return df
 
         except Exception as e:
-            print(f"   ⚠️ Insider trades fetch error: {e}")
-            return None
+            return None  # Silently fail - BSE API unreliable
 
     @classmethod
     def get_signal(cls, symbol: str, as_of_date: date,
@@ -673,7 +672,7 @@ class MomentumAlpha:
             return float(np.clip(score, -1.0, 1.0)), float(confidence)
 
         except Exception as e:
-            print(f"   ⚠️ MomentumAlpha error for {symbol}: {e}")
+            print(f"   [WARN] MomentumAlpha error for {symbol}: {e}")
             return 0.0, 0.0
 
 
@@ -741,7 +740,7 @@ class MeanRevAlpha:
                 return 0.0, 0.0
 
         except Exception as e:
-            print(f"   ⚠️ MeanRevAlpha error for {symbol}: {e}")
+            print(f"   [WARN] MeanRevAlpha error for {symbol}: {e}")
             return 0.0, 0.0
 
 
@@ -847,12 +846,454 @@ class IndiaAlphaAggregator:
         }
 
         if verbose:
-            print(f"\n📊 India Alpha Signals: {symbol} ({as_of_date})")
+            print(f"\nIndia Alpha Signals: {symbol} ({as_of_date})")
             print(f"   Composite: {signal} | Score: {composite_score:+.3f} | Conf: {composite_conf:.0f}%")
             for name, v in components.items():
                 bar = '█' * int(abs(v['score']) * 10)
                 direction = '+' if v['score'] >= 0 else '-'
                 print(f"   {name:10s}: {direction}{bar:<10} {v['score']:+.2f} ({v['confidence']:.0f}%)")
+
+        return result
+
+
+# ==============================================================================
+# 8. DELIVERY PERCENT ALPHA  (NSE Bhav Copy)
+# ==============================================================================
+class DeliveryPercentAlpha:
+    """
+    Delivery-to-Traded Volume Percentage Signal.
+
+    NSE publishes daily delivery % in the bhav copy:
+      - High delivery % (>80%) = investors are HOLDING, not trading → bullish
+      - Rising delivery % over 3 days = institutional accumulation in progress
+      - Very low delivery % (<20%) = pure speculation, no conviction → avoid
+      - Sudden drop in delivery % = distribution (smart money selling to traders)
+
+    Edge: Institutional accumulation shows up as high+rising delivery % BEFORE
+    the price moves. Retailers trade intraday; institutions take delivery.
+    Data: NSE archives (free, daily CSV/ZIP)
+    """
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date) -> tuple:
+        """Returns (score, confidence)."""
+        try:
+            from nse_fetcher import get_fetcher
+            fetcher = get_fetcher()
+
+            # Fetch today's bhav and 3 days ago (for trend)
+            bhav_today = fetcher.get_delivery_bhav(as_of_date)
+            bhav_3d    = fetcher.get_delivery_bhav(as_of_date - timedelta(days=4))
+
+            if bhav_today is None or bhav_today.empty:
+                return 0.0, 0.0
+
+            nse_sym = symbol.replace('.NS', '').upper()
+            row = bhav_today[bhav_today['SYMBOL'] == nse_sym]
+            if row.empty:
+                return 0.0, 0.0
+
+            deliv_today = float(row['DELIV_PER'].iloc[0])
+
+            # Trend: compare to 3 days ago
+            deliv_trend = 0.0
+            if bhav_3d is not None and not bhav_3d.empty:
+                row3 = bhav_3d[bhav_3d['SYMBOL'] == nse_sym]
+                if not row3.empty:
+                    deliv_3d    = float(row3['DELIV_PER'].iloc[0])
+                    deliv_trend = deliv_today - deliv_3d  # positive = rising
+
+            # Score based on absolute delivery % and trend
+            if deliv_today >= 80:
+                score = 0.8
+                conf  = 72.0
+            elif deliv_today >= 65:
+                score = 0.5
+                conf  = 60.0
+            elif deliv_today >= 50:
+                score = 0.2
+                conf  = 45.0
+            elif deliv_today <= 20:
+                score = -0.6
+                conf  = 65.0
+            elif deliv_today <= 35:
+                score = -0.3
+                conf  = 50.0
+            else:
+                score = 0.0
+                conf  = 30.0
+
+            # Trend bonus/penalty (±0.15 max)
+            trend_boost = np.clip(deliv_trend / 100.0, -0.15, 0.15)
+            score = float(np.clip(score + trend_boost, -1.0, 1.0))
+            if conf > 0:
+                conf = min(conf + abs(deliv_trend) * 0.5, 85.0)
+
+            return score, conf
+
+        except Exception as e:
+            return 0.0, 0.0
+
+
+# ==============================================================================
+# 9. OPTION CHAIN ALPHA  (PCR + Max Pain)
+# ==============================================================================
+class OptionChainAlpha:
+    """
+    Option Chain Signal: Put-Call Ratio (PCR) + Max Pain.
+
+    PCR Logic (contrarian):
+      - PCR > 1.4  : extreme fear → contrarian BUY (+0.7)
+      - PCR > 1.2  : elevated puts → mild bullish (+0.4)
+      - PCR < 0.7  : extreme greed/calls → contrarian SELL (-0.6)
+      - PCR < 0.9  : mild call skew → mild bearish (-0.3)
+
+    Max Pain Logic:
+      - Price significantly below max pain → stock likely to drift UP
+        (market makers push toward max pain to let options expire worthless)
+      - Price significantly above max pain → stock likely to drift DOWN
+
+    Data: NSE option chain API (free, requires session cookies)
+    Edge: PCR extremes predict 3-5 day reversals. Max Pain strong near expiry.
+    """
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date) -> tuple:
+        """Returns (score, confidence)."""
+        try:
+            from nse_fetcher import get_fetcher
+            fetcher = get_fetcher()
+
+            oc = fetcher.get_option_chain(symbol)
+            if not oc:
+                return 0.0, 0.0
+
+            pcr        = oc.get('pcr', 1.0)
+            max_pain   = oc.get('max_pain', 0.0)
+            underlying = oc.get('underlying', 0.0)
+
+            # PCR signal (contrarian)
+            if pcr >= 1.5:
+                pcr_score = 0.75
+                pcr_conf  = 75.0
+            elif pcr >= 1.2:
+                pcr_score = 0.45
+                pcr_conf  = 60.0
+            elif pcr >= 0.9:
+                pcr_score = 0.0
+                pcr_conf  = 0.0
+            elif pcr >= 0.7:
+                pcr_score = -0.35
+                pcr_conf  = 55.0
+            else:
+                pcr_score = -0.65
+                pcr_conf  = 72.0
+
+            # Max pain signal
+            mp_score = 0.0
+            mp_conf  = 0.0
+            if underlying > 0 and max_pain > 0:
+                gap_pct = (max_pain - underlying) / underlying
+                if abs(gap_pct) > 0.01:   # >1% gap = meaningful
+                    if gap_pct > 0.04:    # price 4%+ below max pain → drift up
+                        mp_score = 0.5
+                        mp_conf  = 60.0
+                    elif gap_pct > 0.02:
+                        mp_score = 0.3
+                        mp_conf  = 45.0
+                    elif gap_pct < -0.04: # price 4%+ above max pain → drift down
+                        mp_score = -0.5
+                        mp_conf  = 60.0
+                    elif gap_pct < -0.02:
+                        mp_score = -0.3
+                        mp_conf  = 45.0
+
+            # Combine PCR + Max Pain (60/40 split)
+            if pcr_conf > 0 and mp_conf > 0:
+                final_score = pcr_score * 0.60 + mp_score * 0.40
+                final_conf  = (pcr_conf * 0.60 + mp_conf * 0.40)
+            elif pcr_conf > 0:
+                final_score = pcr_score
+                final_conf  = pcr_conf
+            elif mp_conf > 0:
+                final_score = mp_score
+                final_conf  = mp_conf
+            else:
+                return 0.0, 0.0
+
+            return float(np.clip(final_score, -1.0, 1.0)), float(final_conf)
+
+        except Exception as e:
+            return 0.0, 0.0
+
+
+# ==============================================================================
+# 10. CORPORATE EVENT ALPHA  (NSE Announcements)
+# ==============================================================================
+class CorporateEventAlpha:
+    """
+    Corporate Event Signal from NSE announcements.
+
+    Announcement type → score:
+      BUYBACK         : +0.8  (strong bullish — company buying own stock)
+      DIVIDEND        : +0.4  (bullish — cash to shareholders)
+      BONUS           : +0.3  (neutral-bullish — signals confidence)
+      ACQUISITION     : +0.3  (can be transformative)
+      FINANCIAL RESULTS: contextual (score by profit growth in text)
+      RIGHTS ISSUE    : -0.4  (dilution — bearish)
+      QIP / FPO       : -0.3  (dilution)
+      DEBT / LOAN     : -0.2  (leverage concern)
+      PLEDGE          : -0.6  (promoter pledging shares — red flag)
+      RESIGNATION     : -0.3  (management instability)
+
+    Recency decay: events older than 7 days have reduced weight.
+    Data: NSE corporate announcements API (free).
+    """
+
+    # Keywords → (score, confidence)
+    _PATTERNS: List[tuple] = [
+        # Very bullish
+        ('buyback',           0.80, 78.0),
+        ('buy-back',          0.80, 78.0),
+        ('share repurchase',  0.75, 75.0),
+        # Bullish
+        ('dividend',          0.40, 62.0),
+        ('bonus issue',       0.35, 58.0),
+        ('bonus shares',      0.35, 58.0),
+        ('acquisition',       0.30, 50.0),
+        ('merger',            0.25, 45.0),
+        ('demerger',          0.20, 40.0),
+        ('capacity expansion',0.25, 50.0),
+        ('order received',    0.30, 55.0),
+        ('new order',         0.30, 55.0),
+        ('contract awarded',  0.30, 55.0),
+        # Bearish
+        ('rights issue',     -0.40, 65.0),
+        ('rights entitlement',-0.35, 60.0),
+        ('qip',              -0.30, 58.0),
+        ('preferential allotment', -0.25, 52.0),
+        ('fpo',              -0.25, 52.0),
+        ('pledge',           -0.55, 70.0),
+        ('pledged',          -0.55, 70.0),
+        ('resignation',      -0.30, 55.0),
+        ('regulatory action',-0.40, 65.0),
+        ('sebi notice',      -0.45, 70.0),
+        ('default',          -0.60, 72.0),
+        ('npa',              -0.40, 65.0),
+        ('fraud',            -0.70, 80.0),
+        ('insolvency',       -0.70, 80.0),
+    ]
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date) -> tuple:
+        """Returns (score, confidence)."""
+        try:
+            from nse_fetcher import get_fetcher
+            fetcher = get_fetcher()
+
+            announcements = fetcher.get_announcements(symbol)
+            if not announcements:
+                return 0.0, 0.0
+
+            # Filter to last 30 days
+            scores = []
+            for ann in announcements:
+                ann_date_str = ann.get('an_date', '') or ann.get('date', '')
+                if not ann_date_str:
+                    continue
+
+                # Parse date
+                ann_date = None
+                for fmt in ('%d-%b-%Y %H:%M:%S', '%d-%b-%Y', '%Y-%m-%d',
+                            '%d/%m/%Y', '%d %b %Y'):
+                    try:
+                        ann_date = datetime.strptime(
+                            ann_date_str.strip()[:20], fmt
+                        ).date()
+                        break
+                    except Exception:
+                        continue
+
+                if ann_date is None:
+                    continue
+
+                days_old = (as_of_date - ann_date).days
+                if days_old < 0 or days_old > 30:
+                    continue
+
+                # Recency decay: events decay to 30% weight over 30 days
+                recency = max(0.3, 1.0 - days_old / 35.0)
+
+                text = (ann.get('desc', '') + ' ' +
+                        ann.get('attachment', '')).lower()
+
+                for keyword, raw_score, raw_conf in cls._PATTERNS:
+                    if keyword in text:
+                        scores.append((raw_score * recency, raw_conf * recency))
+                        break  # one match per announcement
+
+            if not scores:
+                return 0.0, 0.0
+
+            # Take strongest signal (abs value)
+            scores.sort(key=lambda x: abs(x[0]), reverse=True)
+            best_score, best_conf = scores[0]
+
+            # If multiple signals in same direction, slight boost
+            if len(scores) > 1:
+                same_dir = sum(1 for s, _ in scores[1:] if s * best_score > 0)
+                if same_dir > 0:
+                    best_score *= min(1.15, 1 + same_dir * 0.05)
+                    best_conf  = min(best_conf * 1.1, 85.0)
+
+            return float(np.clip(best_score, -1.0, 1.0)), float(best_conf)
+
+        except Exception as e:
+            return 0.0, 0.0
+
+
+# ==============================================================================
+# MASTER ALPHA AGGREGATOR  (UPDATED with 3 new signals)
+# ==============================================================================
+class IndiaAlphaAggregator:
+    """
+    Combines all India-specific alpha signals into a single composite score.
+
+    Weights based on historical Sharpe ratios + India market characteristics:
+      PEAD:           0.16  (strong academic backing in India)
+      Momentum:       0.15  (persistent cross-sectional edge)
+      FII/DII:        0.14  (market-wide flows predict direction)
+      Mean Rev:       0.12  (high win rate on short horizon)
+      Bulk Deal:      0.10  (informed accumulation)
+      Delivery%:      0.08  (institutional vs speculative volume)
+      Option Chain:   0.07  (PCR + max pain)
+      Insider:        0.08  (high conviction but noisy)
+      F&O Ban:        0.06  (mechanical, high precision, low frequency)
+      Corp Event:     0.04  (catalyst-driven)
+
+    Total = 1.00
+    """
+
+    WEIGHTS = {
+        'pead':         0.16,
+        'momentum':     0.15,
+        'fii_dii':      0.14,
+        'mean_rev':     0.12,
+        'bulk_deal':    0.10,
+        'delivery_pct': 0.08,
+        'option_chain': 0.07,
+        'insider':      0.08,
+        'fo_ban':       0.06,
+        'corp_event':   0.04,
+    }
+
+    @classmethod
+    def get_composite_signal(
+        cls,
+        symbol: str,
+        as_of_date: date,
+        data_dir: str = "data/stocks",
+        universe_returns: Optional[Dict[str, float]] = None,
+        verbose: bool = False
+    ) -> Dict:
+        """
+        Compute all alpha signals and return composite.
+
+        Returns dict with:
+          score       : composite score [-1, 1]
+          confidence  : composite confidence [0, 100]
+          signal      : 'BUY' | 'SELL' | 'HOLD'
+          components  : dict of individual alpha scores
+        """
+        components = {}
+        weighted_score    = 0.0
+        total_weight_used = 0.0
+
+        alpha_funcs = {
+            'pead':         lambda: PEADAlpha.get_signal(symbol, as_of_date),
+            'momentum':     lambda: MomentumAlpha.get_signal(
+                                symbol, as_of_date, data_dir, universe_returns),
+            'fii_dii':      lambda: FIIDIIAlpha.get_signal(symbol, as_of_date),
+            'mean_rev':     lambda: MeanRevAlpha.get_signal(
+                                symbol, as_of_date, data_dir),
+            'bulk_deal':    lambda: BulkDealAlpha.get_signal(symbol, as_of_date),
+            'delivery_pct': lambda: DeliveryPercentAlpha.get_signal(
+                                symbol, as_of_date),
+            'option_chain': lambda: OptionChainAlpha.get_signal(
+                                symbol, as_of_date),
+            'insider':      lambda: InsiderAlpha.get_signal(symbol, as_of_date),
+            'fo_ban':       lambda: FOBanAlpha.get_signal(symbol, as_of_date),
+            'corp_event':   lambda: CorporateEventAlpha.get_signal(
+                                symbol, as_of_date),
+        }
+
+        # Check for disabled signals (from signal_decay_detector)
+        disabled_signals: set = set()
+        try:
+            from signal_decay_detector import get_disabled_signals
+            disabled_signals = set(get_disabled_signals())
+        except Exception:
+            pass
+
+        for name, func in alpha_funcs.items():
+            # Skip disabled signals
+            if name in disabled_signals:
+                components[name] = {'score': 0.0, 'confidence': 0.0,
+                                    'disabled': True}
+                continue
+            try:
+                score, conf = func()
+                components[name] = {
+                    'score': round(float(score), 3),
+                    'confidence': round(float(conf), 1)
+                }
+                if conf > 0:
+                    weighted_score    += score * cls.WEIGHTS[name]
+                    total_weight_used += cls.WEIGHTS[name]
+            except Exception as e:
+                components[name] = {'score': 0.0, 'confidence': 0.0,
+                                    'error': str(e)}
+
+        # Normalise by weights used (graceful degradation)
+        if total_weight_used > 0:
+            composite_score = weighted_score / total_weight_used
+        else:
+            composite_score = 0.0
+
+        composite_score = float(np.clip(composite_score, -1.0, 1.0))
+
+        # Composite confidence = average of non-zero confidences
+        confs = [v['confidence'] for v in components.values()
+                 if v['confidence'] > 0]
+        composite_conf = float(np.mean(confs)) if confs else 0.0
+
+        # Signal threshold
+        if composite_score > 0.25:
+            signal = 'BUY'
+        elif composite_score < -0.25:
+            signal = 'SELL'
+        else:
+            signal = 'HOLD'
+
+        result = {
+            'symbol':     symbol,
+            'date':       as_of_date.isoformat(),
+            'score':      round(composite_score, 3),
+            'confidence': round(composite_conf, 1),
+            'signal':     signal,
+            'components': components,
+        }
+
+        if verbose:
+            print(f"\n  India Alpha: {symbol} ({as_of_date})")
+            print(f"  Composite: {signal} | Score: {composite_score:+.3f}"
+                  f" | Conf: {composite_conf:.0f}%")
+            for name, v in components.items():
+                bar = '#' * int(abs(v['score']) * 10)
+                direction = '+' if v['score'] >= 0 else '-'
+                err = f" [ERR: {v.get('error','')}]" if 'error' in v else ''
+                print(f"  {name:12s}: {direction}{bar:<10} {v['score']:+.2f}"
+                      f" ({v['confidence']:.0f}%){err}")
 
         return result
 

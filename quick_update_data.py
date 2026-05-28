@@ -305,9 +305,19 @@ def update_from_bhav(verbose: bool = True) -> int:
             df = pd.read_parquet(fpath)
             df.index = pd.to_datetime(df.index)
 
-            # Skip if this date is already in the file
+            # Skip if this date is already in the file WITH a valid close
             if bhav_date_ts in df.index:
-                continue
+                try:
+                    existing_close = df.loc[bhav_date_ts, 'Close']
+                    # Handle both scalar and Series (MultiIndex edge case)
+                    if hasattr(existing_close, '__len__'):
+                        existing_close = existing_close.iloc[0]
+                    if pd.notna(existing_close) and float(existing_close) > 0:
+                        continue  # Valid close already present, nothing to do
+                    # Date exists but close is NaN/zero — remove it so bhav can fill it
+                    df = df[df.index != bhav_date_ts]
+                except Exception:
+                    df = df[df.index != bhav_date_ts]
 
             # Build a new row from bhav data
             new_row = pd.DataFrame({

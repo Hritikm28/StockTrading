@@ -451,27 +451,40 @@ class NSEFetcher:
                 if df is None or df.empty:
                     continue
 
-                # Normalize column names
+                # Normalize column names (strip spaces, uppercase)
                 df.columns = [c.strip().upper().replace(' ', '_')
                                for c in df.columns]
+
+                # Remap format-specific names to standard names.
+                # NSE has changed the bhav CSV schema several times.
+                _col_map = {
+                    'CLOSE_PRICE': 'CLOSE', 'CLSPRIC': 'CLOSE',
+                    'OPEN_PRICE':  'OPEN',  'OPNPRIC': 'OPEN',
+                    'HIGH_PRICE':  'HIGH',  'HGHPRIC': 'HIGH',
+                    'LOW_PRICE':   'LOW',   'LWPRIC':  'LOW',
+                    'TTL_TRD_QNTY':  'TOTTRDQTY',
+                    'TTL_TRD_QTY':   'TOTTRDQTY',
+                    'TTLTRDQTY':     'TOTTRDQTY',
+                    'TURNOVER_LACS': 'TOTTRDVAL',
+                    'TTLTRDVAL':     'TOTTRDVAL',
+                    'PREV_CLOSE':    'PREVCLOSE',
+                    'PRVSCLSGPRIC':  'PREVCLOSE',
+                    'TCKRSYMB':      'SYMBOL',
+                    'DELIVERYPERCENTAGE':    'DELIV_PER',
+                    'DELIVERY_PER':          'DELIV_PER',
+                    '%DLYTOTRADED':          'DELIV_PER',
+                    'PERCTDLYVSTRD':         'DELIV_PER',
+                    'DLVRYQTYTOTRDQTYRATIO': 'DELIV_PER',
+                }
+                df = df.rename(columns=_col_map)
 
                 # Keep EQ series only
                 if 'SERIES' in df.columns:
                     df = df[df['SERIES'].str.strip() == 'EQ'].copy()
 
-                # Find delivery column
-                deliv_col = None
-                for candidate in ['DELIV_PER', 'DELIVERYPERCENTAGE',
-                                   'DELIVERY_PER', '%DLYTOTRADED',
-                                   'PERCTDLYVSTRD']:
-                    if candidate in df.columns:
-                        deliv_col = candidate
-                        break
-
-                if deliv_col is None:
-                    continue  # This URL format doesn't have delivery data
-
-                df = df.rename(columns={deliv_col: 'DELIV_PER'})
+                # Delivery column must exist (after remapping)
+                if 'DELIV_PER' not in df.columns:
+                    continue  # This URL format has no delivery data
 
                 if 'SYMBOL' not in df.columns:
                     continue
@@ -481,7 +494,8 @@ class NSEFetcher:
                                                 errors='coerce').fillna(0)
 
                 keep = ['SYMBOL', 'DELIV_PER']
-                for col in ['CLOSE', 'TOTTRDQTY', 'TOTTRDVAL', 'PREVCLOSE']:
+                for col in ['CLOSE', 'OPEN', 'HIGH', 'LOW',
+                            'TOTTRDQTY', 'TOTTRDVAL', 'PREVCLOSE']:
                     if col in df.columns:
                         keep.append(col)
 

@@ -48,7 +48,7 @@ git add signals/
 git diff --cached --quiet
 if errorlevel 1 (
     git commit -m "signals: %DATE%"
-    git pull --rebase origin master
+    git pull origin master -X ours
     git push
     if errorlevel 1 (
         echo   WARNING: Push failed. Run manually: git push

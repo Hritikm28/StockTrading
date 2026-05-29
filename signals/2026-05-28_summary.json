@@ -1,642 +1,182 @@
 {
   "date": "2026-05-28",
   "regime": "SIDEWAYS",
-  "vix": 17.82,
-  "total_signals": 10,
-  "total_capital": 1000000,
-  "approved_signals": [
-    {
-      "symbol": "ONGC.NS",
-      "signal": "BUY",
-      "confidence": 62.5,
-      "composite_score": 0.585,
-      "current_price": 274.05,
-      "stop_loss": 260.6,
-      "target": 294.22,
-      "risk_reward": 1.5,
-      "position_size_inr": 15000.0,
-      "position_pct": 1.5,
-      "regime": "SIDEWAYS",
-      "vix": 17.82
-    },
-    {
-      "symbol": "BHARTIARTL.NS",
-      "signal": "BUY",
-      "confidence": 60.6,
-      "composite_score": 0.423,
-      "current_price": 1852.2,
-      "stop_loss": 1771.38,
-      "target": 1973.43,
-      "risk_reward": 1.5,
-      "position_size_inr": 14544.0,
-      "position_pct": 1.45,
-      "regime": "SIDEWAYS",
-      "vix": 17.82
-    },
-    {
-      "symbol": "ITC.NS",
-      "signal": "BUY",
-      "confidence": 62.8,
-      "composite_score": 0.3,
-      "current_price": 291.95,
-      "stop_loss": 282.63,
-      "target": 305.93,
-      "risk_reward": 1.5,
-      "position_size_inr": 15072.0,
-      "position_pct": 1.51,
-      "regime": "SIDEWAYS",
-      "vix": 17.82
-    },
-    {
-      "symbol": "HEROMOTOCO.NS",
-      "signal": "SELL",
-      "confidence": 60.3,
-      "composite_score": -0.253,
-      "current_price": 5075.0,
-      "stop_loss": 5321.83,
-      "target": 4704.76,
-      "risk_reward": 1.5,
-      "position_size_inr": 14472.0,
-      "position_pct": 1.45,
-      "regime": "SIDEWAYS",
-      "vix": 17.82
-    },
-    {
-      "symbol": "BANKBARODA.NS",
-      "signal": "SELL",
-      "confidence": 62.4,
-      "composite_score": -0.288,
-      "current_price": 270.95,
-      "stop_loss": 283.62,
-      "target": 251.94,
-      "risk_reward": 1.5,
-      "position_size_inr": 14976.0,
-      "position_pct": 1.5,
-      "regime": "SIDEWAYS",
-      "vix": 17.82
-    },
-    {
-      "symbol": "ABB.NS",
-      "signal": "SELL",
-      "confidence": 69.1,
-      "composite_score": -0.381,
-      "current_price": 7219.0,
-      "stop_loss": 7656.33,
-      "target": 6563.0,
-      "risk_reward": 1.5,
-      "position_size_inr": 16584.0,
-      "position_pct": 1.66,
-      "regime": "SIDEWAYS",
-      "vix": 17.82
-    },
-    {
-      "symbol": "GRASIM.NS",
-      "signal": "SELL",
-      "confidence": 63.1,
-      "composite_score": -0.385,
-      "current_price": 3170.0,
-      "stop_loss": 3307.43,
-      "target": 2963.86,
-      "risk_reward": 1.5,
-      "position_size_inr": 15144.0,
-      "position_pct": 1.51,
-      "regime": "SIDEWAYS",
-      "vix": 17.82
-    },
-    {
-      "symbol": "BPCL.NS",
-      "signal": "SELL",
-      "confidence": 65.8,
-      "composite_score": -0.517,
-      "current_price": 307.15,
-      "stop_loss": 322.64,
-      "target": 283.91,
-      "risk_reward": 1.5,
-      "position_size_inr": 15792.0,
-      "position_pct": 1.58,
-      "regime": "SIDEWAYS",
-      "vix": 17.82
-    },
-    {
-      "symbol": "CIPLA.NS",
-      "signal": "SELL",
-      "confidence": 63.0,
-      "composite_score": -0.525,
-      "current_price": 1418.2,
-      "stop_loss": 1481.44,
-      "target": 1323.34,
-      "risk_reward": 1.5,
-      "position_size_inr": 15120.0,
-      "position_pct": 1.51,
-      "regime": "SIDEWAYS",
-      "vix": 17.82
-    },
-    {
-      "symbol": "LTIM.NS",
-      "signal": "SELL",
-      "confidence": 75.0,
-      "composite_score": -0.57,
-      "current_price": 5863.8,
-      "stop_loss": 6109.86,
-      "target": 5494.7,
-      "risk_reward": 1.5,
-      "position_size_inr": 18000.0,
-      "position_pct": 1.8,
-      "regime": "SIDEWAYS",
-      "vix": 17.82
-    }
+  "vix": 15.0,
+  "total_scored": 29,
+  "approved": 8,
+  "rejected": 2,
+  "buy_signals": [
+    "BHARTIARTL.NS",
+    "BAJFINANCE.NS",
+    "DIVISLAB.NS",
+    "SUNPHARMA.NS",
+    "HINDUNILVR.NS",
+    "COALINDIA.NS",
+    "DRREDDY.NS"
   ],
-  "rejected_count": 8,
-  "full_ranking": [
-    {
-      "symbol": "ONGC.NS",
-      "signal": "BUY",
-      "composite_score": 0.585,
-      "composite_confidence": 62.5,
-      "cs_label": "TOP_BUY"
-    },
-    {
-      "symbol": "NESTLEIND.NS",
-      "signal": "BUY",
-      "composite_score": 0.456,
-      "composite_confidence": 57.6,
-      "cs_label": "TOP_BUY"
-    },
-    {
-      "symbol": "TITAN.NS",
-      "signal": "BUY",
-      "composite_score": 0.425,
-      "composite_confidence": 47.7,
-      "cs_label": "TOP_BUY"
-    },
+  "sell_signals": [
+    "CIPLA.NS"
+  ],
+  "signals": [
     {
       "symbol": "BHARTIARTL.NS",
       "signal": "BUY",
-      "composite_score": 0.423,
-      "composite_confidence": 60.6,
-      "cs_label": "TOP_BUY"
-    },
-    {
-      "symbol": "COLPAL.NS",
-      "signal": "BUY",
-      "composite_score": 0.304,
-      "composite_confidence": 59.3,
-      "cs_label": "TOP_BUY"
-    },
-    {
-      "symbol": "ITC.NS",
-      "signal": "BUY",
-      "composite_score": 0.3,
-      "composite_confidence": 62.8,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "DMART.NS",
-      "signal": "HOLD",
-      "composite_score": 0.256,
-      "composite_confidence": 55.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "APOLLOHOSP.NS",
-      "signal": "HOLD",
-      "composite_score": 0.239,
-      "composite_confidence": 51.8,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "INFY.NS",
-      "signal": "HOLD",
-      "composite_score": 0.238,
-      "composite_confidence": 52.4,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "SUNPHARMA.NS",
-      "signal": "HOLD",
-      "composite_score": 0.236,
-      "composite_confidence": 56.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "TCS.NS",
-      "signal": "HOLD",
-      "composite_score": 0.223,
-      "composite_confidence": 51.7,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "MARICO.NS",
-      "signal": "HOLD",
-      "composite_score": 0.21,
-      "composite_confidence": 47.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "POWERGRID.NS",
-      "signal": "HOLD",
-      "composite_score": 0.183,
-      "composite_confidence": 55.1,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BERGEPAINT.NS",
-      "signal": "HOLD",
-      "composite_score": 0.166,
-      "composite_confidence": 53.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "DRREDDY.NS",
-      "signal": "HOLD",
-      "composite_score": 0.159,
-      "composite_confidence": 52.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "COALINDIA.NS",
-      "signal": "HOLD",
-      "composite_score": 0.143,
-      "composite_confidence": 56.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "SBILIFE.NS",
-      "signal": "HOLD",
-      "composite_score": 0.125,
-      "composite_confidence": 61.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BRITANNIA.NS",
-      "signal": "HOLD",
-      "composite_score": 0.081,
-      "composite_confidence": 50.3,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "SIEMENS.NS",
-      "signal": "HOLD",
-      "composite_score": 0.051,
-      "composite_confidence": 61.3,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "TATACONSUM.NS",
-      "signal": "HOLD",
-      "composite_score": 0.041,
-      "composite_confidence": 51.8,
-      "cs_label": "NEUTRAL"
+      "composite_score": 0.633,
+      "confidence": 65.0,
+      "price": 1852.2,
+      "stop_loss": 1770.83,
+      "target": 1974.26,
+      "risk_reward": 1.5,
+      "atr_pct": 2.2,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-28"
     },
     {
       "symbol": "BAJFINANCE.NS",
-      "signal": "HOLD",
-      "composite_score": 0.021,
-      "composite_confidence": 45.7,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "MCDOWELL-N.NS",
-      "signal": "HOLD",
-      "composite_score": 0.0,
-      "composite_confidence": 0.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "UPL.NS",
-      "signal": "HOLD",
-      "composite_score": -0.008,
-      "composite_confidence": 49.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "MUTHOOTFIN.NS",
-      "signal": "HOLD",
-      "composite_score": -0.009,
-      "composite_confidence": 45.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "M&M.NS",
-      "signal": "HOLD",
-      "composite_score": -0.02,
-      "composite_confidence": 52.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "NTPC.NS",
-      "signal": "HOLD",
-      "composite_score": -0.081,
-      "composite_confidence": 57.5,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "HAVELLS.NS",
-      "signal": "HOLD",
-      "composite_score": -0.101,
-      "composite_confidence": 51.8,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "TECHM.NS",
-      "signal": "HOLD",
-      "composite_score": -0.113,
-      "composite_confidence": 46.7,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "HINDUNILVR.NS",
-      "signal": "HOLD",
-      "composite_score": -0.12,
-      "composite_confidence": 43.6,
-      "cs_label": "NEUTRAL"
+      "signal": "BUY",
+      "composite_score": 0.6,
+      "confidence": 60.0,
+      "price": 931.15,
+      "stop_loss": 889.11,
+      "target": 994.21,
+      "risk_reward": 1.5,
+      "atr_pct": 2.26,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-28"
     },
     {
       "symbol": "DIVISLAB.NS",
-      "signal": "HOLD",
-      "composite_score": -0.132,
-      "composite_confidence": 55.8,
-      "cs_label": "NEUTRAL"
+      "signal": "BUY",
+      "composite_score": 0.6,
+      "confidence": 60.0,
+      "price": 6797.5,
+      "stop_loss": 6484.21,
+      "target": 7267.43,
+      "risk_reward": 1.5,
+      "atr_pct": 2.3,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-28"
     },
     {
-      "symbol": "DABUR.NS",
-      "signal": "HOLD",
-      "composite_score": -0.153,
-      "composite_confidence": 47.0,
-      "cs_label": "NEUTRAL"
+      "symbol": "SUNPHARMA.NS",
+      "signal": "BUY",
+      "composite_score": 0.544,
+      "confidence": 62.5,
+      "price": 1844.3,
+      "stop_loss": 1765.6,
+      "target": 1962.35,
+      "risk_reward": 1.5,
+      "atr_pct": 2.13,
+      "scores": {
+        "mean_rev": 0.5,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-28"
     },
     {
-      "symbol": "BAJAJ-AUTO.NS",
-      "signal": "HOLD",
-      "composite_score": -0.169,
-      "composite_confidence": 50.2,
-      "cs_label": "NEUTRAL"
+      "symbol": "HINDUNILVR.NS",
+      "signal": "BUY",
+      "composite_score": 0.514,
+      "confidence": 57.5,
+      "price": 2198.4,
+      "stop_loss": 2110.8,
+      "target": 2329.8,
+      "risk_reward": 1.5,
+      "atr_pct": 1.99,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.4
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-28"
     },
     {
-      "symbol": "CANBK.NS",
-      "signal": "HOLD",
-      "composite_score": -0.197,
-      "composite_confidence": 60.2,
-      "cs_label": "NEUTRAL"
+      "symbol": "COALINDIA.NS",
+      "signal": "BUY",
+      "composite_score": 0.467,
+      "confidence": 57.5,
+      "price": 463.05,
+      "stop_loss": 436.71,
+      "target": 502.56,
+      "risk_reward": 1.5,
+      "atr_pct": 2.84,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.6,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-28"
     },
     {
-      "symbol": "WIPRO.NS",
-      "signal": "HOLD",
-      "composite_score": -0.201,
-      "composite_confidence": 60.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "TATAPOWER.NS",
-      "signal": "HOLD",
-      "composite_score": -0.201,
-      "composite_confidence": 58.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "TATASTEEL.NS",
-      "signal": "HOLD",
-      "composite_score": -0.211,
-      "composite_confidence": 59.5,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "GODREJCP.NS",
-      "signal": "HOLD",
-      "composite_score": -0.214,
-      "composite_confidence": 48.4,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "EICHERMOT.NS",
-      "signal": "HOLD",
-      "composite_score": -0.217,
-      "composite_confidence": 59.5,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "HINDALCO.NS",
-      "signal": "HOLD",
-      "composite_score": -0.217,
-      "composite_confidence": 63.5,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ULTRACEMCO.NS",
-      "signal": "HOLD",
-      "composite_score": -0.219,
-      "composite_confidence": 50.9,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "SBIN.NS",
-      "signal": "HOLD",
-      "composite_score": -0.233,
-      "composite_confidence": 60.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "JSWSTEEL.NS",
-      "signal": "HOLD",
-      "composite_score": -0.244,
-      "composite_confidence": 55.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "TORNTPHARM.NS",
-      "signal": "HOLD",
-      "composite_score": -0.248,
-      "composite_confidence": 59.4,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "HEROMOTOCO.NS",
-      "signal": "SELL",
-      "composite_score": -0.253,
-      "composite_confidence": 60.3,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BANKBARODA.NS",
-      "signal": "SELL",
-      "composite_score": -0.288,
-      "composite_confidence": 62.4,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "HDFCLIFE.NS",
-      "signal": "HOLD",
-      "composite_score": -0.303,
-      "composite_confidence": 52.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ADANIPORTS.NS",
-      "signal": "HOLD",
-      "composite_score": -0.311,
-      "composite_confidence": 57.8,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "HDFCBANK.NS",
-      "signal": "HOLD",
-      "composite_score": -0.313,
-      "composite_confidence": 58.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "RELIANCE.NS",
-      "signal": "HOLD",
-      "composite_score": -0.319,
-      "composite_confidence": 57.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "CHOLAFIN.NS",
-      "signal": "HOLD",
-      "composite_score": -0.34,
-      "composite_confidence": 48.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "LT.NS",
-      "signal": "HOLD",
-      "composite_score": -0.341,
-      "composite_confidence": 52.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "PNB.NS",
-      "signal": "HOLD",
-      "composite_score": -0.346,
-      "composite_confidence": 50.9,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "INDUSINDBK.NS",
-      "signal": "SELL",
-      "composite_score": -0.374,
-      "composite_confidence": 62.7,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BAJAJFINSV.NS",
-      "signal": "HOLD",
-      "composite_score": -0.375,
-      "composite_confidence": 47.1,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "AXISBANK.NS",
-      "signal": "SELL",
-      "composite_score": -0.381,
-      "composite_confidence": 66.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ABB.NS",
-      "signal": "SELL",
-      "composite_score": -0.381,
-      "composite_confidence": 69.1,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "GRASIM.NS",
-      "signal": "SELL",
-      "composite_score": -0.385,
-      "composite_confidence": 63.1,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ASIANPAINT.NS",
-      "signal": "HOLD",
-      "composite_score": -0.387,
-      "composite_confidence": 50.7,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "MARUTI.NS",
-      "signal": "HOLD",
-      "composite_score": -0.387,
-      "composite_confidence": 54.4,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "KOTAKBANK.NS",
-      "signal": "HOLD",
-      "composite_score": -0.39,
-      "composite_confidence": 45.1,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BAJAJHLDNG.NS",
-      "signal": "HOLD",
-      "composite_score": -0.429,
-      "composite_confidence": 49.1,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "PIDILITIND.NS",
-      "signal": "SELL",
-      "composite_score": -0.434,
-      "composite_confidence": 60.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ICICIBANK.NS",
-      "signal": "HOLD",
-      "composite_score": -0.434,
-      "composite_confidence": 59.7,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "LICI.NS",
-      "signal": "HOLD",
-      "composite_score": -0.517,
-      "composite_confidence": 59.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BPCL.NS",
-      "signal": "SELL",
-      "composite_score": -0.517,
-      "composite_confidence": 65.8,
-      "cs_label": "NEUTRAL"
+      "symbol": "DRREDDY.NS",
+      "signal": "BUY",
+      "composite_score": 0.433,
+      "confidence": 57.5,
+      "price": 1319.0,
+      "stop_loss": 1256.89,
+      "target": 1412.17,
+      "risk_reward": 1.5,
+      "atr_pct": 2.35,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.3,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-28"
     },
     {
       "symbol": "CIPLA.NS",
       "signal": "SELL",
-      "composite_score": -0.525,
-      "composite_confidence": 63.0,
-      "cs_label": "AVOID"
-    },
-    {
-      "symbol": "HCLTECH.NS",
-      "signal": "HOLD",
-      "composite_score": -0.531,
-      "composite_confidence": 52.5,
-      "cs_label": "AVOID"
-    },
-    {
-      "symbol": "LTIM.NS",
-      "signal": "SELL",
-      "composite_score": -0.57,
-      "composite_confidence": 75.0,
-      "cs_label": "AVOID"
-    },
-    {
-      "symbol": "ADANIENT.NS",
-      "signal": "SELL",
-      "composite_score": -0.592,
-      "composite_confidence": 62.8,
-      "cs_label": "AVOID"
-    },
-    {
-      "symbol": "PGHH.NS",
-      "signal": "SELL",
-      "composite_score": -0.816,
-      "composite_confidence": 71.7,
-      "cs_label": "AVOID"
+      "composite_score": -0.329,
+      "confidence": 66.7,
+      "price": 1418.2,
+      "stop_loss": 1481.14,
+      "target": 1323.79,
+      "risk_reward": 1.5,
+      "atr_pct": 2.22,
+      "scores": {
+        "mean_rev": -0.9,
+        "momentum": -0.5,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-05-28"
     }
   ]
 }

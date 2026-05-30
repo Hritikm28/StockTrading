@@ -425,6 +425,16 @@ def run_tracker(report_only: bool = False, today_only: bool = False):
     save_performance(all_tracked)
     print(f"Performance saved: {PERFORMANCE_FILE}")
 
+    # ── Improvement 4: feed outcomes back into StockWeightLearner ────────────
+    # Updates per-stock signal weights based on which alphas were right/wrong.
+    # Silently skips if alpha score files don't exist yet (first few runs).
+    try:
+        from multi_alpha_engine import StockWeightLearner
+        fresh = all_tracked.dropna(subset=['ret_1d'])
+        StockWeightLearner.batch_update(fresh)
+    except Exception:
+        pass
+
     # Compute metrics
     metrics = compute_metrics(all_tracked)
 

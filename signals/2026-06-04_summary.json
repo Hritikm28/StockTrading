@@ -1,0 +1,181 @@
+{
+  "date": "2026-06-04",
+  "regime": "SIDEWAYS",
+  "vix": 15.0,
+  "total_scored": 29,
+  "approved": 8,
+  "rejected": 0,
+  "buy_signals": [
+    "TATASTEEL.NS",
+    "CIPLA.NS",
+    "HINDUNILVR.NS",
+    "BAJFINANCE.NS",
+    "DRREDDY.NS",
+    "DIVISLAB.NS",
+    "NTPC.NS",
+    "SUNPHARMA.NS"
+  ],
+  "sell_signals": [],
+  "signals": [
+    {
+      "symbol": "TATASTEEL.NS",
+      "signal": "BUY",
+      "composite_score": 0.767,
+      "confidence": 65.0,
+      "price": 211.89,
+      "stop_loss": 202.75,
+      "target": 225.6,
+      "risk_reward": 1.5,
+      "atr_pct": 2.16,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.9,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-04"
+    },
+    {
+      "symbol": "CIPLA.NS",
+      "signal": "BUY",
+      "composite_score": 0.767,
+      "confidence": 70.0,
+      "price": 1375.2,
+      "stop_loss": 1331.77,
+      "target": 1440.34,
+      "risk_reward": 1.5,
+      "atr_pct": 1.58,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-04"
+    },
+    {
+      "symbol": "HINDUNILVR.NS",
+      "signal": "BUY",
+      "composite_score": 0.675,
+      "confidence": 66.7,
+      "price": 2090.6,
+      "stop_loss": 2003.19,
+      "target": 2221.72,
+      "risk_reward": 1.5,
+      "atr_pct": 2.09,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-04"
+    },
+    {
+      "symbol": "BAJFINANCE.NS",
+      "signal": "BUY",
+      "composite_score": 0.675,
+      "confidence": 66.7,
+      "price": 876.8,
+      "stop_loss": 835.14,
+      "target": 939.29,
+      "risk_reward": 1.5,
+      "atr_pct": 2.38,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-04"
+    },
+    {
+      "symbol": "DRREDDY.NS",
+      "signal": "BUY",
+      "composite_score": 0.675,
+      "confidence": 66.7,
+      "price": 1263.3,
+      "stop_loss": 1214.49,
+      "target": 1336.52,
+      "risk_reward": 1.5,
+      "atr_pct": 1.93,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-04"
+    },
+    {
+      "symbol": "DIVISLAB.NS",
+      "signal": "BUY",
+      "composite_score": 0.675,
+      "confidence": 65.0,
+      "price": 6576.5,
+      "stop_loss": 6265.21,
+      "target": 7043.43,
+      "risk_reward": 1.5,
+      "atr_pct": 2.37,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.4
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-04"
+    },
+    {
+      "symbol": "NTPC.NS",
+      "signal": "BUY",
+      "composite_score": 0.653,
+      "confidence": 66.2,
+      "price": 366.8,
+      "stop_loss": 350.24,
+      "target": 391.64,
+      "risk_reward": 1.5,
+      "atr_pct": 2.26,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.6,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-04"
+    },
+    {
+      "symbol": "SUNPHARMA.NS",
+      "signal": "BUY",
+      "composite_score": 0.635,
+      "confidence": 66.2,
+      "price": 1788.5,
+      "stop_loss": 1715.63,
+      "target": 1897.81,
+      "risk_reward": 1.5,
+      "atr_pct": 2.04,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.3,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-04"
+    }
+  ]
+}

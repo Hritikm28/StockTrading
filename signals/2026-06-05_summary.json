@@ -1,0 +1,181 @@
+{
+  "date": "2026-06-05",
+  "regime": "SIDEWAYS",
+  "vix": 15.0,
+  "total_scored": 29,
+  "approved": 8,
+  "rejected": 3,
+  "buy_signals": [
+    "EICHERMOT.NS",
+    "DIVISLAB.NS",
+    "SUNPHARMA.NS",
+    "TATASTEEL.NS",
+    "ADANIENT.NS",
+    "CIPLA.NS",
+    "NTPC.NS",
+    "HINDUNILVR.NS"
+  ],
+  "sell_signals": [],
+  "signals": [
+    {
+      "symbol": "EICHERMOT.NS",
+      "signal": "BUY",
+      "composite_score": 0.729,
+      "confidence": 66.7,
+      "price": 7110.0,
+      "stop_loss": 6822.36,
+      "target": 7541.46,
+      "risk_reward": 1.5,
+      "atr_pct": 2.02,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.9,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-05"
+    },
+    {
+      "symbol": "DIVISLAB.NS",
+      "signal": "BUY",
+      "composite_score": 0.675,
+      "confidence": 65.0,
+      "price": 6596.5,
+      "stop_loss": 6293.36,
+      "target": 7051.21,
+      "risk_reward": 1.5,
+      "atr_pct": 2.3,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.4
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-05"
+    },
+    {
+      "symbol": "SUNPHARMA.NS",
+      "signal": "BUY",
+      "composite_score": 0.635,
+      "confidence": 66.2,
+      "price": 1780.1,
+      "stop_loss": 1707.21,
+      "target": 1889.43,
+      "risk_reward": 1.5,
+      "atr_pct": 2.05,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.3,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-05"
+    },
+    {
+      "symbol": "TATASTEEL.NS",
+      "signal": "BUY",
+      "composite_score": 0.633,
+      "confidence": 60.0,
+      "price": 210.57,
+      "stop_loss": 202.21,
+      "target": 223.11,
+      "risk_reward": 1.5,
+      "atr_pct": 1.98,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.9,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-05"
+    },
+    {
+      "symbol": "ADANIENT.NS",
+      "signal": "BUY",
+      "composite_score": 0.6,
+      "confidence": 60.0,
+      "price": 2972.8,
+      "stop_loss": 2824.0,
+      "target": 3196.0,
+      "risk_reward": 1.5,
+      "atr_pct": 2.5,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-05"
+    },
+    {
+      "symbol": "CIPLA.NS",
+      "signal": "BUY",
+      "composite_score": 0.6,
+      "confidence": 60.0,
+      "price": 1398.7,
+      "stop_loss": 1350.76,
+      "target": 1470.61,
+      "risk_reward": 1.5,
+      "atr_pct": 1.71,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-05"
+    },
+    {
+      "symbol": "NTPC.NS",
+      "signal": "BUY",
+      "composite_score": 0.535,
+      "confidence": 65.0,
+      "price": 366.4,
+      "stop_loss": 349.99,
+      "target": 391.01,
+      "risk_reward": 1.5,
+      "atr_pct": 2.24,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.6,
+        "vol_breakout": 0.0,
+        "trend": -0.2,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-05"
+    },
+    {
+      "symbol": "HINDUNILVR.NS",
+      "signal": "BUY",
+      "composite_score": 0.508,
+      "confidence": 65.0,
+      "price": 2079.4,
+      "stop_loss": 1994.17,
+      "target": 2207.24,
+      "risk_reward": 1.5,
+      "atr_pct": 2.05,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": -0.2,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-05"
+    }
+  ]
+}

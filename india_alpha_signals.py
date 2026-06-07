@@ -186,62 +186,86 @@ class BulkDealAlpha:
     """
 
     _cache_file = _CACHE_DIR / "bulk_deals.parquet"
+    # Static archive CSV (works from any IP incl. GitHub runners; no cookies).
+    _CSV_URL = "https://nsearchives.nseindia.com/content/equities/bulk.csv"
 
     @classmethod
     def fetch_bulk_deals(cls, days_back: int = 30) -> Optional[pd.DataFrame]:
-        """Fetch bulk deals from NSE."""
-        today = date.today()
-        cache_age_ok = (cls._cache_file.exists() and
-                        (datetime.now() - datetime.fromtimestamp(cls._cache_file.stat().st_mtime)).seconds < 86400)
-
-        if cache_age_ok:
+        """
+        Fetch bulk deals from NSE's daily archive CSV and merge with cached
+        history. The CSV holds the latest session's deals, so we accumulate it
+        in a parquet cache to build the multi-day lookback window over time.
+        """
+        # 1. Load cached history
+        hist = None
+        if cls._cache_file.exists():
             try:
-                return pd.read_parquet(cls._cache_file)
+                hist = pd.read_parquet(cls._cache_file)
             except Exception:
-                pass
+                hist = None
 
-        # NSE bulk deal endpoint
-        from_date = (today - timedelta(days=days_back)).strftime('%d-%m-%Y')
-        to_date = today.strftime('%d-%m-%Y')
-        url = (f"https://www.nseindia.com/api/bulk-deals?"
-               f"from={from_date}&to={to_date}")
-
-        resp = _safe_get(url, headers={'Referer': 'https://www.nseindia.com/'})
-        if resp is None:
-            return None
-
+        # 2. Download today's archive CSV
+        new_df = None
         try:
-            data = resp.json()
-            if not data or 'data' not in data:
-                return None
-
-            records = []
-            for entry in data['data']:
-                try:
-                    records.append({
-                        'date': pd.to_datetime(entry.get('BD_DT_DATE', '')),
-                        'symbol': str(entry.get('BD_SYMBOL', '')).strip().upper(),
-                        'client': str(entry.get('BD_CLIENT_NAME', '')),
-                        'buy_sell': str(entry.get('BD_BUY_SELL', '')).upper(),
-                        'quantity': float(entry.get('BD_QTY_TRD', 0) or 0),
-                        'price': float(entry.get('BD_TP_WATP', 0) or 0),
-                    })
-                except Exception:
-                    continue
-
-            if not records:
-                return None
-
-            df = pd.DataFrame(records).set_index('date').sort_index()
-            try:
-                df.to_parquet(cls._cache_file)
-            except Exception:
-                pass
-            return df
-
+            resp = _safe_get(cls._CSV_URL,
+                             headers={'Referer': 'https://www.nseindia.com/'})
+            if resp is not None and resp.text and ',' in resp.text:
+                raw = pd.read_csv(io.StringIO(resp.text))
+                raw.columns = [c.strip() for c in raw.columns]
+                colmap = {}
+                for c in raw.columns:
+                    lc = c.lower()
+                    if lc.startswith('date'):                colmap[c] = 'date'
+                    elif lc == 'symbol':                     colmap[c] = 'symbol'
+                    elif 'client' in lc:                     colmap[c] = 'client'
+                    elif 'buy' in lc and 'sell' in lc:       colmap[c] = 'buy_sell'
+                    elif 'quantity' in lc:                   colmap[c] = 'quantity'
+                    elif 'price' in lc and 'price' not in colmap.values():
+                        colmap[c] = 'price'
+                raw = raw.rename(columns=colmap)
+                req = ['date', 'symbol', 'buy_sell', 'quantity']
+                if all(k in raw.columns for k in req):
+                    keep = [k for k in ['date', 'symbol', 'client', 'buy_sell',
+                                        'quantity', 'price'] if k in raw.columns]
+                    raw = raw[keep].copy()
+                    raw['date'] = pd.to_datetime(raw['date'], dayfirst=True,
+                                                 errors='coerce')
+                    raw['symbol'] = raw['symbol'].astype(str).str.strip().str.upper()
+                    # Normalise BUY/SELL -> B/S
+                    raw['buy_sell'] = (raw['buy_sell'].astype(str).str.strip()
+                                       .str.upper().str[0])
+                    raw['quantity'] = pd.to_numeric(
+                        raw['quantity'].astype(str).str.replace(',', '', regex=False),
+                        errors='coerce')
+                    if 'price' in raw.columns:
+                        raw['price'] = pd.to_numeric(
+                            raw['price'].astype(str).str.replace(',', '', regex=False),
+                            errors='coerce')
+                    if 'client' not in raw.columns:
+                        raw['client'] = ''
+                    raw = raw.dropna(subset=['date', 'symbol', 'quantity'])
+                    if not raw.empty:
+                        new_df = raw.set_index('date').sort_index()
         except Exception as e:
             print(f"   [WARN] Bulk deals fetch error: {e}")
+            new_df = None
+
+        # 3. Merge history + new, dedupe, keep last 60 days
+        frames = [f for f in [hist, new_df] if f is not None and not f.empty]
+        if not frames:
             return None
+        combined = pd.concat(frames).reset_index()
+        dedup_cols = [c for c in ['date', 'symbol', 'client', 'buy_sell', 'quantity']
+                      if c in combined.columns]
+        combined = combined.drop_duplicates(subset=dedup_cols)
+        combined = combined.set_index('date').sort_index()
+        cutoff = pd.Timestamp(date.today() - timedelta(days=60))
+        combined = combined[combined.index >= cutoff]
+        try:
+            combined.to_parquet(cls._cache_file)
+        except Exception:
+            pass
+        return combined
 
     @classmethod
     def get_signal(cls, symbol: str, as_of_date: date,
@@ -525,37 +549,46 @@ class FOBanAlpha:
         if cls._last_fetch == today and cls._today_ban:
             return cls._today_ban
 
-        url = "https://nseindia.com/api/fo-ban-list"
-        resp = _safe_get(url, headers={'Referer': 'https://www.nseindia.com/'})
+        import re
+        ban_symbols: set = set()
 
-        if resp:
-            try:
-                data = resp.json()
-                ban_symbols = set()
-                if isinstance(data, dict) and 'data' in data:
-                    for entry in data['data']:
-                        sym = entry.get('symbol', '') or entry.get('SYMBOL', '')
+        # 1. Static archive CSV (works from any IP incl. GitHub; no cookies).
+        #    Format: a header line + numbered rows like "1,AMBER".
+        try:
+            csv_url = "https://nsearchives.nseindia.com/content/fo/fo_secban.csv"
+            resp = _safe_get(csv_url, headers={'Referer': 'https://www.nseindia.com/'})
+            if resp is not None and resp.text:
+                for sym in re.findall(r'\d+\s*,\s*([A-Z][A-Z0-9&\-]+)', resp.text):
+                    ban_symbols.add(sym.strip().upper())
+        except Exception:
+            pass
+
+        # 2. Fallback: JSON API (needs cookies; may be empty)
+        if not ban_symbols:
+            url = "https://www.nseindia.com/api/snapshot-derivatives-equity?index=ban_list"
+            resp = _safe_get(url, headers={'Referer': 'https://www.nseindia.com/'})
+            if resp:
+                try:
+                    data = resp.json()
+                    entries = data.get('data', data) if isinstance(data, dict) else data
+                    for entry in entries or []:
+                        sym = (entry.get('symbol', '') or entry.get('SYMBOL', '')) \
+                            if isinstance(entry, dict) else str(entry)
                         if sym:
                             ban_symbols.add(str(sym).strip().upper())
-                elif isinstance(data, list):
-                    for entry in data:
-                        sym = entry.get('symbol', '') if isinstance(entry, dict) else str(entry)
-                        if sym:
-                            ban_symbols.add(sym.strip().upper())
-
-                # Save to cache
-                try:
-                    with open(cls._cache_file, 'w') as f:
-                        import json
-                        json.dump({'date': str(today), 'symbols': list(ban_symbols)}, f)
                 except Exception:
                     pass
 
-                cls._last_fetch = today
-                cls._today_ban = ban_symbols
-                return ban_symbols
+        if ban_symbols:
+            try:
+                with open(cls._cache_file, 'w') as f:
+                    import json
+                    json.dump({'date': str(today), 'symbols': list(ban_symbols)}, f)
             except Exception:
                 pass
+            cls._last_fetch = today
+            cls._today_ban = ban_symbols
+            return ban_symbols
 
         # Disk cache fallback
         if cls._cache_file.exists():
@@ -1153,6 +1186,134 @@ class CorporateEventAlpha:
 
 
 # ==============================================================================
+# 11. RELATIVE STRENGTH ALPHA  (stock vs Nifty 50)
+# ==============================================================================
+class RelativeStrengthAlpha:
+    """
+    Relative strength: is the stock LEADING or LAGGING the index?
+
+    Even in a flat market, leaders keep leading and laggards keep lagging
+    (cross-sectional persistence). We measure the stock's 63-day (~3 month)
+    return minus the Nifty 50's, so it is largely independent of absolute
+    momentum (a stock can be up but still underperform the index).
+    """
+
+    _index_cache: dict = {}
+
+    @classmethod
+    def _load_close(cls, fname: str, data_dir: str):
+        fpath = Path(data_dir) / f"{fname}.parquet"
+        if not fpath.exists():
+            return None
+        try:
+            df = pd.read_parquet(fpath)
+            df.index = pd.to_datetime(df.index)
+            return df.sort_index()['Close']
+        except Exception:
+            return None
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date,
+                   data_dir: str = "data/stocks") -> Tuple[float, float]:
+        nse = symbol.replace('.NS', '').replace('^', '').upper()
+        close = cls._load_close(nse, data_dir)
+        idx = cls._load_close("NIFTY50", data_dir)
+        if close is None or idx is None or len(close) < 70 or len(idx) < 70:
+            return 0.0, 0.0
+        cutoff = pd.Timestamp(as_of_date)
+        close = close[close.index <= cutoff]
+        idx = idx[idx.index <= cutoff]
+        if len(close) < 65 or len(idx) < 65:
+            return 0.0, 0.0
+        try:
+            stock_ret = float(close.iloc[-1] / close.iloc[-63] - 1)
+            index_ret = float(idx.iloc[-1] / idx.iloc[-63] - 1)
+        except Exception:
+            return 0.0, 0.0
+        rs = stock_ret - index_ret  # relative outperformance
+        # Map ±12% relative move to ±0.9 score
+        score = float(np.clip(rs / 0.12 * 0.9, -0.9, 0.9))
+        conf = float(np.clip(40 + abs(rs) * 300, 0, 75)) if abs(score) > 0.1 else 0.0
+        return score, conf
+
+
+# ==============================================================================
+# 12. SECTOR ROTATION ALPHA  (which sectors are in favour)
+# ==============================================================================
+class SectorRotationAlpha:
+    """
+    Sector rotation: capital rotates between sectors. A fundamentally average
+    stock in a hot sector often beats a great stock in a cold sector.
+
+    We rank every sector by its members' median 21-day return, then score a
+    stock by where its sector sits in that ranking. This is genuinely
+    independent of single-stock momentum/mean-reversion.
+    """
+
+    _cache: dict = {}   # keyed by (as_of_date, data_dir) -> {sector: zscore}
+
+    @classmethod
+    def _sector_strength(cls, as_of_date: date, data_dir: str) -> dict:
+        key = (str(as_of_date), data_dir)
+        if key in cls._cache:
+            return cls._cache[key]
+        try:
+            from sector_mapping import STOCK_SECTOR_MAP
+        except Exception:
+            cls._cache[key] = {}
+            return {}
+
+        cutoff = pd.Timestamp(as_of_date)
+        sector_rets: Dict[str, list] = {}
+        for sym, sector in STOCK_SECTOR_MAP.items():
+            nse = sym.replace('.NS', '').upper()
+            fpath = Path(data_dir) / f"{nse}.parquet"
+            if not fpath.exists():
+                continue
+            try:
+                c = pd.read_parquet(fpath)
+                c.index = pd.to_datetime(c.index)
+                c = c.sort_index()['Close']
+                c = c[c.index <= cutoff]
+                if len(c) < 25:
+                    continue
+                r = float(c.iloc[-1] / c.iloc[-21] - 1)
+                sector_rets.setdefault(sector, []).append(r)
+            except Exception:
+                continue
+
+        # median return per sector, then z-score across sectors
+        med = {s: float(np.median(v)) for s, v in sector_rets.items() if len(v) >= 2}
+        if len(med) < 3:
+            cls._cache[key] = {}
+            return {}
+        vals = np.array(list(med.values()))
+        mu, sd = float(vals.mean()), float(vals.std())
+        z = {s: ((v - mu) / sd if sd > 0 else 0.0) for s, v in med.items()}
+        cls._cache[key] = z
+        return z
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date,
+                   data_dir: str = "data/stocks") -> Tuple[float, float]:
+        try:
+            from sector_mapping import STOCK_SECTOR_MAP
+        except Exception:
+            return 0.0, 0.0
+        key = symbol if symbol.endswith('.NS') else symbol + '.NS'
+        sector = STOCK_SECTOR_MAP.get(key)
+        if not sector:
+            return 0.0, 0.0
+        z = cls._sector_strength(as_of_date, data_dir)
+        if sector not in z:
+            return 0.0, 0.0
+        # z-score -> score: ±2 sigma maps to ±0.8
+        score = float(np.clip(z[sector] / 2.0 * 0.8, -0.8, 0.8))
+        conf = float(np.clip(35 + abs(z[sector]) * 20, 0, 70)) if abs(score) > 0.1 else 0.0
+        return score, conf
+
+
+# ==============================================================================
 # MASTER ALPHA AGGREGATOR  (UPDATED with 3 new signals)
 # ==============================================================================
 class IndiaAlphaAggregator:
@@ -1185,6 +1346,8 @@ class IndiaAlphaAggregator:
         'insider':      0.08,
         'fo_ban':       0.06,
         'corp_event':   0.04,
+        'rel_strength': 0.07,   # leadership vs index (new)
+        'sector_mom':   0.06,   # sector rotation (new)
     }
 
     @classmethod
@@ -1225,6 +1388,10 @@ class IndiaAlphaAggregator:
             'fo_ban':       lambda: FOBanAlpha.get_signal(symbol, as_of_date),
             'corp_event':   lambda: CorporateEventAlpha.get_signal(
                                 symbol, as_of_date),
+            'rel_strength': lambda: RelativeStrengthAlpha.get_signal(
+                                symbol, as_of_date, data_dir),
+            'sector_mom':   lambda: SectorRotationAlpha.get_signal(
+                                symbol, as_of_date, data_dir),
         }
 
         # Check for disabled signals (from signal_decay_detector)

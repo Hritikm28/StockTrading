@@ -239,7 +239,8 @@ class StockWeightLearner:
     MIN_MULT          = 0.15
 
     SIGNALS = ['momentum', 'fii_dii', 'pead', 'mean_rev', 'bulk_deal',
-               'delivery_pct', 'option_chain', 'insider', 'fo_ban', 'corp_event']
+               'delivery_pct', 'option_chain', 'insider', 'fo_ban', 'corp_event',
+               'rel_strength', 'sector_mom']
 
     _data: Optional[Dict] = None
 
@@ -275,22 +276,26 @@ class StockWeightLearner:
         """
         data     = cls._load()
         sd       = data.get(symbol, {})
-        n        = sd.get('n_trades', 0)
+        learned  = sd.get('multipliers', {})
+        # [Overfitting guard] Trust each signal based on ITS OWN evidence count,
+        # not the stock's total trades. A signal that has only fired a few times
+        # stays near-neutral even if the stock has many trades overall — this
+        # stops the learner from chasing noise on thin per-signal samples.
+        counts   = sd.get('sig_counts', {})
 
-        if n < cls.MIN_TRADES:
-            return {s: 1.0 for s in cls.SIGNALS}
-
-        learned = sd.get('multipliers', {})
-        # Blend factor: 0 at MIN_TRADES, 0.70 at FULL_BLEND_TRADES
-        blend = min(
-            0.70 * (n - cls.MIN_TRADES) /
-            max(cls.FULL_BLEND_TRADES - cls.MIN_TRADES, 1),
-            0.70
-        )
-        return {
-            s: round((1 - blend) * 1.0 + blend * learned.get(s, 1.0), 3)
-            for s in cls.SIGNALS
-        }
+        out = {}
+        for s in cls.SIGNALS:
+            c = counts.get(s, 0)
+            if c < cls.MIN_TRADES:
+                out[s] = 1.0
+                continue
+            blend = min(
+                0.70 * (c - cls.MIN_TRADES) /
+                max(cls.FULL_BLEND_TRADES - cls.MIN_TRADES, 1),
+                0.70
+            )
+            out[s] = round((1 - blend) * 1.0 + blend * learned.get(s, 1.0), 3)
+        return out
 
     @classmethod
     def update_from_outcome(cls, symbol: str,
@@ -308,6 +313,7 @@ class StockWeightLearner:
         sd = data[symbol]
         sd['n_trades'] = sd.get('n_trades', 0) + 1
         mults = sd.setdefault('multipliers', {})
+        counts = sd.setdefault('sig_counts', {})   # per-signal evidence count
         pos_outcome = float(ret_1d) > 0
 
         for sig in cls.SIGNALS:
@@ -316,6 +322,7 @@ class StockWeightLearner:
             conf  = comp.get('confidence', 0.0) if isinstance(comp, dict) else 0.0
             if conf <= 0 or abs(score) < 0.05:
                 continue
+            counts[sig] = counts.get(sig, 0) + 1   # this signal had a real view
             agreed = (score > 0) == pos_outcome
             target = 1.5 if agreed else 0.5
             old    = mults.get(sig, 1.0)
@@ -665,14 +672,18 @@ class MultiAlphaEngine:
             'delivery_pct': 'delivery_pct',
             'option_chain': 'option_chain',
             'corp_event':   'corp_event',
+            'rel_strength': 'rel_strength',
+            'sector_mom':   'sector_mom',
         }
         for alpha_key, weight_key in alpha_name_map.items():
             comp  = components.get(alpha_key, {})
             score = comp.get('score', 0.0)
             conf  = comp.get('confidence', 0.0)
-            if conf > 0 and weight_key in weights:
-                # [Improvement 4] scale regime weight by per-stock multiplier
-                eff_w           = weights[weight_key] * stock_mults.get(alpha_key, 1.0)
+            if conf > 0:
+                # [Improvement 4] scale regime weight by per-stock multiplier.
+                # Alphas absent from a regime map (e.g. fo_ban) get a small
+                # default so they still contribute; normalisation handles sums.
+                eff_w           = weights.get(weight_key, 0.04) * stock_mults.get(alpha_key, 1.0)
                 weighted_score += score * eff_w
                 total_weight   += eff_w
             if conf > 0 and abs(score) > 0.05:

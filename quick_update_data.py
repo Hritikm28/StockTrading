@@ -61,7 +61,9 @@ def _get_last_date(symbol: str) -> date:
                     return last.date()
         except Exception:
             pass
-    return date.today() - timedelta(days=365)  # Full year if no file
+    # ~800 calendar days (~550 trading days) on cold start so momentum
+    # alphas (need 252 trading days) and others have ample history.
+    return date.today() - timedelta(days=800)
 
 
 def _update_symbol(symbol: str) -> bool:

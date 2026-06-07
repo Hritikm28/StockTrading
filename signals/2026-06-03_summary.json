@@ -1,0 +1,181 @@
+{
+  "date": "2026-06-03",
+  "regime": "SIDEWAYS",
+  "vix": 15.0,
+  "total_scored": 29,
+  "approved": 8,
+  "rejected": 1,
+  "buy_signals": [
+    "BAJFINANCE.NS",
+    "DIVISLAB.NS",
+    "TATASTEEL.NS",
+    "CIPLA.NS",
+    "HINDUNILVR.NS",
+    "DRREDDY.NS",
+    "SUNPHARMA.NS",
+    "BHARTIARTL.NS"
+  ],
+  "sell_signals": [],
+  "signals": [
+    {
+      "symbol": "BAJFINANCE.NS",
+      "signal": "BUY",
+      "composite_score": 0.775,
+      "confidence": 70.0,
+      "price": 882.0,
+      "stop_loss": 839.27,
+      "target": 946.09,
+      "risk_reward": 1.5,
+      "atr_pct": 2.42,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-03"
+    },
+    {
+      "symbol": "DIVISLAB.NS",
+      "signal": "BUY",
+      "composite_score": 0.775,
+      "confidence": 70.0,
+      "price": 6533.0,
+      "stop_loss": 6223.64,
+      "target": 6997.04,
+      "risk_reward": 1.5,
+      "atr_pct": 2.37,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-03"
+    },
+    {
+      "symbol": "TATASTEEL.NS",
+      "signal": "BUY",
+      "composite_score": 0.767,
+      "confidence": 65.0,
+      "price": 210.6,
+      "stop_loss": 201.61,
+      "target": 224.09,
+      "risk_reward": 1.5,
+      "atr_pct": 2.14,
+      "scores": {
+        "mean_rev": 0.0,
+        "momentum": 0.9,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-03"
+    },
+    {
+      "symbol": "CIPLA.NS",
+      "signal": "BUY",
+      "composite_score": 0.767,
+      "confidence": 70.0,
+      "price": 1379.3,
+      "stop_loss": 1327.27,
+      "target": 1457.34,
+      "risk_reward": 1.5,
+      "atr_pct": 1.89,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-03"
+    },
+    {
+      "symbol": "HINDUNILVR.NS",
+      "signal": "BUY",
+      "composite_score": 0.675,
+      "confidence": 66.7,
+      "price": 2093.7,
+      "stop_loss": 2004.36,
+      "target": 2227.71,
+      "risk_reward": 1.5,
+      "atr_pct": 2.13,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-03"
+    },
+    {
+      "symbol": "DRREDDY.NS",
+      "signal": "BUY",
+      "composite_score": 0.675,
+      "confidence": 65.0,
+      "price": 1274.0,
+      "stop_loss": 1220.27,
+      "target": 1354.59,
+      "risk_reward": 1.5,
+      "atr_pct": 2.11,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.4
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-03"
+    },
+    {
+      "symbol": "SUNPHARMA.NS",
+      "signal": "BUY",
+      "composite_score": 0.635,
+      "confidence": 66.2,
+      "price": 1789.9,
+      "stop_loss": 1717.27,
+      "target": 1898.84,
+      "risk_reward": 1.5,
+      "atr_pct": 2.03,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.3,
+        "vol_breakout": 0.0,
+        "trend": 0.6,
+        "bb": 0.8
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-03"
+    },
+    {
+      "symbol": "BHARTIARTL.NS",
+      "signal": "BUY",
+      "composite_score": 0.633,
+      "confidence": 65.0,
+      "price": 1814.2,
+      "stop_loss": 1739.21,
+      "target": 1926.68,
+      "risk_reward": 1.5,
+      "atr_pct": 2.07,
+      "scores": {
+        "mean_rev": 0.9,
+        "momentum": 0.0,
+        "vol_breakout": 0.0,
+        "trend": 0.3,
+        "bb": 0.0
+      },
+      "regime": "SIDEWAYS",
+      "date": "2026-06-03"
+    }
+  ]
+}

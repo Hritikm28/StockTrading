@@ -138,6 +138,31 @@ def build():
     report["improved"] = movers[:5]
     report["declined"] = [m for m in movers if m["delta"] < 0][-5:][::-1]
 
+    # ── 4. Out-of-sample holdout: do corrections GENERALISE (not curve-fit)? ──
+    # The dampener is walk-forward by construction (uses only prior trades), so
+    # we split the timeline 70/30 and, on the unseen last 30%, compare the
+    # forward win-rate of FAVOURED trades (dampener>=1.0) vs SUPPRESSED
+    # (dampener<0.9). If favoured beats suppressed out-of-sample, the edge is
+    # real rather than overfit.
+    hold = None
+    dd_sorted = dd.sort_values("signal_date")
+    split = int(len(dd_sorted) * 0.7)
+    test = dd_sorted.iloc[split:]
+    if len(test) >= 10:
+        fav = test[test["dampener"] >= 1.0]
+        sup = test[test["dampener"] < 0.9]
+        if len(fav) >= 3 and len(sup) >= 3:
+            fav_wr = round(100 * fav["win_1d"].mean(), 1)
+            sup_wr = round(100 * sup["win_1d"].mean(), 1)
+            hold = {
+                "test_trades": int(len(test)),
+                "favored_n": int(len(fav)), "favored_wr": fav_wr,
+                "suppressed_n": int(len(sup)), "suppressed_wr": sup_wr,
+                "spread": round(fav_wr - sup_wr, 1),
+                "generalizes": bool(fav_wr > sup_wr),
+            }
+    report["holdout"] = hold
+
     # ── Verdict ──────────────────────────────────────────────────────────────
     verdict = []
     slope = report.get("winrate_trend_per_week")
@@ -149,6 +174,11 @@ def build():
         verdict.append(("Dampener mechanism",
                         f"boosted {b['boosted']['win_rate']}% vs suppressed {b['suppressed']['win_rate']}%",
                         "adding value" if works else "not yet helping"))
+    if hold is not None:
+        verdict.append(("Out-of-sample holdout",
+                        f"favoured {hold['favored_wr']}% vs suppressed {hold['suppressed_wr']}% "
+                        f"(spread {hold['spread']:+}%)",
+                        "generalizes" if hold["generalizes"] else "overfit risk"))
     report["verdict"] = verdict
 
     _write(report, weekly, buck, (report["improved"], report["declined"]))
@@ -176,11 +206,29 @@ def _html(report, weekly, buck, movers):
                 f"<p>{report['message']}</p></body></html>")
 
     vparts = ""
+    good = ("improving", "adding value", "generalizes")
+    bad = ("declining", "not yet helping", "overfit risk")
     for name, val, tag in report.get("verdict", []):
-        color = "#1a7a3a" if tag in ("improving", "adding value") else (
-            "#b0322b" if tag in ("declining", "not yet helping") else "#888")
+        color = "#1a7a3a" if tag in good else ("#b0322b" if tag in bad else "#888")
         vparts += (f"<li><b>{name}:</b> {val} "
                    f"<span style='color:{color};font-weight:bold'>({tag})</span></li>")
+
+    hold = report.get("holdout")
+    holdout_html = "<p style='color:#888'>Need more trades for a holdout split.</p>"
+    if hold:
+        verdict_txt = ("GENERALIZES — edge holds on unseen data"
+                       if hold["generalizes"] else
+                       "OVERFIT RISK — edge does not hold out-of-sample")
+        vcolor = "#1a7a3a" if hold["generalizes"] else "#b0322b"
+        holdout_html = (
+            f"<p style='color:#555;font-size:13px'>Trained on first 70% of trades, "
+            f"tested on the unseen last {hold['test_trades']} trades.</p>"
+            f"<ul><li>Favoured trades (dampener≥1.0): <b>{hold['favored_wr']}%</b> "
+            f"win ({hold['favored_n']})</li>"
+            f"<li>Suppressed trades (dampener&lt;0.9): <b>{hold['suppressed_wr']}%</b> "
+            f"win ({hold['suppressed_n']})</li></ul>"
+            f"<p style='color:{vcolor};font-weight:bold'>Spread {hold['spread']:+}% — "
+            f"{verdict_txt}</p>")
 
     return f"""<html><body style='font-family:Segoe UI,Arial,sans-serif;color:#222'>
 <h2 style='margin-bottom:4px'>Weekly Correction Report — {today}</h2>
@@ -199,7 +247,10 @@ def _html(report, weekly, buck, movers):
 If <b>boosted</b> win-rate &gt; <b>suppressed</b>, the correction is working.</p>
 {tbl(buck, ['bucket','n','win_rate','avg_ret'], ['Dampener','Trades','Win %','Avg %'])}
 
-<h3>3. Stock movers (recent vs prior win-rate)</h3>
+<h3>3. Out-of-sample holdout — does the edge generalise?</h3>
+{holdout_html}
+
+<h3>4. Stock movers (recent vs prior win-rate)</h3>
 <b style='color:#1a7a3a'>Improved</b>
 {tbl(movers[0] if movers else [], ['symbol','prior_wr','recent_wr','delta','n'], ['Stock','Prior %','Recent %','Δ','N'])}
 <b style='color:#b0322b'>Declined</b>

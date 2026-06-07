@@ -1,0 +1,44 @@
+name: NSE URL Probe
+
+# One-off probe: tests corrected NSE/BSE data URLs from GitHub's servers and
+# commits cloud_diagnostics/nse_url_probe.json back so we can read it locally.
+on:
+  push:
+    paths:
+      - 'cloud_nse_probe.py'
+      - '.github/workflows/nse_probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install requests
+        run: pip install requests
+      - name: Run NSE probe
+        run: python cloud_nse_probe.py
+        continue-on-error: true
+      - name: Commit probe results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config pull.rebase false
+          git add cloud_diagnostics/
+          git diff --cached --quiet || git commit -m "probe: NSE URL results $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          for a in 1 2 3 4 5; do
+            git fetch origin master
+            git merge -X ours origin/master --no-edit || true
+            git push origin HEAD:master && break
+            sleep 5
+          done

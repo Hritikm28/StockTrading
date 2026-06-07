@@ -1,0 +1,13 @@
+# Lean deps for running the REAL multi_alpha_engine in --quick mode (no ML).
+# Used by GitHub Actions cloud automation. Excludes torch/tensorflow/catboost
+# (only needed for full ML mode, which the cloud does not run).
+pandas>=2.0.0
+numpy>=1.24.0
+yfinance>=0.2.50
+requests>=2.31.0
+pyarrow>=12.0.0
+joblib>=1.3.0
+beautifulsoup4>=4.12.0
+python-dateutil>=2.8.2
+pytz>=2023.3
+lxml>=4.9.0

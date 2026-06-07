@@ -36,9 +36,25 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config pull.rebase false
           git add signals/
-          git diff --cached --quiet || git commit -m "review: weekly $(date -u +'%Y-%m-%d')"
-          git push
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "review: weekly $(date -u +'%Y-%m-%d')"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master
+            git merge -X ours origin/master --no-edit || true
+            if git push origin HEAD:master; then
+              echo "Pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "Push attempt $attempt failed; retrying..."
+            sleep 5
+          done
+          echo "ERROR: could not push after 5 attempts" >&2
+          exit 1
 
       - name: Create GitHub Issue with review report
         env:

@@ -81,12 +81,28 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config pull.rebase false
           # signals (always) + self-correction state (so learning persists)
           git add signals/ || true
           git add paper_trading/results/performance.csv 2>/dev/null || true
           git add paper_trading/results/summary.json 2>/dev/null || true
           git add paper_trading/stock_weights.json 2>/dev/null || true
           git add paper_trading/alpha_scores/ 2>/dev/null || true
-          git diff --cached --quiet || git commit -m "signals: $(date -u +'%Y-%m-%d') auto-generated (real engine)"
-          git pull origin master -X ours --no-edit || true
-          git push
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "signals: $(date -u +'%Y-%m-%d') auto-generated (real engine)"
+          # Robust push: survive concurrent pushes from the weekly-review workflow
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master
+            git merge -X ours origin/master --no-edit || true
+            if git push origin HEAD:master; then
+              echo "Pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "Push attempt $attempt failed; retrying..."
+            sleep 5
+          done
+          echo "ERROR: could not push after 5 attempts" >&2
+          exit 1

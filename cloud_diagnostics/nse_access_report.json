@@ -1,0 +1,60 @@
+{
+  "run_at_utc": "2026-06-07T05:27:38.569510",
+  "python": "3.11.15",
+  "tests": {
+    "yfinance": {
+      "ok": false,
+      "detail": "empty/short frame (0 rows)"
+    },
+    "nse_fiidii": {
+      "ok": true,
+      "detail": "HTTP 200, 218 bytes | '[{\"buyValue\":\"22779.32\",\"category\":\"DII\",\"date\":\"05-Jun-2026\",\"netValue\":\"9133.57\",\"sellValue\":\"13645.75\"},{\"buyValue\":\"11044.57\",\"category\":\"FII/FPI\",\"date\":\"0'"
+    },
+    "nse_bulk": {
+      "ok": false,
+      "detail": "HTTP 404, 388 bytes | '<!DOCTYPE html> <html lang=\"en\"> <head>   <meta charset=\"UTF-8\">   <title>Resource not found</title> </head> <body style=\"background-color: #e8e8e8;\">   <div st'"
+    },
+    "nse_foban": {
+      "ok": false,
+      "detail": "HTTP 404, 388 bytes | '<!DOCTYPE html> <html lang=\"en\"> <head>   <meta charset=\"UTF-8\">   <title>Resource not found</title> </head> <body style=\"background-color: #e8e8e8;\">   <div st'"
+    },
+    "bse_insider": {
+      "ok": true,
+      "detail": "HTTP 200, 12565 bytes | '<!DOCTYPE html><html lang=\"en\" data-critters-container=\"\"><head>     <meta charset=\"utf-8\">     <title>       LIVE Stock/Share Market | Indian Stock/Share Marke'"
+    },
+    "nse_bhav_archive": {
+      "ok": false,
+      "detail": "HTTP 404, 3543 bytes for 20260605"
+    },
+    "engine_seed_data": {
+      "ok": true,
+      "detail": "seeded 3/3 parquets"
+    },
+    "engine_run": {
+      "ok": true,
+      "detail": "ranked 3 stocks; top=RELIANCE.NS score=0.526"
+    }
+  },
+  "alpha_breakdown_top": {
+    "pead": 0.0,
+    "momentum": -0.333,
+    "fii_dii": 0.0,
+    "mean_rev": 0.9,
+    "bulk_deal": 0.0,
+    "delivery_pct": 0.611,
+    "option_chain": 0.0,
+    "insider": 0.0,
+    "fo_ban": 0.0,
+    "corp_event": 0.0
+  },
+  "active_alphas": [
+    "momentum",
+    "mean_rev",
+    "delivery_pct"
+  ],
+  "verdict": {
+    "price_engine_works_in_cloud": false,
+    "any_nse_source_reachable": true,
+    "recommendation": "Engine failed in cloud \u2014 investigate import/deps."
+  }
+}

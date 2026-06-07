@@ -97,6 +97,15 @@
       "n": 320
     }
   ],
+  "holdout": {
+    "test_trades": 2765,
+    "favored_n": 2136,
+    "favored_wr": 98.5,
+    "suppressed_n": 622,
+    "suppressed_wr": 5.1,
+    "spread": 93.4,
+    "generalizes": true
+  },
   "verdict": [
     [
       "System win-rate trend",
@@ -107,6 +116,11 @@
       "Dampener mechanism",
       "boosted 99.7% vs suppressed 1.2%",
       "adding value"
+    ],
+    [
+      "Out-of-sample holdout",
+      "favoured 98.5% vs suppressed 5.1% (spread +93.4%)",
+      "generalizes"
     ]
   ]
 }

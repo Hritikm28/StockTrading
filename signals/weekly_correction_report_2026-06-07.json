@@ -1,0 +1,112 @@
+{
+  "date": "2026-06-07",
+  "n_trades": 4608,
+  "weekly": [
+    {
+      "week": "2026-05-18",
+      "n": 1536,
+      "win_rate": 75.0,
+      "avg_ret": 3.8
+    },
+    {
+      "week": "2026-05-25",
+      "n": 3072,
+      "win_rate": 68.8,
+      "avg_ret": 0.56
+    }
+  ],
+  "winrate_trend_per_week": -6.2,
+  "dampener_buckets": [
+    {
+      "bucket": "boosted",
+      "n": 3139,
+      "win_rate": 99.3,
+      "avg_ret": 3.17
+    },
+    {
+      "bucket": "neutral",
+      "n": 167,
+      "win_rate": 68.3,
+      "avg_ret": 1.44
+    },
+    {
+      "bucket": "suppressed",
+      "n": 1302,
+      "win_rate": 2.5,
+      "avg_ret": -2.02
+    }
+  ],
+  "dampener_adds_value": true,
+  "improved": [
+    {
+      "symbol": "AXISBANK.NS",
+      "prior_wr": 0.0,
+      "recent_wr": 40.0,
+      "delta": 40.0,
+      "n": 160
+    },
+    {
+      "symbol": "ICICIBANK.NS",
+      "prior_wr": 0.0,
+      "recent_wr": 40.0,
+      "delta": 40.0,
+      "n": 160
+    },
+    {
+      "symbol": "SUNPHARMA.NS",
+      "prior_wr": 0.0,
+      "recent_wr": 40.0,
+      "delta": 40.0,
+      "n": 160
+    },
+    {
+      "symbol": "WIPRO.NS",
+      "prior_wr": 0.0,
+      "recent_wr": 22.0,
+      "delta": 22.0,
+      "n": 288
+    },
+    {
+      "symbol": "ADANIENT.NS",
+      "prior_wr": 0.0,
+      "recent_wr": 0.0,
+      "delta": 0.0,
+      "n": 32
+    }
+  ],
+  "declined": [
+    {
+      "symbol": "TITAN.NS",
+      "prior_wr": 100.0,
+      "recent_wr": 60.0,
+      "delta": -40.0,
+      "n": 160
+    },
+    {
+      "symbol": "DRREDDY.NS",
+      "prior_wr": 100.0,
+      "recent_wr": 60.0,
+      "delta": -40.0,
+      "n": 160
+    },
+    {
+      "symbol": "BAJFINANCE.NS",
+      "prior_wr": 100.0,
+      "recent_wr": 60.0,
+      "delta": -40.0,
+      "n": 160
+    }
+  ],
+  "verdict": [
+    [
+      "System win-rate trend",
+      "-6.2%/week",
+      "declining"
+    ],
+    [
+      "Dampener mechanism",
+      "boosted 99.3% vs suppressed 2.5%",
+      "adding value"
+    ]
+  ]
+}

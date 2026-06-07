@@ -78,3 +78,4 @@ temp/
 # Email summary artifacts (generated at runtime)
 email_body.html
 email_subject.txt
+correction_email_body.html

@@ -32,6 +32,9 @@ jobs:
       - name: Run weekly review
         run: python weekly_review.py
 
+      - name: Run correction-effectiveness report
+        run: python weekly_correction_report.py || true
+
       - name: Commit review files
         run: |
           git config user.name "github-actions[bot]"
@@ -55,6 +58,22 @@ jobs:
           done
           echo "ERROR: could not push after 5 attempts" >&2
           exit 1
+
+      - name: Email weekly correction report
+        if: ${{ env.MAIL_USERNAME != '' && hashFiles('correction_email_body.html') != '' }}
+        env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "Weekly Correction Report — did the auto-corrections help?"
+          html_body: file://correction_email_body.html
+          to: ${{ secrets.MAIL_TO != '' && secrets.MAIL_TO || secrets.MAIL_USERNAME }}
+          from: Trading Bot <${{ secrets.MAIL_USERNAME }}>
 
       - name: Create GitHub Issue with review report
         env:

@@ -1,16 +1,16 @@
 {
   "date": "2026-06-07",
-  "n_trades": 4608,
+  "n_trades": 9216,
   "weekly": [
     {
       "week": "2026-05-18",
-      "n": 1536,
+      "n": 3072,
       "win_rate": 75.0,
       "avg_ret": 3.8
     },
     {
       "week": "2026-05-25",
-      "n": 3072,
+      "n": 6144,
       "win_rate": 68.8,
       "avg_ret": 0.56
     }
@@ -19,8 +19,8 @@
   "dampener_buckets": [
     {
       "bucket": "boosted",
-      "n": 3139,
-      "win_rate": 99.3,
+      "n": 6403,
+      "win_rate": 99.7,
       "avg_ret": 3.17
     },
     {
@@ -31,9 +31,9 @@
     },
     {
       "bucket": "suppressed",
-      "n": 1302,
-      "win_rate": 2.5,
-      "avg_ret": -2.02
+      "n": 2646,
+      "win_rate": 1.2,
+      "avg_ret": -2.06
     }
   ],
   "dampener_adds_value": true,
@@ -43,35 +43,35 @@
       "prior_wr": 0.0,
       "recent_wr": 40.0,
       "delta": 40.0,
-      "n": 160
+      "n": 320
     },
     {
       "symbol": "ICICIBANK.NS",
       "prior_wr": 0.0,
       "recent_wr": 40.0,
       "delta": 40.0,
-      "n": 160
+      "n": 320
     },
     {
       "symbol": "SUNPHARMA.NS",
       "prior_wr": 0.0,
       "recent_wr": 40.0,
       "delta": 40.0,
-      "n": 160
+      "n": 320
     },
     {
       "symbol": "WIPRO.NS",
       "prior_wr": 0.0,
       "recent_wr": 22.0,
       "delta": 22.0,
-      "n": 288
+      "n": 576
     },
     {
       "symbol": "ADANIENT.NS",
       "prior_wr": 0.0,
       "recent_wr": 0.0,
       "delta": 0.0,
-      "n": 32
+      "n": 64
     }
   ],
   "declined": [
@@ -80,21 +80,21 @@
       "prior_wr": 100.0,
       "recent_wr": 60.0,
       "delta": -40.0,
-      "n": 160
+      "n": 320
     },
     {
       "symbol": "DRREDDY.NS",
       "prior_wr": 100.0,
       "recent_wr": 60.0,
       "delta": -40.0,
-      "n": 160
+      "n": 320
     },
     {
       "symbol": "BAJFINANCE.NS",
       "prior_wr": 100.0,
       "recent_wr": 60.0,
       "delta": -40.0,
-      "n": 160
+      "n": 320
     }
   ],
   "verdict": [
@@ -105,7 +105,7 @@
     ],
     [
       "Dampener mechanism",
-      "boosted 99.3% vs suppressed 2.5%",
+      "boosted 99.7% vs suppressed 1.2%",
       "adding value"
     ]
   ]

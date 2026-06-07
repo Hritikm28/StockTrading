@@ -76,6 +76,27 @@ jobs:
       - name: Publish signals
         run: python publish_signals.py
 
+      - name: Build email summary
+        run: |
+          python email_summary.py
+          echo "EMAIL_SUBJECT=$(cat email_subject.txt)" >> "$GITHUB_ENV"
+
+      - name: Email daily summary
+        if: ${{ env.MAIL_USERNAME != '' }}
+        env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: ${{ env.EMAIL_SUBJECT }}
+          html_body: file://email_body.html
+          to: ${{ secrets.MAIL_TO != '' && secrets.MAIL_TO || secrets.MAIL_USERNAME }}
+          from: Trading Bot <${{ secrets.MAIL_USERNAME }}>
+
       - name: Commit signals + learning state
         run: |
           git config user.name "github-actions[bot]"
@@ -105,3 +126,21 @@ jobs:
           done
           echo "ERROR: could not push after 5 attempts" >&2
           exit 1
+
+      - name: Email failure alert
+        if: ${{ failure() && env.MAIL_USERNAME != '' }}
+        env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "[ALERT] Daily trading run FAILED — ${{ github.run_id }}"
+          body: |
+            The daily signal run failed today.
+            Check the logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          to: ${{ secrets.MAIL_TO != '' && secrets.MAIL_TO || secrets.MAIL_USERNAME }}
+          from: Trading Bot <${{ secrets.MAIL_USERNAME }}>

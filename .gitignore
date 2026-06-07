@@ -74,3 +74,7 @@ temp/
 # weekly_review.py
 # requirements_cloud.txt
 # .github/workflows/
+
+# Email summary artifacts (generated at runtime)
+email_body.html
+email_subject.txt

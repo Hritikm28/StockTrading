@@ -1,0 +1,63 @@
+{
+  "probe_date": "2026-06-05",
+  "working": [
+    "bhav_full_ddmmyyyy",
+    "bhav_udiff_zip",
+    "block_csv",
+    "bulk_csv",
+    "fiidii",
+    "foban_json"
+  ],
+  "broken": [
+    "bse_insider_new",
+    "bulk_hist_json",
+    "foban_csv"
+  ],
+  "results": {
+    "foban_csv": {
+      "url": "https://nsearchives.nseindia.com/content/fo/fo_secban.csv",
+      "ok": false,
+      "detail": "HTTP 200 | 'Securities in Ban For Trade Date 08-JUN-2026: 1,AMBER 2,KAYNES '"
+    },
+    "bulk_csv": {
+      "url": "https://nsearchives.nseindia.com/content/equities/bulk.csv",
+      "ok": true,
+      "detail": "HTTP 200 | 'Date,Symbol,Security Name,Client Name,Buy/Sell,Quantity Traded,Trade Price / Wght. Avg. Price,Remarks 05-JUN-2026,AFIL,A'"
+    },
+    "block_csv": {
+      "url": "https://nsearchives.nseindia.com/content/equities/block.csv",
+      "ok": true,
+      "detail": "HTTP 200 | 'Date,Symbol,Security Name,Client Name,Buy/Sell,Quantity Traded,Trade Price / Wght. Avg. Price 05-JUN-2026,ADANIENSOL,Ada'"
+    },
+    "bhav_full_ddmmyyyy": {
+      "url": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_05062026.csv",
+      "ok": true,
+      "detail": "HTTP 200 | 'SYMBOL, SERIES, DATE1, PREV_CLOSE, OPEN_PRICE, HIGH_PRICE, LOW_PRICE, LAST_PRICE, CLOSE_PRICE, AVG_PRICE, TTL_TRD_QNTY, '"
+    },
+    "bhav_udiff_zip": {
+      "url": "https://nsearchives.nseindia.com/content/cm/BhavCopy_NSE_CM_0_0_0_20260605_F_0000.csv.zip",
+      "ok": true,
+      "detail": "HTTP 200 | '191409 bytes'"
+    },
+    "fiidii": {
+      "url": "https://www.nseindia.com/api/fiidiiTradeReact",
+      "ok": true,
+      "detail": "HTTP 200 | '[{\"buyValue\":\"22779.32\",\"category\":\"DII\",\"date\":\"05-Jun-2026\",\"netValue\":\"9133.57\",\"sellValue\":\"13645.75\"},{\"buyValue\":\"'"
+    },
+    "bulk_hist_json": {
+      "url": "https://www.nseindia.com/api/historical/bulk-deals?from=06-05-2026&to=05-06-2026",
+      "ok": false,
+      "detail": "HTTP 200 | ' <!DOCTYPE html> <html lang=\"en\"> <head> <meta content=\"noindex, nofollow\" name=\"robots\"/>     <meta charset=\"UTF-8\">   '"
+    },
+    "foban_json": {
+      "url": "https://www.nseindia.com/api/snapshot-derivatives-equity?index=ban_list",
+      "ok": true,
+      "detail": "HTTP 200 | '{\"data\":[],\"msg\":\"No Data Found\"}'"
+    },
+    "bse_insider_new": {
+      "url": "https://api.bseindia.com/BseIndiaAPI/api/InsiderTrading_New/w?scripcode=&Flag=All",
+      "ok": false,
+      "detail": "HTTP 200 | '\\r \\r <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.'"
+    }
+  }
+}

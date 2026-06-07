@@ -17,10 +17,6 @@ on:
     # 03:00 UTC = 08:30 IST (before market open; prior close available via yfinance)
     - cron: '0 3 * * 1-5'
   workflow_dispatch:
-  # TEMP: self-test trigger — remove after first successful verification run
-  push:
-    paths:
-      - '.github/workflows/daily_signals.yml'
 
 permissions:
   contents: write

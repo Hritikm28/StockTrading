@@ -58,9 +58,9 @@ jobs:
           # v2: deeper 800-day bootstrap (momentum needs 252 trading days).
           # Bumping the prefix forces a one-time deep re-seed, ignoring the
           # shallow v1 cache.
-          key: stockdata-v2-${{ steps.date.outputs.ymd }}
+          key: stockdata-v3-${{ steps.date.outputs.ymd }}
           restore-keys: |
-            stockdata-v2-
+            stockdata-v3-
 
       - name: Install lean engine dependencies
         run: pip install -r requirements_engine.txt

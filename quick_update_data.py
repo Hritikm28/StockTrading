@@ -145,10 +145,13 @@ def run_update(verbose: bool = True):
     for batch_num, batch in enumerate(batches, 1):
         # Check which symbols in this batch actually need updating
         need_update = []
+        earliest = today  # earliest last-date in batch -> drives deep cold-start fetch
         for sym in batch:
             last = _get_last_date(sym)
             if last < today - timedelta(days=1):
                 need_update.append(sym)
+                if last < earliest:
+                    earliest = last
             else:
                 skipped += 1
 
@@ -162,7 +165,10 @@ def run_update(verbose: bool = True):
 
         # Try batch download first (fast)
         try:
-            start_date = (today - timedelta(days=10)).strftime('%Y-%m-%d')
+            # Cold stocks (missing parquet) report last-date = today-800 via
+            # _get_last_date, so this fetches deep history for them while warm
+            # stocks only pull the recent incremental window.
+            start_date = (earliest - timedelta(days=5)).strftime('%Y-%m-%d')
             end_date   = (today + timedelta(days=1)).strftime('%Y-%m-%d')
 
             batch_df = yf.download(
@@ -372,10 +378,13 @@ def run_update(verbose: bool = True):
 
     for batch_num, batch in enumerate(batches, 1):
         need_update = []
+        earliest = today  # earliest last-date in batch -> drives deep cold-start fetch
         for sym in batch:
             last = _get_last_date(sym)
             if last < today - timedelta(days=1):
                 need_update.append(sym)
+                if last < earliest:
+                    earliest = last
             else:
                 skipped += 1
 
@@ -388,7 +397,10 @@ def run_update(verbose: bool = True):
                   f"updating {len(need_update)} symbols...", end='\r')
 
         try:
-            start_date = (today - timedelta(days=10)).strftime('%Y-%m-%d')
+            # Cold stocks (missing parquet) report last-date = today-800 via
+            # _get_last_date, so this fetches deep history for them while warm
+            # stocks only pull the recent incremental window.
+            start_date = (earliest - timedelta(days=5)).strftime('%Y-%m-%d')
             end_date   = (today + timedelta(days=1)).strftime('%Y-%m-%d')
 
             batch_df = yf.download(

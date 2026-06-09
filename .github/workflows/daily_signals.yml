@@ -14,8 +14,10 @@ name: Daily Trading Signals
 
 on:
   schedule:
-    # 02:00 UTC = 07:30 IST (IST = UTC+5:30; before market open)
-    - cron: '0 2 * * 1-5'
+    # 01:47 UTC = 07:17 IST. NOTE: GitHub cron is best-effort and queues under
+    # load, so we target early + an odd minute (off the congested top-of-hour)
+    # to land closer to 07:30-08:00 IST before market open. Still not guaranteed.
+    - cron: '47 1 * * 1-5'
   workflow_dispatch:
 
 permissions:

@@ -515,9 +515,13 @@ class MultiAlphaEngine:
 
     # Regime-specific alpha weights — what works in each regime
     # New signals added: delivery_pct, option_chain, corp_event
+    # ml_score weights deliberately SMALL: walk-forward 2020-2026
+    # (walk_forward_report.md) shows the pooled model has no standalone edge
+    # (near-random AUC most years). It stays in the mix at low weight so the
+    # plumbing is live and better future models earn weight back with evidence.
     REGIME_WEIGHTS = {
         'BULL': {
-            'ml_score':     0.27,  # ML trend-following dominant
+            'ml_score':     0.10,  # capped pending walk-forward evidence
             'momentum':     0.22,  # 12-1 momentum shines in bull markets
             'fii_dii':      0.13,  # Flow momentum confirms trend
             'pead':         0.13,  # Earnings beat follow-through
@@ -529,7 +533,7 @@ class MultiAlphaEngine:
             'corp_event':   0.03,  # Catalyst signals
         },
         'BEAR': {
-            'ml_score':     0.22,
+            'ml_score':     0.08,
             'momentum':     0.04,  # Momentum destroys capital in bear markets
             'fii_dii':      0.17,  # FII selling is the bear driver
             'pead':         0.08,
@@ -541,7 +545,7 @@ class MultiAlphaEngine:
             'corp_event':   0.03,
         },
         'SIDEWAYS': {
-            'ml_score':     0.22,
+            'ml_score':     0.08,
             'momentum':     0.08,
             'fii_dii':      0.10,
             'pead':         0.15,
@@ -553,7 +557,7 @@ class MultiAlphaEngine:
             'corp_event':   0.03,
         },
         'CRISIS': {
-            'ml_score':     0.13,  # ML unreliable in extreme events
+            'ml_score':     0.05,  # ML unreliable in extreme events
             'momentum':     0.04,
             'fii_dii':      0.26,  # FII flows are the dominant factor
             'pead':         0.04,

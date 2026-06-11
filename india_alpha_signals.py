@@ -1609,7 +1609,10 @@ class IndiaAlphaAggregator:
         'insider':      0.08,
         'fo_ban':       0.06,
         'corp_event':   0.04,
-        'rel_strength': 0.07,   # leadership vs index
+        # rel_strength cut 0.07 -> 0.02: 10y walk-forward rank IC is NEGATIVE
+        # (-0.011, walk_forward_report.md) — 63d leaders mildly revert over
+        # the next 5 days. Kept tiny so the live kill-switch can finish the job.
+        'rel_strength': 0.02,
         'sector_mom':   0.06,   # sector rotation
         'pledge':       0.05,   # promoter pledge risk (new)
         'sast':         0.06,   # SAST stake changes (new)

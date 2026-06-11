@@ -537,7 +537,20 @@ class DailyRunner:
             ml_sell = sum(1 for s, c in ml_scores.items() if c[0] < -0.3)
             print(f"      ML signals: {ml_buy} BUY views, {ml_sell} SELL views")
         else:
-            print("\n[1/4] Quick mode — skipping ML training, using alphas only")
+            # Quick mode: no per-stock training, but the pooled cross-sectional
+            # model (trained weekly, committed to models/) predicts in seconds —
+            # so the cloud gets real ML intelligence, not alphas-only.
+            print(f"\n[1/4] Quick mode — pooled ML predictor on {len(symbols)} stocks...")
+            try:
+                from ml_predictor import predict_universe
+                ml_scores = predict_universe(
+                    symbols, as_of_date,
+                    data_dir=str(self.config.DATA_DIR), verbose=True)
+                if not any(c > 0 for _, c in ml_scores.values()):
+                    ml_scores = {}
+            except Exception as e:
+                print(f"      Pooled ML unavailable ({e}) — alphas only")
+                ml_scores = {}
 
         # ── STEP 2: Multi-Alpha Ranking ──────────────────────────────────────
         print(f"\n[2/4] Running multi-alpha engine + cross-sectional ranking...")

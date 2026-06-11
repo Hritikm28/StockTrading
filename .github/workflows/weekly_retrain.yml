@@ -4,8 +4,8 @@ name: Weekly ML Retrain
 # cached price data and commits it to models/ — so the daily run always
 # predicts with a model at most a week old. Fully free, laptop can be off.
 #
-# Self-protecting: train_models() refuses to save if the validation AUC is
-# below threshold or the sample count is too small, so a bad data week can
+# Self-protecting: train_models() refuses to save if the validation rank IC
+# is below threshold or the sample count is too small, so a bad data week can
 # never silently replace a good model with a worse one.
 
 on:

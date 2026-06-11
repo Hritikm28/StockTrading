@@ -54,7 +54,7 @@ ALL_SIGNALS = [
     'insider',
     'fo_ban',
     'corp_event',
-    'rel_strength',
+    'hi52',
     'sector_mom',
     'pledge',
     'sast',

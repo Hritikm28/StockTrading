@@ -1,7 +1,8 @@
 {
   "trained": "2026-06-11",
   "horizon_days": 5,
-  "label": "fwd 5d ret > +2% vs < -2%",
+  "label": "cross-sectional pctile of 5d fwd return",
+  "objective": "rank-regression",
   "features": [
     "ret_1d",
     "ret_5d",
@@ -34,11 +35,10 @@
     "rs_63d"
   ],
   "metrics": {
-    "val_auc": 0.5287,
-    "val_acc": 0.5157,
-    "top_decile_edge_5d_pct": 0.148,
-    "n_train": 143177,
-    "n_val": 23535,
-    "split_date": "2024-12-04"
+    "val_ic": 0.0218,
+    "top_decile_edge_5d_pct": 0.172,
+    "n_train": 248703,
+    "n_val": 40994,
+    "split_date": "2024-12-26"
   }
 }

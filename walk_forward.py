@@ -13,9 +13,10 @@ What is (and is not) validated here — honesty matters:
     announcements...). Point-in-time history for those would cost money;
     they are validated by the LIVE track record instead (track_record.md).
 
-Strategy simulated: every 5 trading days, buy the top-10 stocks by model
-probability (if prob > threshold), hold 5 days, pay 0.40% round-trip costs.
-Benchmark: NIFTY 50 over the same 5-day windows.
+Strategy simulated: every 5 trading days, buy the top-10 stocks by the
+model's predicted cross-sectional rank, hold 5 days, pay 0.40% round-trip
+costs. (Rank model is always invested — it bets on relative winners, not
+market direction.) Benchmark: NIFTY 50 over the same 5-day windows.
 
 Usage:
     python walk_forward.py                # full run, writes walk_forward_report.md
@@ -41,7 +42,6 @@ REPORT_FILE = Path("walk_forward_report.md")
 
 START_YEAR   = 2020      # first traded year (needs >= 4y of prior training data)
 TOP_N        = 10
-PROB_GATE    = 0.55
 COST_PCT     = 0.40      # round trip, same as paper_trade_tracker
 STEP_DAYS    = 5         # non-overlapping 5-day holds
 
@@ -102,13 +102,14 @@ def run_walk_forward():
         test_df = test_df.copy()
         test_df['p'] = (p_xgb + p_lgb) / 2
 
-        # Trade every STEP_DAYS-th date: top-N by prob, hold 5d, pay costs
+        # Trade every STEP_DAYS-th date: top-N by predicted rank, hold 5d,
+        # pay costs. Rank model has a view every day — always invested.
         dates = sorted(test_df['date'].unique())[::STEP_DAYS]
         for d in dates:
             day = test_df[test_df['date'] == d]
-            picks = day[day['p'] > PROB_GATE].nlargest(TOP_N, 'p')
+            picks = day.nlargest(TOP_N, 'p')
             if picks.empty:
-                strat_ret = 0.0          # in cash, no signal
+                strat_ret = 0.0
                 n_picks = 0
             else:
                 strat_ret = picks['fwd_ret'].mean() * 100 - COST_PCT
@@ -122,7 +123,7 @@ def run_walk_forward():
         y_strat = ((1 + ydf['strat'] / 100).prod() - 1) * 100
         y_nifty = ((1 + ydf['nifty'] / 100).prod() - 1) * 100
         fold_results.append({
-            'year': year, 'val_auc': models['metrics']['val_auc'],
+            'year': year, 'val_ic': models['metrics']['val_ic'],
             'periods': len(ydf), 'invested_pct':
                 round(float((ydf['n'] > 0).mean()) * 100, 0),
             'strat_pct': round(float(y_strat), 1),
@@ -162,7 +163,7 @@ def run_walk_forward():
         "# Walk-Forward Validation Report",
         "",
         f"_Generated {date.today()}. Yearly retrain on strictly prior data; "
-        f"top-{TOP_N} by probability (gate {PROB_GATE}), {STEP_DAYS}-day holds, "
+        f"top-{TOP_N} by predicted cross-sectional rank, {STEP_DAYS}-day holds, "
         f"{COST_PCT}% round-trip costs. Event alphas (FII/DII, pledge, SAST...) "
         "are NOT in this backtest — no free point-in-time history exists; they "
         "are validated by the live track record instead._",
@@ -174,12 +175,12 @@ def run_walk_forward():
         f"period win rate: {win_rate:.0f}%  |  Sharpe (net): {sharpe:.2f}  |  "
         f"max drawdown: {max_dd:.1f}%",
         "",
-        "| Year | Val AUC | Periods | Invested | Strategy | NIFTY | Excess |",
-        "|------|---------|---------|----------|----------|-------|--------|",
+        "| Year | Val IC | Periods | Invested | Strategy | NIFTY | Excess |",
+        "|------|--------|---------|----------|----------|-------|--------|",
     ]
     for r in fold_results:
         lines.append(
-            f"| {r['year']} | {r['val_auc']:.3f} | {r['periods']} "
+            f"| {r['year']} | {r['val_ic']:+.3f} | {r['periods']} "
             f"| {r['invested_pct']:.0f}% | {r['strat_pct']:+.1f}% "
             f"| {r['nifty_pct']:+.1f}% | **{r['excess_pct']:+.1f}%** |")
     lines += [

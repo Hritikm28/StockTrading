@@ -240,7 +240,7 @@ class StockWeightLearner:
 
     SIGNALS = ['momentum', 'fii_dii', 'pead', 'mean_rev', 'bulk_deal',
                'delivery_pct', 'option_chain', 'insider', 'fo_ban', 'corp_event',
-               'rel_strength', 'sector_mom', 'pledge', 'sast', 'shp_delta']
+               'hi52', 'sector_mom', 'pledge', 'sast', 'shp_delta']
 
     _data: Optional[Dict] = None
 
@@ -531,6 +531,7 @@ class MultiAlphaEngine:
             'delivery_pct': 0.05,  # Institutional accumulation confirmation
             'option_chain': 0.05,  # PCR + max pain
             'corp_event':   0.03,  # Catalyst signals
+            'hi52':         0.07,  # 52wk-high continuation strongest in bulls
         },
         'BEAR': {
             'ml_score':     0.08,
@@ -543,6 +544,7 @@ class MultiAlphaEngine:
             'delivery_pct': 0.06,  # Distribution pattern shows real selling
             'option_chain': 0.06,  # PCR extremes predict reversals
             'corp_event':   0.03,
+            'hi52':         0.02,  # anchoring edge fades when highs are distant
         },
         'SIDEWAYS': {
             'ml_score':     0.08,
@@ -555,6 +557,7 @@ class MultiAlphaEngine:
             'delivery_pct': 0.06,
             'option_chain': 0.06,
             'corp_event':   0.03,
+            'hi52':         0.05,
         },
         'CRISIS': {
             'ml_score':     0.05,  # ML unreliable in extreme events
@@ -676,7 +679,7 @@ class MultiAlphaEngine:
             'delivery_pct': 'delivery_pct',
             'option_chain': 'option_chain',
             'corp_event':   'corp_event',
-            'rel_strength': 'rel_strength',
+            'hi52':         'hi52',
             'sector_mom':   'sector_mom',
             'pledge':       'pledge',
             'sast':         'sast',

@@ -219,12 +219,72 @@ class EarningsCalendar:
         
         self.clear_cache(symbol)
         self._get_earnings_history(symbol)
-        
+
         print(f"🔄 Refreshed earnings data for {symbol}")
 
 
+def update_universe(max_fetches: int = 150, stale_days: int = 100):
+    """
+    Refresh earnings caches for every symbol in data/stocks. Used by the
+    daily GitHub Actions run so the PEAD alpha has data IN THE CLOUD
+    (data/ is gitignored, so without this the cloud never sees earnings).
+
+    A symbol is refetched only if it has no cache or its latest reported
+    earnings is older than `stale_days` (results are quarterly, so ~100 days
+    means a new announcement is due/out). Fetches are capped per run to
+    stay friendly with yfinance rate limits — the daily cadence catches up
+    within a couple of runs.
+    """
+    import time
+
+    stocks_dir = Path("data/stocks")
+    skip = {'NIFTY50', 'NIFTYBANK', 'INDIAVIX'}
+    symbols = sorted(p.stem for p in stocks_dir.glob("*.parquet")
+                     if p.stem not in skip)
+    if not symbols:
+        print("No price parquets found — nothing to update")
+        return
+
+    cal = EarningsCalendar()
+    today = date.today()
+    fetched = fresh = failed = 0
+
+    for sym in symbols:
+        if fetched >= max_fetches:
+            print(f"   Fetch cap ({max_fetches}) reached — "
+                  "remaining symbols roll to the next run")
+            break
+        cache_file = cal.cache_dir / f"{sym}_earnings.parquet"
+        if cache_file.exists():
+            try:
+                df = pd.read_parquet(cache_file)
+                last = pd.to_datetime(df.index.max()).date()
+                if (today - last).days < stale_days:
+                    fresh += 1
+                    continue
+            except Exception:
+                pass
+            try:
+                cache_file.unlink()
+            except OSError:
+                pass
+        if f"{sym}.NS" in cal.earnings_cache:
+            del cal.earnings_cache[f"{sym}.NS"]
+        fetched += 1
+        if cal._get_earnings_history(f"{sym}.NS") is None:
+            failed += 1
+        time.sleep(0.5)   # be gentle with yfinance
+
+    print(f"\nEarnings update: {fresh} fresh, {fetched} fetched "
+          f"({failed} failed), {len(symbols)} symbols total")
+
+
 if __name__ == "__main__":
-    
+    import sys as _sys
+    if '--update' in _sys.argv:
+        update_universe()
+        _sys.exit(0)
+
     print("="*70)
     print("EARNINGS CALENDAR TEST (FIXED VERSION)")
     print("="*70)

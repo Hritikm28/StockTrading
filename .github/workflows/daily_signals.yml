@@ -64,6 +64,14 @@ jobs:
           restore-keys: |
             stockdata-v3-
 
+      - name: Restore earnings-data cache (PEAD alpha)
+        uses: actions/cache@v4
+        with:
+          path: data/earnings_calendar
+          key: earningsdata-v1-${{ steps.date.outputs.ymd }}
+          restore-keys: |
+            earningsdata-v1-
+
       - name: Install lean engine dependencies
         run: pip install -r requirements_engine.txt
 
@@ -72,6 +80,9 @@ jobs:
           python quick_update_data.py || true
           # second pass retries only stocks still stale (cheap; smooths yfinance rate limits)
           python quick_update_data.py || true
+
+      - name: Update earnings calendar (feeds PEAD alpha)
+        run: python earnings_calendar.py --update || true
 
       - name: Grade past predictions + auto-correct weights
         run: python paper_trade_tracker.py --today || true

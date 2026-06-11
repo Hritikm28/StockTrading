@@ -14,10 +14,16 @@ rows each. This is how systematic funds model equities:
     The CLOUD can therefore run real daily ML predictions for free, and
     retrain itself weekly.
 
-Label: 5-day forward return > +2% (1) vs < -2% (0); neutral middle dropped.
+Target: CROSS-SECTIONAL RANK — the per-date percentile of each stock's 5-day
+forward return among all stocks that day. Binary "will it go up?" is mostly
+market noise (the walk-forward proved it: near-random AUC). "Which stocks
+beat the OTHERS this week?" subtracts the market move out of the label and
+is the question a top-N portfolio actually needs answered. It also uses
+every row (no neutral-band rows thrown away).
 Features: ~30 strictly backward-looking transforms of OHLCV + NIFTY context.
 Validation: time-based split (final 15% of DATES), never random — random
 splits leak future information and are how fake backtests are born.
+Gate: mean per-date Spearman rank IC on validation; < MIN_VAL_IC → not saved.
 
 Usage:
     python ml_predictor.py --train             # train + save if good enough
@@ -49,10 +55,8 @@ META_FILE = MODELS_DIR / "pooled_meta.json"
 DATA_DIR = Path("data/stocks")
 
 HORIZON = 5            # predict 5-trading-day forward move
-UP_THRESH = 0.02       # > +2% → label 1
-DOWN_THRESH = -0.02    # < -2% → label 0; in between → dropped
 MIN_TRAIN_SAMPLES = 40_000   # refuse to ship a model trained on less
-MIN_VAL_AUC = 0.52           # refuse to ship a model worse than this
+MIN_VAL_IC = 0.010           # mean daily Spearman IC gate (0.02+ = real edge)
 STALE_DATA_MAX_DAYS = 7      # don't predict from week-old prices
 
 
@@ -165,7 +169,11 @@ def build_panel(data_dir: Path = DATA_DIR,
                 end_date: Optional[date] = None,
                 verbose: bool = True) -> pd.DataFrame:
     """
-    Pooled (symbol, date) panel with features + binary label.
+    Pooled (symbol, date) panel with features + cross-sectional rank label:
+    label_rank = percentile of the stock's 5d forward return among ALL stocks
+    that date (0 = worst of the day, 1 = best). Computed across symbols, so
+    it can only be done after pooling — it bakes "beat the others" into the
+    target and removes the market's direction from the label entirely.
     end_date: optionally truncate (used by walk-forward to train point-in-time).
     """
     nifty = _load_parquet(data_dir / "NIFTY50.parquet")
@@ -181,12 +189,20 @@ def build_panel(data_dir: Path = DATA_DIR,
             continue
 
         feats = build_features(df, nifty)
-        fwd = df['Close'].pct_change(HORIZON).shift(-HORIZON)
-        feats['label'] = np.where(fwd > UP_THRESH, 1.0,
-                          np.where(fwd < DOWN_THRESH, 0.0, np.nan))
-        feats['fwd_ret'] = fwd
+        feats['fwd_ret'] = df['Close'].pct_change(HORIZON).shift(-HORIZON)
         feats['symbol'] = sym
-        feats = feats.dropna(subset=FEATURE_COLS + ['label'])
+
+        # Split/bonus artifacts: NSE circuit limits cap real moves at ±20%/day,
+        # so a >25% 1-day jump is an unadjusted corporate action, not alpha
+        # (found the hard way: BERGEPAINT "+6989% in 5d" = bad parquet rows).
+        # Poison every row whose ±HORIZON window touches the discontinuity.
+        jump = df['Close'].pct_change().abs() > 0.25
+        if jump.any():
+            poisoned = jump.rolling(2 * HORIZON + 1, center=True,
+                                    min_periods=1).max().astype(bool)
+            feats = feats[~poisoned.values]
+
+        feats = feats.dropna(subset=FEATURE_COLS + ['fwd_ret'])
         if not feats.empty:
             frames.append(feats)
         if verbose and (i + 1) % 25 == 0:
@@ -196,6 +212,10 @@ def build_panel(data_dir: Path = DATA_DIR,
         return pd.DataFrame()
     panel = pd.concat(frames)
     panel = panel.rename_axis('date').reset_index().sort_values('date')
+    panel['label_rank'] = panel.groupby('date')['fwd_ret'].rank(pct=True)
+    # A rank within <10 stocks is noise, not a cross-section
+    counts = panel.groupby('date')['symbol'].transform('count')
+    panel = panel[counts >= 10]
     if verbose:
         print(f"   panel: {len(panel):,} samples, {panel['symbol'].nunique()} "
               f"symbols, {panel['date'].min().date()} -> "
@@ -206,15 +226,16 @@ def build_panel(data_dir: Path = DATA_DIR,
 # ---------------------------------------------------------------------------
 # Training (native XGBoost / LightGBM APIs — no sklearn dependency)
 # ---------------------------------------------------------------------------
-def _auc(y_true: np.ndarray, y_score: np.ndarray) -> float:
-    """Rank-based AUC without sklearn."""
-    order = np.argsort(y_score)
-    ranks = np.empty(len(y_score)); ranks[order] = np.arange(1, len(y_score) + 1)
-    pos = y_true == 1
-    n_pos, n_neg = pos.sum(), (~pos).sum()
-    if n_pos == 0 or n_neg == 0:
-        return 0.5
-    return float((ranks[pos].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg))
+def _daily_spearman_ic(df: pd.DataFrame, pred_col: str = 'p') -> float:
+    """Mean per-date Spearman rank correlation of predictions vs fwd returns."""
+    ics = []
+    for _, day in df.groupby('date'):
+        if len(day) < 20:
+            continue
+        ic = day[pred_col].rank().corr(day['fwd_ret'].rank())
+        if pd.notna(ic):
+            ics.append(ic)
+    return float(np.mean(ics)) if ics else 0.0
 
 
 def train_models(panel: pd.DataFrame, save: bool = True,
@@ -232,48 +253,43 @@ def train_models(panel: pd.DataFrame, save: bool = True,
     tr = panel[panel['date'] < split_date]
     va = panel[panel['date'] >= split_date]
 
-    X_tr, y_tr = tr[FEATURE_COLS].values, tr['label'].values
-    X_va, y_va = va[FEATURE_COLS].values, va['label'].values
-    spw = float((y_tr == 0).sum() / max((y_tr == 1).sum(), 1))
+    X_tr, y_tr = tr[FEATURE_COLS].values, tr['label_rank'].values
+    X_va, y_va = va[FEATURE_COLS].values, va['label_rank'].values
 
     if verbose:
         print(f"   train {len(tr):,} rows (< {pd.Timestamp(split_date).date()}) | "
-              f"val {len(va):,} rows | pos rate {y_tr.mean():.2%}")
+              f"val {len(va):,} rows | target: cross-sectional rank pctile")
 
-    # XGBoost
+    # XGBoost — regression on the per-date return percentile
     dtr = xgb.DMatrix(X_tr, label=y_tr, feature_names=FEATURE_COLS)
     dva = xgb.DMatrix(X_va, label=y_va, feature_names=FEATURE_COLS)
     xgb_model = xgb.train(
-        {'objective': 'binary:logistic', 'eval_metric': 'auc',
+        {'objective': 'reg:squarederror', 'eval_metric': 'rmse',
          'max_depth': 5, 'eta': 0.05, 'subsample': 0.8,
-         'colsample_bytree': 0.8, 'min_child_weight': 50,
-         'scale_pos_weight': spw, 'seed': 42},
+         'colsample_bytree': 0.8, 'min_child_weight': 50, 'seed': 42},
         dtr, num_boost_round=400,
         evals=[(dva, 'val')], early_stopping_rounds=50, verbose_eval=False)
 
-    # LightGBM
+    # LightGBM — same target
     lgb_model = lgb.train(
-        {'objective': 'binary', 'metric': 'auc', 'max_depth': 6,
+        {'objective': 'regression', 'metric': 'l2', 'max_depth': 6,
          'num_leaves': 48, 'learning_rate': 0.05, 'feature_fraction': 0.8,
          'bagging_fraction': 0.8, 'bagging_freq': 1,
-         'min_data_in_leaf': 100, 'scale_pos_weight': spw,
-         'seed': 42, 'verbosity': -1},
+         'min_data_in_leaf': 100, 'seed': 42, 'verbosity': -1},
         lgb.Dataset(X_tr, label=y_tr, feature_name=FEATURE_COLS),
         num_boost_round=400,
         valid_sets=[lgb.Dataset(X_va, label=y_va)],
         callbacks=[lgb.early_stopping(50, verbose=False)])
 
-    # Ensemble validation
+    # Ensemble validation — the metrics that matter for a TOP-N strategy
     p_xgb = xgb_model.predict(dva, iteration_range=(0, xgb_model.best_iteration + 1))
     p_lgb = lgb_model.predict(X_va, num_iteration=lgb_model.best_iteration)
-    p_ens = (p_xgb + p_lgb) / 2
-    auc = _auc(y_va, p_ens)
-    acc = float(((p_ens > 0.5) == (y_va == 1)).mean())
-
-    # The metric that matters for a TOP-N strategy: average forward return of
-    # the model's top-decile picks per validation day vs the universe average.
     va_eval = va[['date', 'fwd_ret']].copy()
-    va_eval['p'] = p_ens
+    va_eval['p'] = (p_xgb + p_lgb) / 2
+
+    ic = _daily_spearman_ic(va_eval)
+
+    # Top-decile picks per validation day vs the universe average
     top_rets, all_rets = [], []
     for _, day in va_eval.groupby('date'):
         if len(day) < 10:
@@ -285,18 +301,18 @@ def train_models(panel: pd.DataFrame, save: bool = True,
         if top_rets else 0.0
 
     metrics = {
-        'val_auc': round(auc, 4), 'val_acc': round(acc, 4),
+        'val_ic': round(ic, 4),
         'top_decile_edge_5d_pct': round(top_edge, 3),
         'n_train': int(len(tr)), 'n_val': int(len(va)),
         'split_date': str(pd.Timestamp(split_date).date()),
     }
     if verbose:
-        print(f"   val AUC {auc:.4f} | acc {acc:.2%} | "
+        print(f"   val rank IC {ic:+.4f} | "
               f"top-decile 5d edge {top_edge:+.2f}% vs universe")
 
-    if auc < MIN_VAL_AUC:
-        print(f"   AUC {auc:.4f} < {MIN_VAL_AUC} — model NOT saved "
-              "(worse than near-random; keeping previous model if any)")
+    if ic < MIN_VAL_IC:
+        print(f"   IC {ic:+.4f} < {MIN_VAL_IC} — model NOT saved "
+              "(no ranking edge; keeping previous model if any)")
         return None
 
     if save:
@@ -306,7 +322,8 @@ def train_models(panel: pd.DataFrame, save: bool = True,
         META_FILE.write_text(json.dumps({
             'trained': str(date.today()),
             'horizon_days': HORIZON,
-            'label': f'fwd {HORIZON}d ret > {UP_THRESH:+.0%} vs < {DOWN_THRESH:+.0%}',
+            'label': f'cross-sectional pctile of {HORIZON}d fwd return',
+            'objective': 'rank-regression',
             'features': FEATURE_COLS,
             'metrics': metrics,
         }, indent=2))
@@ -339,7 +356,9 @@ def predict_universe(symbols: List[str], as_of_date: date,
                      verbose: bool = False) -> Dict[str, Tuple[float, float]]:
     """
     Returns {symbol: (ml_score [-1,1], ml_confidence [0,100])} for daily_runner.
-    Score = 2*(P(up) - 0.5). Confidence scales with the model's conviction.
+    The model predicts each stock's return percentile; we then rank TODAY's
+    predictions cross-sectionally, so score = +1 means "model's top pick of
+    the day's universe", -1 the bottom. Confidence scales with rank extremity.
     Symbols with stale/missing data return (0, 0) so the engine ignores ML
     for them instead of trading on old prices.
     """
@@ -379,9 +398,16 @@ def predict_universe(symbols: List[str], as_of_date: date,
     p_lgb = models['lgb'].predict(X)
     p = (p_xgb + p_lgb) / 2
 
-    for sym, prob in zip(kept, p):
-        score = float(np.clip((prob - 0.5) * 2, -1.0, 1.0))
-        conf  = float(min(35 + abs(prob - 0.5) * 2 * 60, 85.0))
+    # Cross-sectional percentile of today's predictions (0..1).
+    # Raw rank-regression outputs compress toward 0.5; re-ranking them
+    # across today's universe restores the full spread and is exactly the
+    # quantity the model was trained to estimate.
+    pct = pd.Series(p).rank(pct=True).values if len(p) > 1 \
+        else np.full(len(p), 0.5)
+
+    for sym, pc in zip(kept, pct):
+        score = float(np.clip(2 * pc - 1, -1.0, 1.0))
+        conf  = float(min(35 + abs(pc - 0.5) * 2 * 60, 85.0))
         results[sym] = (score, conf)
 
     if verbose:

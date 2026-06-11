@@ -1262,6 +1262,48 @@ class RelativeStrengthAlpha:
         return score, conf
 
 
+class Hi52Alpha:
+    """
+    52-week-high proximity (George & Hwang 2004).
+
+    Stocks trading near their 52-week high keep outperforming: investors
+    anchor on the high and are slow to bid past it, so good news gets
+    underreacted to near the high. One of the most robust cross-sectional
+    anomalies, and it replicates in India. Confirmed in our own panel:
+    hi52_dist is a top ML feature and momentum 12-1 (its cousin) has
+    IC +0.026 (walk_forward_report.md).
+
+    Needs only the price parquets — works identically in the cloud.
+    """
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date,
+                   data_dir: str = "data/stocks") -> Tuple[float, float]:
+        nse = symbol.replace('.NS', '').replace('^', '').upper()
+        close = RelativeStrengthAlpha._load_close(nse, data_dir)
+        if close is None:
+            return 0.0, 0.0
+        close = close[close.index <= pd.Timestamp(as_of_date)]
+        if len(close) < 252:
+            return 0.0, 0.0
+        try:
+            ratio = float(close.iloc[-1] / close.iloc[-252:].max())
+        except Exception:
+            return 0.0, 0.0
+        # ratio 1.0 = at the high; <0.7 = deep below (loser territory)
+        if ratio >= 0.97:
+            return 0.8, 70.0          # at/near high — strongest continuation
+        if ratio >= 0.90:
+            return 0.5, 60.0
+        if ratio >= 0.80:
+            return 0.2, 45.0
+        if ratio <= 0.60:
+            return -0.4, 55.0         # deep losers keep lagging at 5-20d horizon
+        if ratio <= 0.70:
+            return -0.2, 45.0
+        return 0.0, 0.0               # middle zone — no edge
+
+
 # ==============================================================================
 # 12. SECTOR ROTATION ALPHA  (which sectors are in favour)
 # ==============================================================================
@@ -1600,7 +1642,9 @@ class IndiaAlphaAggregator:
 
     WEIGHTS = {
         'pead':         0.16,
-        'momentum':     0.15,
+        # momentum 0.15 -> 0.17: the one price alpha our 10y walk-forward
+        # PROVED (IC +0.026); absorbed the killed rel_strength weight.
+        'momentum':     0.17,
         'fii_dii':      0.14,
         'mean_rev':     0.12,
         'bulk_deal':    0.10,
@@ -1609,10 +1653,10 @@ class IndiaAlphaAggregator:
         'insider':      0.08,
         'fo_ban':       0.06,
         'corp_event':   0.04,
-        # rel_strength cut 0.07 -> 0.02: 10y walk-forward rank IC is NEGATIVE
+        # rel_strength KILLED 2026-06-11: 10y walk-forward rank IC NEGATIVE
         # (-0.011, walk_forward_report.md) — 63d leaders mildly revert over
-        # the next 5 days. Kept tiny so the live kill-switch can finish the job.
-        'rel_strength': 0.02,
+        # the next 5 days. Class kept for reference; no longer scored.
+        'hi52':         0.06,   # 52-week-high proximity (George & Hwang)
         'sector_mom':   0.06,   # sector rotation
         'pledge':       0.05,   # promoter pledge risk (new)
         'sast':         0.06,   # SAST stake changes (new)
@@ -1657,7 +1701,7 @@ class IndiaAlphaAggregator:
             'fo_ban':       lambda: FOBanAlpha.get_signal(symbol, as_of_date),
             'corp_event':   lambda: CorporateEventAlpha.get_signal(
                                 symbol, as_of_date),
-            'rel_strength': lambda: RelativeStrengthAlpha.get_signal(
+            'hi52':         lambda: Hi52Alpha.get_signal(
                                 symbol, as_of_date, data_dir),
             'sector_mom':   lambda: SectorRotationAlpha.get_signal(
                                 symbol, as_of_date, data_dir),

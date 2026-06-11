@@ -1,112 +1,177 @@
 {
   "generated": "2026-06-11",
-  "total_signals": 180,
+  "total_signals": 137,
   "cost_model_pct": 0.4,
   "benchmark": "NIFTY50",
   "metrics": {
     "1d": {
-      "n_trades": 47,
-      "win_rate": 44.7,
-      "avg_ret": -0.27,
-      "median_ret": -0.39,
-      "avg_win": 0.92,
-      "avg_loss": -1.23,
-      "sharpe": -2.99,
-      "best": 2.06,
-      "worst": -5.92,
-      "avg_nifty": 0.13,
-      "avg_excess": -0.22,
-      "beat_nifty_rate": 48.4,
+      "n_trades": 127,
+      "win_rate": 31.5,
+      "avg_ret": -0.5,
+      "median_ret": -0.47,
+      "avg_win": 0.79,
+      "avg_loss": -1.09,
+      "sharpe": -6.78,
+      "best": 3.27,
+      "worst": -3.31,
+      "avg_nifty": -0.19,
+      "avg_excess": -0.31,
+      "beat_nifty_rate": 35.9,
       "by_symbol": {
-        "ABB.NS": {
+        "ADANIENT.NS": {
+          "n": 2,
+          "win_rate": 50.0,
+          "avg_ret": -0.04
+        },
+        "ADANIPORTS.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -5.92
+          "avg_ret": -0.66
         },
         "APOLLOHOSP.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -0.76
+          "avg_ret": -1.77
         },
-        "BAJFINANCE.NS": {
-          "n": 3,
-          "win_rate": 33.3,
-          "avg_ret": 0.11
+        "ASIANPAINT.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 3.27
         },
-        "BERGEPAINT.NS": {
+        "BAJAJ-AUTO.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -1.18
+          "avg_ret": -0.53
+        },
+        "BAJFINANCE.NS": {
+          "n": 6,
+          "win_rate": 33.3,
+          "avg_ret": -0.26
         },
         "BHARTIARTL.NS": {
-          "n": 2,
-          "win_rate": 100.0,
-          "avg_ret": 0.24
+          "n": 8,
+          "win_rate": 25.0,
+          "avg_ret": -0.6
         },
         "BPCL.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -0.94
+          "avg_ret": -0.52
+        },
+        "BRITANNIA.NS": {
+          "n": 3,
+          "win_rate": 0.0,
+          "avg_ret": -0.88
         },
         "CIPLA.NS": {
-          "n": 1,
+          "n": 5,
           "win_rate": 100.0,
-          "avg_ret": 0.16
+          "avg_ret": 0.72
         },
-        "DABUR.NS": {
+        "COALINDIA.NS": {
+          "n": 4,
+          "win_rate": 50.0,
+          "avg_ret": 0.28
+        },
+        "COLPAL.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -1.77
+          "avg_ret": -3.31
         },
-        "DMART.NS": {
-          "n": 2,
-          "win_rate": 50.0,
-          "avg_ret": -0.77
+        "DIVISLAB.NS": {
+          "n": 8,
+          "win_rate": 25.0,
+          "avg_ret": -0.5
         },
         "DRREDDY.NS": {
-          "n": 2,
-          "win_rate": 0.0,
-          "avg_ret": -0.99
+          "n": 7,
+          "win_rate": 28.6,
+          "avg_ret": -0.59
         },
         "EICHERMOT.NS": {
+          "n": 2,
+          "win_rate": 50.0,
+          "avg_ret": -0.38
+        },
+        "GRASIM.NS": {
+          "n": 3,
+          "win_rate": 66.7,
+          "avg_ret": 0.02
+        },
+        "HCLTECH.NS": {
           "n": 1,
-          "win_rate": 100.0,
-          "avg_ret": 2.05
+          "win_rate": 0.0,
+          "avg_ret": -0.82
+        },
+        "HINDALCO.NS": {
+          "n": 4,
+          "win_rate": 0.0,
+          "avg_ret": -1.08
         },
         "HINDUNILVR.NS": {
-          "n": 3,
-          "win_rate": 33.3,
-          "avg_ret": -0.45
+          "n": 9,
+          "win_rate": 55.6,
+          "avg_ret": 0.11
+        },
+        "ICICIBANK.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.98
+        },
+        "ITC.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -3.23
+        },
+        "JSWSTEEL.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -1.13
+        },
+        "KOTAKBANK.NS": {
+          "n": 2,
+          "win_rate": 50.0,
+          "avg_ret": 0.21
+        },
+        "LT.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 1.51
         },
         "M&M.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -0.74
+          "avg_ret": -3.02
+        },
+        "MARICO.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.34
         },
         "MARUTI.NS": {
-          "n": 2,
+          "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -0.42
+          "avg_ret": -0.25
         },
-        "MUTHOOTFIN.NS": {
+        "NESTLEIND.NS": {
           "n": 1,
           "win_rate": 100.0,
-          "avg_ret": 1.21
+          "avg_ret": 1.34
         },
         "NTPC.NS": {
-          "n": 3,
-          "win_rate": 66.7,
-          "avg_ret": 0.84
+          "n": 9,
+          "win_rate": 22.2,
+          "avg_ret": -0.81
         },
         "ONGC.NS": {
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_ret": -0.89
+        },
+        "PIDILITIND.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -3.97
-        },
-        "PGHH.NS": {
-          "n": 1,
-          "win_rate": 100.0,
-          "avg_ret": 1.4
+          "avg_ret": -1.45
         },
         "POWERGRID.NS": {
           "n": 1,
@@ -114,115 +179,220 @@
           "avg_ret": -1.23
         },
         "RELIANCE.NS": {
-          "n": 1,
+          "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -0.39
+          "avg_ret": -0.93
         },
         "SBILIFE.NS": {
           "n": 1,
-          "win_rate": 100.0,
-          "avg_ret": 0.68
+          "win_rate": 0.0,
+          "avg_ret": -1.84
         },
         "SBIN.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -2.2
+        },
+        "SIEMENS.NS": {
           "n": 2,
-          "win_rate": 100.0,
-          "avg_ret": 0.61
+          "win_rate": 0.0,
+          "avg_ret": -1.58
         },
         "SUNPHARMA.NS": {
-          "n": 3,
-          "win_rate": 33.3,
-          "avg_ret": -0.94
+          "n": 12,
+          "win_rate": 25.0,
+          "avg_ret": -0.83
         },
         "TATACONSUM.NS": {
           "n": 1,
-          "win_rate": 100.0,
-          "avg_ret": 0.83
+          "win_rate": 0.0,
+          "avg_ret": -0.35
+        },
+        "TATAPOWER.NS": {
+          "n": 3,
+          "win_rate": 0.0,
+          "avg_ret": -1.0
         },
         "TATASTEEL.NS": {
-          "n": 3,
-          "win_rate": 66.7,
-          "avg_ret": 0.96
+          "n": 10,
+          "win_rate": 30.0,
+          "avg_ret": -0.45
         },
         "TCS.NS": {
           "n": 1,
-          "win_rate": 0.0,
-          "avg_ret": -1.12
+          "win_rate": 100.0,
+          "avg_ret": 0.19
         },
         "TITAN.NS": {
-          "n": 3,
-          "win_rate": 33.3,
-          "avg_ret": -0.76
-        },
-        "UPL.NS": {
-          "n": 1,
-          "win_rate": 100.0,
-          "avg_ret": 2.06
-        },
-        "WIPRO.NS": {
           "n": 2,
           "win_rate": 50.0,
-          "avg_ret": 0.12
+          "avg_ret": -0.47
+        },
+        "ULTRACEMCO.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -0.06
         }
       }
     },
     "3d": {
-      "n_trades": 21,
-      "win_rate": 47.6,
-      "avg_ret": -0.34,
-      "median_ret": -0.46,
-      "avg_win": 0.96,
-      "avg_loss": -1.53,
-      "sharpe": -2.19,
-      "best": 2.12,
-      "worst": -3.02,
-      "avg_nifty": -0.14,
-      "avg_excess": -0.67,
-      "beat_nifty_rate": 38.5,
+      "n_trades": 110,
+      "win_rate": 36.4,
+      "avg_ret": -0.92,
+      "median_ret": -0.87,
+      "avg_win": 1.3,
+      "avg_loss": -2.19,
+      "sharpe": -4.06,
+      "best": 4.2,
+      "worst": -5.59,
+      "avg_nifty": -1.0,
+      "avg_excess": 0.19,
+      "beat_nifty_rate": 50.0,
       "by_symbol": {
-        "BAJFINANCE.NS": {
-          "n": 1,
-          "win_rate": 100.0,
-          "avg_ret": 0.14
-        },
-        "CIPLA.NS": {
-          "n": 1,
-          "win_rate": 100.0,
-          "avg_ret": 0.47
-        },
-        "DABUR.NS": {
-          "n": 1,
-          "win_rate": 0.0,
-          "avg_ret": -2.15
-        },
-        "DMART.NS": {
-          "n": 1,
-          "win_rate": 0.0,
-          "avg_ret": -1.02
-        },
-        "DRREDDY.NS": {
-          "n": 1,
-          "win_rate": 0.0,
-          "avg_ret": -1.45
-        },
-        "EICHERMOT.NS": {
-          "n": 1,
-          "win_rate": 100.0,
-          "avg_ret": 2.12
-        },
-        "HINDUNILVR.NS": {
-          "n": 1,
-          "win_rate": 0.0,
-          "avg_ret": -0.46
-        },
-        "MARUTI.NS": {
+        "ADANIENT.NS": {
           "n": 2,
           "win_rate": 50.0,
-          "avg_ret": -0.57
+          "avg_ret": 0.89
         },
-        "NTPC.NS": {
+        "APOLLOHOSP.NS": {
           "n": 1,
           "win_rate": 100.0,
-          "avg_ret": 1.49
+          "avg_ret": 0.44
+        },
+        "ASIANPAINT.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 2.17
+        },
+        "BAJFINANCE.NS": {
+          "n": 6,
+          "win_rate": 33.3,
+          "avg_ret": -1.73
+        },
+        "BHARTIARTL.NS": {
+          "n": 8,
+          "win_rate": 12.5,
+          "avg_ret": -1.24
+        },
+        "BPCL.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.43
+        },
+        "BRITANNIA.NS": {
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_ret": -1.49
+        },
+        "CIPLA.NS": {
+          "n": 5,
+          "win_rate": 60.0,
+          "avg_ret": 0.74
+        },
+        "COALINDIA.NS": {
+          "n": 3,
+          "win_rate": 100.0,
+          "avg_ret": 2.55
+        },
+        "COLPAL.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -1.92
+        },
+        "DIVISLAB.NS": {
+          "n": 8,
+          "win_rate": 50.0,
+          "avg_ret": -0.9
+        },
+        "DRREDDY.NS": {
+          "n": 7,
+          "win_rate": 28.6,
+          "avg_ret": -1.12
+        },
+        "EICHERMOT.NS": {
+          "n": 2,
+          "win_rate": 100.0,
+          "avg_ret": 0.33
+        },
+        "GRASIM.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.23
+        },
+        "HCLTECH.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.53
+        },
+        "HINDALCO.NS": {
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_ret": -3.74
+        },
+        "HINDUNILVR.NS": {
+          "n": 9,
+          "win_rate": 44.4,
+          "avg_ret": -0.75
+        },
+        "ICICIBANK.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.8
+        },
+        "ITC.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -4.15
+        },
+        "JSWSTEEL.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -0.42
+        },
+        "KOTAKBANK.NS": {
+          "n": 2,
+          "win_rate": 50.0,
+          "avg_ret": -1.79
+        },
+        "LT.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 2.92
+        },
+        "M&M.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -1.68
+        },
+        "MARICO.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 1.69
+        },
+        "MARUTI.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.94
+        },
+        "NESTLEIND.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 4.2
+        },
+        "NTPC.NS": {
+          "n": 7,
+          "win_rate": 14.3,
+          "avg_ret": -2.22
+        },
+        "ONGC.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.05
+        },
+        "PIDILITIND.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -2.61
         },
         "POWERGRID.NS": {
           "n": 1,
@@ -230,55 +400,211 @@
           "avg_ret": 1.35
         },
         "RELIANCE.NS": {
-          "n": 1,
+          "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -1.59
+          "avg_ret": -1.35
         },
         "SBILIFE.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -1.3
+          "avg_ret": -3.38
         },
         "SBIN.NS": {
-          "n": 2,
-          "win_rate": 100.0,
-          "avg_ret": 0.42
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -1.99
         },
         "SUNPHARMA.NS": {
-          "n": 1,
-          "win_rate": 100.0,
-          "avg_ret": 0.38
+          "n": 12,
+          "win_rate": 8.3,
+          "avg_ret": -1.41
+        },
+        "TATAPOWER.NS": {
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_ret": -3.29
         },
         "TATASTEEL.NS": {
-          "n": 1,
-          "win_rate": 100.0,
-          "avg_ret": 1.89
+          "n": 8,
+          "win_rate": 25.0,
+          "avg_ret": -1.64
         },
         "TCS.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -2.15
+          "avg_ret": -2.25
         },
         "TITAN.NS": {
           "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -0.78
+          "avg_ret": -0.85
         },
-        "WIPRO.NS": {
+        "ULTRACEMCO.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.6
+        }
+      }
+    },
+    "5d": {
+      "n_trades": 89,
+      "win_rate": 28.1,
+      "avg_ret": -1.62,
+      "median_ret": -1.47,
+      "avg_win": 1.38,
+      "avg_loss": -2.79,
+      "sharpe": -4.49,
+      "best": 4.56,
+      "worst": -8.27,
+      "avg_nifty": -1.39,
+      "avg_excess": -0.47,
+      "beat_nifty_rate": 40.9,
+      "by_symbol": {
+        "ADANIENT.NS": {
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_ret": -1.62
+        },
+        "APOLLOHOSP.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.61
+        },
+        "ASIANPAINT.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 1.28
+        },
+        "BAJFINANCE.NS": {
+          "n": 6,
+          "win_rate": 33.3,
+          "avg_ret": -2.7
+        },
+        "BHARTIARTL.NS": {
+          "n": 8,
+          "win_rate": 12.5,
+          "avg_ret": -1.61
+        },
+        "CIPLA.NS": {
+          "n": 5,
+          "win_rate": 60.0,
+          "avg_ret": -0.33
+        },
+        "COALINDIA.NS": {
+          "n": 3,
+          "win_rate": 100.0,
+          "avg_ret": 2.58
+        },
+        "COLPAL.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -3.02
+          "avg_ret": -2.85
+        },
+        "DIVISLAB.NS": {
+          "n": 7,
+          "win_rate": 28.6,
+          "avg_ret": -1.06
+        },
+        "DRREDDY.NS": {
+          "n": 7,
+          "win_rate": 28.6,
+          "avg_ret": -1.86
+        },
+        "EICHERMOT.NS": {
+          "n": 2,
+          "win_rate": 50.0,
+          "avg_ret": -0.12
+        },
+        "HCLTECH.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 2.58
+        },
+        "HINDUNILVR.NS": {
+          "n": 9,
+          "win_rate": 55.6,
+          "avg_ret": -1.09
+        },
+        "ICICIBANK.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -0.8
+        },
+        "ITC.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -2.87
+        },
+        "KOTAKBANK.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 1.34
+        },
+        "LT.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 2.92
+        },
+        "M&M.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -0.71
+        },
+        "MARUTI.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -2.23
+        },
+        "NTPC.NS": {
+          "n": 5,
+          "win_rate": 0.0,
+          "avg_ret": -5.32
+        },
+        "ONGC.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -1.07
+        },
+        "POWERGRID.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -3.4
+        },
+        "SBILIFE.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -3.46
+        },
+        "SUNPHARMA.NS": {
+          "n": 11,
+          "win_rate": 9.1,
+          "avg_ret": -1.87
+        },
+        "TATASTEEL.NS": {
+          "n": 8,
+          "win_rate": 0.0,
+          "avg_ret": -2.85
+        },
+        "TCS.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -4.13
+        },
+        "TITAN.NS": {
+          "n": 2,
+          "win_rate": 0.0,
+          "avg_ret": -2.18
         }
       }
     }
   },
   "track_record": {
-    "inception": "2026-05-22",
-    "last_graded": "2026-05-27",
-    "days_live": 5,
-    "total_trades": 47,
-    "cum_net_pct": -1.03,
-    "cum_nifty_pct": 0.5,
-    "cum_excess_pct": -1.53
+    "inception": "2026-05-25",
+    "last_graded": "2026-06-10",
+    "days_live": 15,
+    "total_trades": 127,
+    "cum_net_pct": -7.15,
+    "cum_nifty_pct": -2.58,
+    "cum_excess_pct": -4.57
   }
 }

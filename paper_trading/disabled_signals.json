@@ -1,1 +1,37 @@
-{}
+{
+  "momentum": {
+    "disabled": true,
+    "disabled_on": "2026-06-11",
+    "reason": "Win rate 44.2% < 45.0%",
+    "win_rate": 44.2,
+    "n_trades": 43
+  },
+  "mean_rev": {
+    "disabled": true,
+    "disabled_on": "2026-06-11",
+    "reason": "Win rate 19.4% < 45.0%",
+    "win_rate": 19.4,
+    "n_trades": 31
+  },
+  "delivery_pct": {
+    "disabled": true,
+    "disabled_on": "2026-06-11",
+    "reason": "Win rate 22.0% < 45.0%",
+    "win_rate": 22.0,
+    "n_trades": 41
+  },
+  "corp_event": {
+    "disabled": true,
+    "disabled_on": "2026-06-11",
+    "reason": "Win rate 14.3% < 45.0%",
+    "win_rate": 14.3,
+    "n_trades": 7
+  },
+  "rel_strength": {
+    "disabled": true,
+    "disabled_on": "2026-06-11",
+    "reason": "Win rate 39.4% < 45.0%",
+    "win_rate": 39.4,
+    "n_trades": 33
+  }
+}

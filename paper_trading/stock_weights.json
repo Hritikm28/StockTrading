@@ -1,0 +1,437 @@
+{
+  "M&M.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "delivery_pct": 0.925
+    },
+    "sig_counts": {
+      "delivery_pct": 1
+    }
+  },
+  "SBILIFE.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "delivery_pct": 0.925
+    },
+    "sig_counts": {
+      "delivery_pct": 1
+    }
+  },
+  "SUNPHARMA.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.139,
+      "mean_rev": 1.011,
+      "delivery_pct": 1.011,
+      "corp_event": 0.925,
+      "rel_strength": 1.075,
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "corp_event": 1,
+      "rel_strength": 1,
+      "sector_mom": 1
+    }
+  },
+  "ITC.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "mean_rev": 0.925,
+      "delivery_pct": 0.925,
+      "corp_event": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "corp_event": 1
+    }
+  },
+  "TCS.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.925,
+      "mean_rev": 1.075,
+      "delivery_pct": 1.075,
+      "corp_event": 1.075
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "corp_event": 1
+    }
+  },
+  "APOLLOHOSP.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.925,
+      "delivery_pct": 0.925,
+      "corp_event": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1,
+      "corp_event": 1
+    }
+  },
+  "COALINDIA.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 0.989,
+      "delivery_pct": 0.989,
+      "rel_strength": 0.925
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "delivery_pct": 2,
+      "rel_strength": 1
+    }
+  },
+  "BHARTIARTL.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "mean_rev": 0.925,
+      "delivery_pct": 0.925,
+      "corp_event": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "corp_event": 1
+    }
+  },
+  "ONGC.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 0.861,
+      "mean_rev": 0.861,
+      "delivery_pct": 0.861,
+      "corp_event": 0.925,
+      "rel_strength": 0.925,
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "corp_event": 1,
+      "rel_strength": 1,
+      "sector_mom": 1
+    }
+  },
+  "COLPAL.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "mean_rev": 0.925,
+      "delivery_pct": 0.925,
+      "corp_event": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "corp_event": 1
+    }
+  },
+  "HINDALCO.NS": {
+    "n_trades": 4,
+    "multipliers": {
+      "momentum": 0.761,
+      "mean_rev": 0.761,
+      "delivery_pct": 0.761,
+      "rel_strength": 0.761,
+      "sector_mom": 0.807
+    },
+    "sig_counts": {
+      "momentum": 4,
+      "mean_rev": 4,
+      "delivery_pct": 4,
+      "rel_strength": 4,
+      "sector_mom": 3
+    }
+  },
+  "NTPC.NS": {
+    "n_trades": 4,
+    "multipliers": {
+      "momentum": 0.854,
+      "mean_rev": 0.854,
+      "delivery_pct": 0.854,
+      "sector_mom": 1.146,
+      "rel_strength": 0.925
+    },
+    "sig_counts": {
+      "momentum": 4,
+      "mean_rev": 4,
+      "delivery_pct": 4,
+      "sector_mom": 4,
+      "rel_strength": 1
+    }
+  },
+  "JSWSTEEL.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.925,
+      "delivery_pct": 0.925,
+      "rel_strength": 0.925,
+      "sector_mom": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1,
+      "rel_strength": 1,
+      "sector_mom": 1
+    }
+  },
+  "TATAPOWER.NS": {
+    "n_trades": 3,
+    "multipliers": {
+      "momentum": 0.807,
+      "mean_rev": 0.807,
+      "delivery_pct": 0.861,
+      "rel_strength": 0.807,
+      "sector_mom": 1.193
+    },
+    "sig_counts": {
+      "momentum": 3,
+      "mean_rev": 3,
+      "delivery_pct": 2,
+      "rel_strength": 3,
+      "sector_mom": 3
+    }
+  },
+  "ULTRACEMCO.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "mean_rev": 0.925,
+      "delivery_pct": 0.925,
+      "rel_strength": 1.075,
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "rel_strength": 1,
+      "sector_mom": 1
+    }
+  },
+  "RELIANCE.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.139,
+      "mean_rev": 0.861,
+      "delivery_pct": 0.861,
+      "rel_strength": 1.139,
+      "sector_mom": 1.139
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "rel_strength": 2,
+      "sector_mom": 2
+    }
+  },
+  "MARICO.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "delivery_pct": 1.075,
+      "rel_strength": 1.075,
+      "sector_mom": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1,
+      "rel_strength": 1,
+      "sector_mom": 1
+    }
+  },
+  "NESTLEIND.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "delivery_pct": 1.075,
+      "rel_strength": 1.075,
+      "sector_mom": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1,
+      "rel_strength": 1,
+      "sector_mom": 1
+    }
+  },
+  "BRITANNIA.NS": {
+    "n_trades": 3,
+    "multipliers": {
+      "momentum": 1.193,
+      "delivery_pct": 0.807,
+      "rel_strength": 1.193,
+      "sector_mom": 1.193
+    },
+    "sig_counts": {
+      "momentum": 3,
+      "delivery_pct": 3,
+      "rel_strength": 3,
+      "sector_mom": 3
+    }
+  },
+  "BPCL.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "delivery_pct": 0.925,
+      "rel_strength": 1.075,
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1,
+      "rel_strength": 1,
+      "sector_mom": 1
+    }
+  },
+  "GRASIM.NS": {
+    "n_trades": 3,
+    "multipliers": {
+      "momentum": 1.066,
+      "mean_rev": 0.989,
+      "delivery_pct": 1.066,
+      "rel_strength": 1.066,
+      "sector_mom": 0.925
+    },
+    "sig_counts": {
+      "momentum": 3,
+      "mean_rev": 2,
+      "delivery_pct": 3,
+      "rel_strength": 3,
+      "sector_mom": 1
+    }
+  },
+  "PIDILITIND.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "mean_rev": 1.075,
+      "delivery_pct": 0.925,
+      "rel_strength": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "rel_strength": 1
+    }
+  },
+  "SBIN.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.925,
+      "mean_rev": 1.075,
+      "delivery_pct": 1.075,
+      "rel_strength": 1.075
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "rel_strength": 1
+    }
+  },
+  "KOTAKBANK.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "delivery_pct": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1
+    }
+  },
+  "TATASTEEL.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 0.861,
+      "mean_rev": 0.861,
+      "delivery_pct": 0.861,
+      "rel_strength": 0.861,
+      "sector_mom": 0.925
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "rel_strength": 2,
+      "sector_mom": 1
+    }
+  },
+  "SIEMENS.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 0.861,
+      "mean_rev": 0.861,
+      "delivery_pct": 1.011,
+      "rel_strength": 0.861,
+      "sector_mom": 0.861
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "rel_strength": 2,
+      "sector_mom": 2
+    }
+  },
+  "ADANIPORTS.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.925,
+      "delivery_pct": 0.925,
+      "rel_strength": 0.925,
+      "sector_mom": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1,
+      "rel_strength": 1,
+      "sector_mom": 1
+    }
+  },
+  "TATACONSUM.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.925,
+      "mean_rev": 0.925,
+      "rel_strength": 0.925,
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "rel_strength": 1,
+      "sector_mom": 1
+    }
+  },
+  "BAJAJ-AUTO.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.925,
+      "delivery_pct": 0.925,
+      "rel_strength": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1,
+      "rel_strength": 1
+    }
+  }
+}

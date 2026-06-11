@@ -14,10 +14,14 @@ name: Daily Trading Signals
 
 on:
   schedule:
-    # 01:47 UTC = 07:17 IST. NOTE: GitHub cron is best-effort and queues under
-    # load, so we target early + an odd minute (off the congested top-of-hour)
-    # to land closer to 07:30-08:00 IST before market open. Still not guaranteed.
-    - cron: '47 1 * * 1-5'
+    # 14:33 UTC = 20:03 IST — EVENING run, after market close. Two reasons:
+    #   1. Data quality: NSE bhav copy (~18:00 IST), FII/DII flows (~16:30 IST)
+    #      and same-day closes are all published by 20:00 IST, so signals use
+    #      TODAY's official data instead of yesterday's.
+    #   2. Timing: GitHub cron queues 2-5h on the free tier. A morning run
+    #      lands mid-session (~12:00 IST); an evening run can be hours late
+    #      and the email still arrives well before the next market open.
+    - cron: '33 14 * * 1-5'
   workflow_dispatch:
 
 permissions:
@@ -72,6 +76,9 @@ jobs:
       - name: Grade past predictions + auto-correct weights
         run: python paper_trade_tracker.py --today || true
 
+      - name: Kill-switch — disable alphas with decayed win rates
+        run: python signal_decay_detector.py || true
+
       - name: Run real multi-alpha engine
         run: python daily_runner.py --quick
 
@@ -108,7 +115,10 @@ jobs:
           git add signals/ || true
           git add paper_trading/results/performance.csv 2>/dev/null || true
           git add paper_trading/results/summary.json 2>/dev/null || true
+          git add paper_trading/results/track_record.md 2>/dev/null || true
+          git add paper_trading/results/wl_processed.json 2>/dev/null || true
           git add paper_trading/stock_weights.json 2>/dev/null || true
+          git add paper_trading/disabled_signals.json 2>/dev/null || true
           git add paper_trading/alpha_scores/ 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "Nothing to commit."

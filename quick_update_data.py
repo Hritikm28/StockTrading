@@ -22,23 +22,17 @@ warnings.filterwarnings('ignore')
 DATA_DIR = Path("data/stocks")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-# 70-stock trading universe (Nifty50 + NiftyNext50 minus broken tickers)
-UNIVERSE = [
-    "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS",
-    "HINDUNILVR.NS", "ITC.NS", "SBIN.NS", "BHARTIARTL.NS", "BAJFINANCE.NS",
-    "KOTAKBANK.NS", "LT.NS", "HCLTECH.NS", "ASIANPAINT.NS", "MARUTI.NS",
-    "AXISBANK.NS", "TITAN.NS", "ULTRACEMCO.NS", "SUNPHARMA.NS", "NESTLEIND.NS",
-    "BAJAJFINSV.NS", "WIPRO.NS", "ONGC.NS", "NTPC.NS", "POWERGRID.NS",
-    "COALINDIA.NS", "JSWSTEEL.NS", "TATASTEEL.NS", "INDUSINDBK.NS", "TECHM.NS",
-    "HINDALCO.NS", "GRASIM.NS", "TATACONSUM.NS", "DRREDDY.NS", "BRITANNIA.NS",
-    "CIPLA.NS", "APOLLOHOSP.NS", "BPCL.NS", "LTIM.NS", "SBILIFE.NS",
-    "HDFCLIFE.NS", "TRENT.NS", "GAIL.NS", "PIDILITIND.NS", "DABUR.NS",
-    "SIEMENS.NS", "DLF.NS", "ICICIPRULI.NS", "BANKBARODA.NS", "CHOLAFIN.NS",
-    "ZOMATO.NS", "ABB.NS", "BOSCHLTD.NS", "COLPAL.NS", "MARICO.NS",
-    "BEL.NS", "HDFCAMC.NS", "PFC.NS", "RECLTD.NS", "TATAPOWER.NS",
-    "HAL.NS", "ADANIENT.NS", "ADANIPORTS.NS", "TATAMTRDVR.NS", "DMART.NS",
-    "PGHH.NS", "BAJAJ-AUTO.NS", "EICHERMOT.NS", "HEROMOTOCO.NS", "M&M.NS",
-]
+# Dynamic universe: Nifty 500 with liquidity floor (see universe.py).
+# Falls back to the legacy 70-stock list if the NSE list is unreachable.
+try:
+    from universe import get_universe
+    UNIVERSE = get_universe(verbose=True)
+except Exception as _e:
+    print(f"  [WARN] universe module failed ({_e}); using minimal fallback")
+    UNIVERSE = [
+        "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "INFY.NS", "ICICIBANK.NS",
+        "HINDUNILVR.NS", "ITC.NS", "SBIN.NS", "BHARTIARTL.NS", "LT.NS",
+    ]
 
 # Also update index data
 INDICES = ["^NSEI", "^NSEBANK", "INDIAVIX.NS"]

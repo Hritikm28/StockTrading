@@ -552,6 +552,134 @@ class NSEFetcher:
             return []
 
 
+    # ------------------------------------------------------------------ #
+    #  Promoter Pledge Data (market-wide snapshot)                        #
+    # ------------------------------------------------------------------ #
+    def get_pledge_data(self) -> Optional[pd.DataFrame]:
+        """
+        Market-wide promoter pledge snapshot from NSE corporate filings.
+
+        Returns DataFrame: com_name, pct_promoter_holding, pct_shares_pledged
+        (pct_shares_pledged = % of TOTAL shares pledged by promoters).
+        Cached 24h. Keyed by company NAME — map to symbols via
+        universe.get_name_to_symbol_map().
+        """
+        cached = self._load_cache("pledge_data", max_age_hours=24)
+        if cached is not None:
+            try:
+                return pd.DataFrame(cached)
+            except Exception:
+                pass
+
+        url  = f"{NSE_BASE}/api/corporate-pledgedata?index=equities"
+        resp = self._get(url)
+        if not resp:
+            return None
+        try:
+            data = resp.json().get('data', [])
+            rows = []
+            for item in data:
+                try:
+                    rows.append({
+                        'com_name': str(item.get('comName', '')).strip(),
+                        'pct_promoter_holding':
+                            float(str(item.get('percPromoterHolding', 0)).strip() or 0),
+                        'pct_shares_pledged':
+                            float(str(item.get('percSharesPledged', 0)).strip() or 0),
+                    })
+                except Exception:
+                    continue
+            if not rows:
+                return None
+            self._save_cache("pledge_data", rows)
+            return pd.DataFrame(rows)
+        except Exception:
+            return None
+
+    # ------------------------------------------------------------------ #
+    #  SAST Reg 29 Disclosures (promoter/acquirer stake changes)          #
+    # ------------------------------------------------------------------ #
+    def get_sast_deals(self) -> List[Dict]:
+        """
+        Recent SAST Regulation 29 disclosures (substantial stake changes).
+        Each item: symbol, acq_sale ('Acquisition'/'Sale'), is_promoter,
+        shares, pct_diluted, end_date (dd-MMM-yyyy string). Cached 12h.
+        """
+        cached = self._load_cache("sast_reg29", max_age_hours=12)
+        if cached is not None:
+            return cached
+
+        url  = f"{NSE_BASE}/api/corporate-sast-reg29?index=equities"
+        resp = self._get(url)
+        if not resp:
+            return []
+        try:
+            data = resp.json().get('data', [])
+            out = []
+            for item in data:
+                try:
+                    date_range = str(item.get('acquirerDate', '') or '')
+                    end_date = date_range.split(' to ')[-1].strip()
+                    pct = item.get('totAcqDiluted') or item.get('totSaleDiluted')
+                    out.append({
+                        'symbol':      str(item.get('symbol', '')).strip().upper(),
+                        'acq_sale':    str(item.get('acqSaleType', '')).strip(),
+                        'is_promoter': str(item.get('promoterType', 'N')).strip() == 'Y',
+                        'shares':      float(item.get('noOfShareAcq')
+                                             or item.get('noOfShareSale') or 0),
+                        'pct_diluted': float(str(pct).strip()) if pct else 0.0,
+                        'end_date':    end_date,
+                    })
+                except Exception:
+                    continue
+            self._save_cache("sast_reg29", out)
+            return out
+        except Exception:
+            return []
+
+    # ------------------------------------------------------------------ #
+    #  Quarterly Shareholding Pattern (per symbol)                        #
+    # ------------------------------------------------------------------ #
+    def get_shareholding(self, symbol: str) -> List[Dict]:
+        """
+        Quarterly shareholding pattern for one symbol.
+        Each item: quarter_end, submission_date, promoter_pct, public_pct.
+        submission_date is when the data became PUBLIC — alphas must filter on
+        it (not quarter_end) to stay point-in-time correct.
+        Quarterly data → cached 30 days.
+        """
+        sym = symbol.replace('.NS', '').upper()
+        cache_key = f"shp_{sym}"
+        cached = self._load_cache(cache_key, max_age_hours=24 * 30)
+        if cached is not None:
+            return cached
+
+        url  = (f"{NSE_BASE}/api/corporate-share-holdings-master"
+                f"?index=equities&symbol={sym}")
+        resp = self._get(url)
+        if not resp:
+            return []
+        try:
+            data = resp.json()
+            if not isinstance(data, list):
+                return []
+            out = []
+            for item in data[:12]:        # last ~3 years of quarters
+                try:
+                    out.append({
+                        'quarter_end':     str(item.get('date', '')),
+                        'submission_date': str(item.get('submissionDate', '')),
+                        'promoter_pct':    float(item.get('pr_and_prgrp') or 0),
+                        'public_pct':      float(item.get('public_val') or 0),
+                    })
+                except Exception:
+                    continue
+            self._save_cache(cache_key, out)
+            return out
+        except Exception:
+            return []
+
+
 # ---------------------------------------------------------------------------
 # Global singleton
 # ---------------------------------------------------------------------------

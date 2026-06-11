@@ -1115,6 +1115,31 @@ class CorporateEventAlpha:
         ('npa',              -0.40, 65.0),
         ('fraud',            -0.70, 80.0),
         ('insolvency',       -0.70, 80.0),
+        # Extended lexicon
+        ('open offer',        0.45, 62.0),
+        ('delisting',         0.40, 58.0),
+        ('rating upgrade',    0.40, 60.0),
+        ('upgraded to',       0.35, 55.0),
+        ('joint venture',     0.25, 48.0),
+        ('partnership',       0.20, 45.0),
+        ('record date',       0.15, 35.0),
+        ('stake acquisition', 0.30, 52.0),
+        ('preferential issue',-0.25, 52.0),
+        ('rating downgrade', -0.45, 65.0),
+        ('downgraded to',    -0.40, 60.0),
+        ('credit watch',     -0.35, 58.0),
+        ('penalty',          -0.30, 55.0),
+        ('show cause',       -0.40, 62.0),
+        ('income tax search',-0.45, 65.0),
+        ('gst notice',       -0.25, 50.0),
+        ('litigation',       -0.20, 45.0),
+        ('arbitration',      -0.20, 45.0),
+        ('plant shutdown',   -0.35, 58.0),
+        ('fire at',          -0.30, 55.0),
+        ('strike at',        -0.25, 50.0),
+        ('ceo steps down',   -0.35, 58.0),
+        ('cfo steps down',   -0.40, 60.0),
+        ('auditor resign',   -0.65, 78.0),
     ]
 
     @classmethod
@@ -1314,6 +1339,244 @@ class SectorRotationAlpha:
 
 
 # ==============================================================================
+# 13. PROMOTER PLEDGE ALPHA  (NSE pledge filings)
+# ==============================================================================
+class PromoterPledgeAlpha:
+    """
+    Promoter share-pledging signal.
+
+    Promoters pledging their own shares to borrow money is one of the most
+    reliable red flags in Indian markets (pledged stakes get dumped by lenders
+    on margin calls, crashing the stock). The reverse — pledge RELEASE — is a
+    strong positive: promoters' finances are improving.
+
+    Score uses the % of the PROMOTER STAKE that is pledged:
+      >= 50% pledged → -0.7   (severe risk)
+      >= 25% pledged → -0.4
+      >= 10% pledged → -0.2
+    Plus a trend term once we have >= 7 days of snapshot history:
+      pledge falling  → +0.4 bonus (release = bullish)
+      pledge rising   → -0.3 extra
+    Data: NSE corporate-pledgedata (free; keyed by company name — mapped to
+    symbols via the Nifty 500 constituent list).
+    """
+
+    _history_file = _CACHE_DIR / "pledge_history.parquet"
+    _snapshot: Optional[Dict[str, float]] = None     # {SYMBOL: pledge_ratio}
+    _snapshot_date: Optional[date] = None
+
+    @classmethod
+    def _build_snapshot(cls) -> Dict[str, float]:
+        """{SYMBOL: % of promoter stake pledged}, persisted daily for trend."""
+        today = date.today()
+        if cls._snapshot_date == today and cls._snapshot is not None:
+            return cls._snapshot
+        try:
+            from nse_fetcher import get_fetcher
+            from universe import get_name_to_symbol_map, normalize_company_name
+            df = get_fetcher().get_pledge_data()
+            if df is None or df.empty:
+                cls._snapshot = cls._snapshot or {}
+                return cls._snapshot
+            name_map = get_name_to_symbol_map()
+            snap: Dict[str, float] = {}
+            for _, r in df.iterrows():
+                sym = name_map.get(normalize_company_name(r['com_name']))
+                if not sym:
+                    continue
+                promoter = float(r['pct_promoter_holding'] or 0)
+                pledged  = float(r['pct_shares_pledged'] or 0)
+                if promoter > 1:
+                    snap[sym] = round(pledged / promoter * 100, 2)
+            cls._snapshot = snap
+            cls._snapshot_date = today
+
+            # Append today's snapshot to history (for the trend term)
+            try:
+                hist = pd.read_parquet(cls._history_file) \
+                    if cls._history_file.exists() else pd.DataFrame()
+                new = pd.DataFrame(
+                    [{'date': str(today), 'symbol': s, 'pledge_ratio': v}
+                     for s, v in snap.items()])
+                hist = pd.concat([hist, new], ignore_index=True)
+                hist = hist.drop_duplicates(subset=['date', 'symbol'], keep='last')
+                cutoff = str(today - timedelta(days=120))
+                hist = hist[hist['date'] >= cutoff]
+                hist.to_parquet(cls._history_file)
+            except Exception:
+                pass
+            return snap
+        except Exception:
+            cls._snapshot = cls._snapshot or {}
+            return cls._snapshot
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date) -> Tuple[float, float]:
+        try:
+            snap = cls._build_snapshot()
+            nse_sym = symbol.replace('.NS', '').upper()
+            if nse_sym not in snap:
+                return 0.0, 0.0
+            ratio = snap[nse_sym]
+
+            if ratio >= 50:
+                score, conf = -0.7, 75.0
+            elif ratio >= 25:
+                score, conf = -0.4, 60.0
+            elif ratio >= 10:
+                score, conf = -0.2, 45.0
+            else:
+                score, conf = 0.0, 0.0
+
+            # Trend: compare against the oldest snapshot >= 7 days back
+            try:
+                if cls._history_file.exists():
+                    hist = pd.read_parquet(cls._history_file)
+                    h = hist[hist['symbol'] == nse_sym].sort_values('date')
+                    old = h[h['date'] <= str(as_of_date - timedelta(days=7))]
+                    if not old.empty:
+                        change = ratio - float(old['pledge_ratio'].iloc[-1])
+                        if change <= -5:          # release ≥5pp = bullish
+                            score += 0.4
+                            conf = max(conf, 60.0)
+                        elif change >= 5:         # fresh pledging = bearish
+                            score -= 0.3
+                            conf = max(conf, 65.0)
+            except Exception:
+                pass
+
+            if conf == 0:
+                return 0.0, 0.0
+            return float(np.clip(score, -1.0, 1.0)), float(min(conf, 85.0))
+        except Exception:
+            return 0.0, 0.0
+
+
+# ==============================================================================
+# 14. SAST STAKE-CHANGE ALPHA  (Reg 29 disclosures)
+# ==============================================================================
+class SASTAlpha:
+    """
+    Substantial stake changes disclosed under SAST Regulation 29.
+
+    When a promoter or large acquirer crosses a disclosure threshold buying
+    shares in the open market, they are betting real money with the best
+    information available. Promoter acquisitions predict outperformance;
+    promoter sales are a warning.
+
+    Score (events in the last 30 days, promoter events weighted double):
+      net acquisition → up to +0.7    net sale → down to -0.7
+    Data: NSE corporate-sast-reg29 (free).
+    """
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date,
+                   lookback_days: int = 30) -> Tuple[float, float]:
+        try:
+            from nse_fetcher import get_fetcher
+            deals = get_fetcher().get_sast_deals()
+            if not deals:
+                return 0.0, 0.0
+
+            nse_sym = symbol.replace('.NS', '').upper()
+            cutoff = as_of_date - timedelta(days=lookback_days)
+
+            net, n_events = 0.0, 0
+            for d in deals:
+                if d.get('symbol') != nse_sym:
+                    continue
+                try:
+                    end = datetime.strptime(
+                        d.get('end_date', '')[:11].strip(), '%d-%b-%Y').date()
+                except Exception:
+                    continue
+                if end < cutoff or end > as_of_date:
+                    continue
+
+                direction = 1.0 if 'acqui' in d.get('acq_sale', '').lower() else -1.0
+                # Size term: 1%+ of diluted capital is a big statement
+                size = min(abs(d.get('pct_diluted', 0.0)) / 1.0, 1.0)
+                weight = (2.0 if d.get('is_promoter') else 1.0) * (0.4 + 0.6 * size)
+                net += direction * weight
+                n_events += 1
+
+            if n_events == 0:
+                return 0.0, 0.0
+
+            score = float(np.clip(net * 0.35, -0.7, 0.7))
+            conf  = float(min(45 + n_events * 10 + abs(net) * 10, 80.0))
+            if abs(score) < 0.05:
+                return 0.0, 0.0
+            return score, conf
+        except Exception:
+            return 0.0, 0.0
+
+
+# ==============================================================================
+# 15. SHAREHOLDING DELTA ALPHA  (quarterly promoter stake changes)
+# ==============================================================================
+class ShareholdingDeltaAlpha:
+    """
+    Quarter-over-quarter change in promoter holding from official shareholding
+    patterns. Promoters raising their stake = the strongest insider signal
+    available in public data; consistent dilution = caution.
+
+    Point-in-time safe: only quarters whose SUBMISSION date (when the filing
+    became public) is on or before as_of_date are used — never the quarter-end
+    date, which would be lookahead.
+
+    Data: NSE corporate-share-holdings-master per symbol (free, cached 30d).
+    """
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date) -> Tuple[float, float]:
+        try:
+            from nse_fetcher import get_fetcher
+            rows = get_fetcher().get_shareholding(symbol)
+            if not rows or len(rows) < 2:
+                return 0.0, 0.0
+
+            def _parse(d: str) -> Optional[date]:
+                for fmt in ('%d-%b-%Y', '%d-%B-%Y', '%Y-%m-%d'):
+                    try:
+                        return datetime.strptime(d.strip()[:11], fmt).date()
+                    except Exception:
+                        continue
+                return None
+
+            known = []
+            for r in rows:
+                sub = _parse(r.get('submission_date', ''))
+                qe  = _parse(r.get('quarter_end', ''))
+                if sub and qe and sub <= as_of_date and r.get('promoter_pct'):
+                    known.append((qe, sub, float(r['promoter_pct'])))
+            if len(known) < 2:
+                return 0.0, 0.0
+
+            known.sort(key=lambda x: x[0])
+            (q_prev, _, p_prev), (q_last, sub_last, p_last) = known[-2], known[-1]
+            delta = p_last - p_prev
+
+            if delta >= 0.5:
+                score, conf = 0.5, 65.0
+            elif delta >= 0.25:
+                score, conf = 0.3, 50.0
+            elif delta <= -0.5:
+                score, conf = -0.5, 65.0
+            elif delta <= -0.25:
+                score, conf = -0.3, 50.0
+            else:
+                return 0.0, 0.0
+
+            # Decay: filings older than ~a quarter carry less signal
+            days_old = (as_of_date - sub_last).days
+            decay = max(0.4, 1.0 - days_old / 180.0)
+            return float(np.clip(score * decay, -1.0, 1.0)), float(conf * decay)
+        except Exception:
+            return 0.0, 0.0
+
+
+# ==============================================================================
 # MASTER ALPHA AGGREGATOR  (UPDATED with 3 new signals)
 # ==============================================================================
 class IndiaAlphaAggregator:
@@ -1346,8 +1609,11 @@ class IndiaAlphaAggregator:
         'insider':      0.08,
         'fo_ban':       0.06,
         'corp_event':   0.04,
-        'rel_strength': 0.07,   # leadership vs index (new)
-        'sector_mom':   0.06,   # sector rotation (new)
+        'rel_strength': 0.07,   # leadership vs index
+        'sector_mom':   0.06,   # sector rotation
+        'pledge':       0.05,   # promoter pledge risk (new)
+        'sast':         0.06,   # SAST stake changes (new)
+        'shp_delta':    0.05,   # quarterly promoter stake delta (new)
     }
 
     @classmethod
@@ -1392,6 +1658,11 @@ class IndiaAlphaAggregator:
                                 symbol, as_of_date, data_dir),
             'sector_mom':   lambda: SectorRotationAlpha.get_signal(
                                 symbol, as_of_date, data_dir),
+            'pledge':       lambda: PromoterPledgeAlpha.get_signal(
+                                symbol, as_of_date),
+            'sast':         lambda: SASTAlpha.get_signal(symbol, as_of_date),
+            'shp_delta':    lambda: ShareholdingDeltaAlpha.get_signal(
+                                symbol, as_of_date),
         }
 
         # Check for disabled signals (from signal_decay_detector)

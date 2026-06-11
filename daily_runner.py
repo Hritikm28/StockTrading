@@ -77,7 +77,14 @@ class RunnerConfig:
         'BAJAJHLDNG.NS', 'CHOLAFIN.NS', 'LICI.NS',
     ]
 
-    DEFAULT_UNIVERSE = NIFTY_50 + NIFTY_NEXT_50_ADDITIONS
+    # Nifty 500 with liquidity floor — the edge lives in liquid mid-caps that
+    # funds can't touch. Falls back to the legacy large-cap list if the NSE
+    # constituent list is unreachable (see universe.py).
+    try:
+        from universe import get_universe as _get_universe
+        DEFAULT_UNIVERSE = _get_universe()
+    except Exception:
+        DEFAULT_UNIVERSE = NIFTY_50 + NIFTY_NEXT_50_ADDITIONS
 
     # Risk
     MAX_POSITIONS = 10

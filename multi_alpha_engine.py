@@ -240,7 +240,7 @@ class StockWeightLearner:
 
     SIGNALS = ['momentum', 'fii_dii', 'pead', 'mean_rev', 'bulk_deal',
                'delivery_pct', 'option_chain', 'insider', 'fo_ban', 'corp_event',
-               'rel_strength', 'sector_mom']
+               'rel_strength', 'sector_mom', 'pledge', 'sast', 'shp_delta']
 
     _data: Optional[Dict] = None
 
@@ -674,6 +674,9 @@ class MultiAlphaEngine:
             'corp_event':   'corp_event',
             'rel_strength': 'rel_strength',
             'sector_mom':   'sector_mom',
+            'pledge':       'pledge',
+            'sast':         'sast',
+            'shp_delta':    'shp_delta',
         }
         for alpha_key, weight_key in alpha_name_map.items():
             comp  = components.get(alpha_key, {})

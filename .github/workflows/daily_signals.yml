@@ -72,6 +72,14 @@ jobs:
           restore-keys: |
             earningsdata-v1-
 
+      - name: Restore alpha-data cache (FII/DII flow history)
+        uses: actions/cache@v4
+        with:
+          path: data/alpha_cache
+          key: alphacache-v1-${{ steps.date.outputs.ymd }}
+          restore-keys: |
+            alphacache-v1-
+
       - name: Install lean engine dependencies
         run: pip install -r requirements_engine.txt
 

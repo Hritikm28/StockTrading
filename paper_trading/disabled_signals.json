@@ -1,37 +1,40 @@
 {
   "momentum": {
-    "disabled": true,
+    "disabled": false,
     "disabled_on": "2026-06-11",
-    "reason": "Win rate 44.2% < 45.0%",
+    "reason": "kill no longer supported (wr 44.2%, upper bound 56.7%, 43 trades)",
     "win_rate": 44.2,
-    "n_trades": 43
+    "n_trades": 43,
+    "restored_on": "2026-06-11"
   },
   "mean_rev": {
     "disabled": true,
     "disabled_on": "2026-06-11",
-    "reason": "Win rate 19.4% < 45.0%",
+    "reason": "Win rate 19.4% (95% upper bound 31.1%) < 45.0%",
     "win_rate": 19.4,
     "n_trades": 31
   },
   "delivery_pct": {
     "disabled": true,
     "disabled_on": "2026-06-11",
-    "reason": "Win rate 22.0% < 45.0%",
+    "reason": "Win rate 22.0% (95% upper bound 32.6%) < 45.0%",
     "win_rate": 22.0,
     "n_trades": 41
   },
   "corp_event": {
-    "disabled": true,
+    "disabled": false,
     "disabled_on": "2026-06-11",
-    "reason": "Win rate 14.3% < 45.0%",
+    "reason": "kill no longer supported (wr 14.3%, upper bound 36.1%, 7 trades)",
     "win_rate": 14.3,
-    "n_trades": 7
+    "n_trades": 7,
+    "restored_on": "2026-06-11"
   },
   "rel_strength": {
-    "disabled": true,
+    "disabled": false,
     "disabled_on": "2026-06-11",
-    "reason": "Win rate 39.4% < 45.0%",
+    "reason": "kill no longer supported (wr 39.4%, upper bound 53.4%, 33 trades)",
     "win_rate": 39.4,
-    "n_trades": 33
+    "n_trades": 33,
+    "restored_on": "2026-06-11"
   }
 }

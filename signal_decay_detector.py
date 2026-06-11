@@ -34,9 +34,15 @@ PERFORMANCE_FILE  = RESULTS_DIR / "performance.csv"
 DISABLED_FILE     = Path("paper_trading/disabled_signals.json")
 DISABLED_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-KILL_THRESHOLD    = 45.0   # Win rate below this → disable signal
+KILL_THRESHOLD    = 45.0   # Win rate below this → candidate to disable
 RESTORE_THRESHOLD = 55.0   # Win rate above this → re-enable signal
-MIN_TRADES        = 5      # Need at least this many trades to judge
+MIN_TRADES        = 5      # Need at least this many trades to report stats
+MIN_TRADES_TO_KILL = 20    # ...but killing needs real evidence, not noise
+COOLDOWN_DAYS     = 14     # Disabled signals get a probation comeback after
+                           # this many days — otherwise a disabled alpha
+                           # produces no scores, hence no new trades, hence
+                           # can never re-qualify (permanent death spiral).
+Z_95              = 1.645  # one-sided 95% confidence
 LOOKBACK_DAYS     = 30     # Rolling window for win rate calculation
 
 
@@ -179,13 +185,41 @@ def compute_signal_winrates(perf_df: pd.DataFrame,
 # ---------------------------------------------------------------------------
 # Decay detection
 # ---------------------------------------------------------------------------
+def _wilson_upper(wr_pct: float, n: int) -> float:
+    """
+    One-sided 95% upper confidence bound on the true win rate (%).
+    Killing a signal requires this bound to be BELOW the threshold —
+    i.e. we must be statistically confident the signal is bad, not just
+    unlucky. 44% over 40 trades is noise; 20% over 40 trades is decay.
+    """
+    p = wr_pct / 100.0
+    return (p + Z_95 * np.sqrt(max(p * (1 - p), 1e-9) / n)) * 100.0
+
+
 def detect_decay(winrates: Dict, current_disabled: Dict) -> Dict:
     """
-    Compare win rates against thresholds.
+    Compare win rates against thresholds with statistical evidence.
     Returns updated disabled state dict.
     """
-    today     = str(date.today())
+    today     = date.today()
     new_state = dict(current_disabled)
+
+    # Probation: re-enable anything disabled >= COOLDOWN_DAYS ago. If it is
+    # genuinely decayed it will re-fail on fresh evidence; if it was killed
+    # by noise (or the regime changed) it earns its way back in.
+    for sig_name, st in list(new_state.items()):
+        if not st.get('disabled'):
+            continue
+        try:
+            dis_on = pd.Timestamp(st['disabled_on']).date()
+        except Exception:
+            continue
+        if (today - dis_on).days >= COOLDOWN_DAYS:
+            st['disabled']    = False
+            st['restored_on'] = str(today)
+            st['reason']      = f"probation after {COOLDOWN_DAYS}d cooldown"
+            print(f"   [ON]  PROBATION: {sig_name} re-enabled after "
+                  f"{COOLDOWN_DAYS}d cooldown")
 
     for sig_name, stats in winrates.items():
         if sig_name == '_overall':
@@ -197,28 +231,42 @@ def detect_decay(winrates: Dict, current_disabled: Dict) -> Dict:
         if n < MIN_TRADES:
             continue
 
-        if wr < KILL_THRESHOLD:
-            if sig_name not in new_state:
-                new_state[sig_name] = {
-                    'disabled':     True,
-                    'disabled_on':  today,
-                    'reason':       f"Win rate {wr:.1f}% < {KILL_THRESHOLD}%",
-                    'win_rate':     wr,
-                    'n_trades':     n,
-                }
-                print(f"   [OFF] DISABLED: {sig_name} "
-                      f"(win rate {wr:.1f}%, {n} trades)")
-            else:
-                # Update stats
-                new_state[sig_name]['win_rate'] = wr
-                new_state[sig_name]['n_trades'] = n
+        upper = _wilson_upper(wr, n)
+        kill = (n >= MIN_TRADES_TO_KILL and upper < KILL_THRESHOLD)
+
+        if kill:
+            already = new_state.get(sig_name, {}).get('disabled', False)
+            new_state[sig_name] = {
+                **new_state.get(sig_name, {}),
+                'disabled':     True,
+                'disabled_on':  new_state.get(sig_name, {}).get('disabled_on',
+                                                                str(today))
+                                if already else str(today),
+                'reason':       (f"Win rate {wr:.1f}% (95% upper bound "
+                                 f"{upper:.1f}%) < {KILL_THRESHOLD}%"),
+                'win_rate':     wr,
+                'n_trades':     n,
+            }
+            if not already:
+                print(f"   [OFF] DISABLED: {sig_name} (win rate {wr:.1f}%, "
+                      f"upper bound {upper:.1f}%, {n} trades)")
         elif wr >= RESTORE_THRESHOLD:
             if sig_name in new_state and new_state[sig_name].get('disabled'):
                 new_state[sig_name]['disabled']    = False
-                new_state[sig_name]['restored_on'] = today
+                new_state[sig_name]['restored_on'] = str(today)
                 new_state[sig_name]['win_rate']    = wr
                 print(f"   [ON]  RESTORED: {sig_name} "
                       f"(win rate {wr:.1f}%, {n} trades)")
+        elif sig_name in new_state and new_state[sig_name].get('disabled'):
+            # Currently disabled but evidence no longer supports the kill
+            # under the statistical rule — bring it back.
+            new_state[sig_name]['disabled']    = False
+            new_state[sig_name]['restored_on'] = str(today)
+            new_state[sig_name]['reason']      = (
+                f"kill no longer supported (wr {wr:.1f}%, "
+                f"upper bound {upper:.1f}%, {n} trades)")
+            print(f"   [ON]  RESTORED: {sig_name} — evidence too weak to "
+                  f"keep disabled (wr {wr:.1f}%, ub {upper:.1f}%, n={n})")
 
     return new_state
 

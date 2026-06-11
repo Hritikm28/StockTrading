@@ -102,23 +102,57 @@ class FIIDIIAlpha:
             if not data:
                 return None
 
-            records = []
+            # NSE's live schema is one row PER CATEGORY per date with string
+            # values: {"buyValue":"22779.32","category":"DII","date":"05-Jun-2026",...}
+            # (verified by cloud_nse_probe). The old per-date fiiBuyValue
+            # schema is kept as fallback. Parsing the wrong schema returned
+            # all-zero flows and silently killed this alpha for months.
+            by_date: Dict = {}
             for entry in data:
                 try:
-                    records.append({
-                        'date': pd.to_datetime(entry.get('date', entry.get('tradeDate', ''))),
-                        'fii_buy': float(entry.get('fiiBuyValue', 0) or 0),
-                        'fii_sell': float(entry.get('fiiSellValue', 0) or 0),
-                        'dii_buy': float(entry.get('diiBuyValue', 0) or 0),
-                        'dii_sell': float(entry.get('diiSellValue', 0) or 0),
-                    })
+                    if 'category' in entry:
+                        d = pd.to_datetime(entry.get('date', ''))
+                        cat = str(entry.get('category', '')).upper()
+                        row = by_date.setdefault(d, {
+                            'fii_buy': 0.0, 'fii_sell': 0.0,
+                            'dii_buy': 0.0, 'dii_sell': 0.0})
+                        buy  = float(entry.get('buyValue') or 0)
+                        sell = float(entry.get('sellValue') or 0)
+                        if 'FII' in cat or 'FPI' in cat:
+                            row['fii_buy'], row['fii_sell'] = buy, sell
+                        elif 'DII' in cat:
+                            row['dii_buy'], row['dii_sell'] = buy, sell
+                    else:
+                        d = pd.to_datetime(
+                            entry.get('date', entry.get('tradeDate', '')))
+                        by_date[d] = {
+                            'fii_buy':  float(entry.get('fiiBuyValue', 0) or 0),
+                            'fii_sell': float(entry.get('fiiSellValue', 0) or 0),
+                            'dii_buy':  float(entry.get('diiBuyValue', 0) or 0),
+                            'dii_sell': float(entry.get('diiSellValue', 0) or 0),
+                        }
                 except Exception:
                     continue
 
-            if not records:
+            if not by_date:
                 return None
 
-            df = pd.DataFrame(records).set_index('date').sort_index()
+            df = pd.DataFrame.from_dict(by_date, orient='index').sort_index()
+            df.index.name = 'date'
+
+            # The API only returns the last few sessions; the 5d rolling
+            # signal needs history. Accumulate: merge with the disk cache,
+            # new data winning on overlap. Drop all-zero legacy rows (the
+            # old parser bug wrote zeros — they would poison the rolling sum).
+            base_cols = ['fii_buy', 'fii_sell', 'dii_buy', 'dii_sell']
+            if cls._cache_file.exists():
+                try:
+                    old = pd.read_parquet(cls._cache_file)
+                    old = old[[c for c in base_cols if c in old.columns]]
+                    old = old[old.abs().sum(axis=1) > 0]
+                    df = df.combine_first(old).sort_index()
+                except Exception:
+                    pass
             df['fii_net'] = df['fii_buy'] - df['fii_sell']
             df['dii_net'] = df['dii_buy'] - df['dii_sell']
             df['combined_net'] = df['fii_net'] + df['dii_net']

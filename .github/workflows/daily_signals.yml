@@ -34,7 +34,9 @@ concurrency:
 jobs:
   generate-signals:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # 50 (was 30): a cold cache re-seed (800-day bootstrap) took ~28 min in
+    # the past — too close to a 30-min kill while running unattended.
+    timeout-minutes: 50
 
     steps:
       - name: Checkout repository

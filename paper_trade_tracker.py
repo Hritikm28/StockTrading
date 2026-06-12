@@ -66,8 +66,10 @@ SUMMARY_FILE      = RESULTS_DIR / "summary.json"
 TRACK_RECORD_FILE = RESULTS_DIR / "track_record.md"
 WL_PROCESSED_FILE = RESULTS_DIR / "wl_processed.json"
 
-# Outcome windows in TRADING days from entry (entry day = day 1)
-WINDOWS = [1, 3, 5]
+# Outcome windows in TRADING days from entry (entry day = day 1).
+# 5d is the PRIMARY horizon (what the validated alphas + pooled ML predict);
+# 10d tracks slow-edge follow-through; 1d/3d are diagnostics only.
+WINDOWS = [1, 3, 5, 10]
 
 # ── Transaction cost model (NSE equity delivery, % round trip) ─────────────
 # STT 0.1% buy + 0.1% sell, exchange txn ~0.003% x2, SEBI + stamp + GST + DP
@@ -78,7 +80,7 @@ SLIPPAGE_PCT_ROUND_TRIP = 0.15
 TOTAL_COST_PCT = FEES_PCT_ROUND_TRIP + SLIPPAGE_PCT_ROUND_TRIP   # 0.40%
 
 # Single-window gross moves beyond this are treated as data errors
-SANITY_MAX_ABS_RET = {1: 25.0, 3: 40.0, 5: 60.0}
+SANITY_MAX_ABS_RET = {1: 25.0, 3: 40.0, 5: 60.0, 10: 80.0}
 
 
 # ---------------------------------------------------------------------------
@@ -422,6 +424,10 @@ def feed_weight_learner(df: pd.DataFrame):
     The legacy flow re-fed every historical outcome into StockWeightLearner on
     every run, compounding the EMA thousands of times. A processed-keys ledger
     guarantees one update per (symbol, signal_date).
+
+    Feeds on the 5-trading-day outcome (horizon-matched to the alphas) — a
+    trade enters the ledger only once its 5d window resolves, so it is never
+    half-fed with the noisy 1d outcome first.
     """
     try:
         from multi_alpha_engine import StockWeightLearner
@@ -435,7 +441,7 @@ def feed_weight_learner(df: pd.DataFrame):
         except Exception:
             processed = set()
 
-    fresh = df.dropna(subset=['ret_1d'])
+    fresh = df.dropna(subset=['ret_5d'])
     fresh = fresh[~fresh.apply(
         lambda r: f"{r['symbol']}|{r['signal_date']}", axis=1).isin(processed)]
     if fresh.empty:
@@ -486,10 +492,11 @@ def print_report(metrics: Dict, df: pd.DataFrame, track: Dict):
               f"NIFTY {track['cum_nifty_pct']:+.2f}%  ->  "
               f"EXCESS {track['cum_excess_pct']:+.2f}%")
 
-    m1 = metrics.get('1d', {})
-    if m1.get('n_trades', 0) >= 10:
-        wr, exc = m1.get('win_rate', 0), m1.get('avg_excess')
-        print("\n  SYSTEM HEALTH (after costs):")
+    # Health judged on the PRIMARY 5d horizon (1d is noise for these alphas)
+    m5 = metrics.get('5d') or metrics.get('1d', {})
+    if m5.get('n_trades', 0) >= 10:
+        wr, exc = m5.get('win_rate', 0), m5.get('avg_excess')
+        print("\n  SYSTEM HEALTH (5d horizon, after costs):")
         if wr >= 55 and (exc or 0) > 0:
             print("  [OK]   Win rate and excess-vs-NIFTY both positive")
         elif wr >= 50:
@@ -498,7 +505,7 @@ def print_report(metrics: Dict, df: pd.DataFrame, track: Dict):
             print("  [BAD]  Net win rate below 50% — review weights/kill-switch")
     else:
         print(f"\n  INFO: need 10+ graded trades for health check "
-              f"(have {m1.get('n_trades', 0)})")
+              f"(have {m5.get('n_trades', 0)})")
     print()
 
 

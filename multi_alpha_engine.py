@@ -52,74 +52,11 @@ from india_alpha_signals import IndiaAlphaAggregator
 
 
 # ==============================================================================
-# IMPROVEMENT 1 — PER-STOCK PERFORMANCE DAMPENER
-# ==============================================================================
-class PerformanceDampener:
-    """
-    Dynamically adjusts a stock's composite score based on its recent 1-day
-    win rate tracked in paper_trading/results/performance.csv.
-
-    Formula:  multiplier = clip( win_rate / BASELINE, MIN_MULT, MAX_MULT )
-
-    Examples:
-      win_rate=20%  -> multiplier ~0.36  (strongly suppress)
-      win_rate=45%  -> multiplier ~0.82  (mild suppress)
-      win_rate=55%  -> multiplier ~1.00  (neutral — the baseline)
-      win_rate=72%  -> multiplier ~1.15  (slight boost, capped)
-
-    Requires MIN_TRADES before diverging from 1.0 so new stocks are unaffected.
-    Self-correcting: as a stock's performance recovers the multiplier rises
-    automatically without any manual intervention.
-    """
-
-    PERF_FILE  = Path("paper_trading/results/performance.csv")
-    LOOKBACK   = 15     # Last N completed 1-day trades per stock
-    MIN_TRADES = 5      # Need at least this many to apply dampening
-    BASELINE   = 0.55   # Expected system win rate
-    MIN_MULT   = 0.35   # Floor (worst persistent losers)
-    MAX_MULT   = 1.15   # Cap  (avoid over-weighting lucky streaks)
-
-    _cache: Optional[Dict[str, float]] = None
-    _cache_date: Optional[date] = None
-
-    @classmethod
-    def get_multipliers(cls, as_of_date: Optional[date] = None) -> Dict[str, float]:
-        """Returns {symbol: multiplier} for every stock with enough history."""
-        today = as_of_date or date.today()
-        if cls._cache_date == today and cls._cache is not None:
-            return cls._cache
-
-        if not cls.PERF_FILE.exists():
-            return {}
-        try:
-            df = pd.read_csv(cls.PERF_FILE)
-            if 'ret_1d' not in df.columns or 'symbol' not in df.columns:
-                return {}
-            df = df.dropna(subset=['ret_1d']).sort_values('signal_date')
-            mults: Dict[str, float] = {}
-            for sym, grp in df.groupby('symbol'):
-                recent = grp.tail(cls.LOOKBACK)
-                if len(recent) < cls.MIN_TRADES:
-                    continue
-                win_rate = float((recent['ret_1d'] > 0).mean())
-                mult = float(np.clip(win_rate / cls.BASELINE,
-                                     cls.MIN_MULT, cls.MAX_MULT))
-                mults[str(sym)] = round(mult, 3)
-            cls._cache = mults
-            cls._cache_date = today
-            return mults
-        except Exception:
-            return {}
-
-    @classmethod
-    def apply(cls, symbol: str, score: float,
-              as_of_date: Optional[date] = None) -> Tuple[float, float]:
-        """Returns (dampened_score, multiplier_used). 1.0 = no change."""
-        mults = cls.get_multipliers(as_of_date)
-        mult  = mults.get(symbol, 1.0)
-        return float(np.clip(score * mult, -1.0, 1.0)), mult
-
-
+# NOTE: the per-stock PerformanceDampener was REMOVED 2026-06-12. It scaled
+# scores by each stock's recent win rate, which is procyclical: a drawdown
+# dampened scores, which produced worse entries, which extended the drawdown.
+# System-level protection now lives in circuit_breaker.py (portfolio-level,
+# with statistical evidence) and the NIFTY 200-DMA trend gate below.
 # ==============================================================================
 # IMPROVEMENT 3 — MARKET BREADTH DETECTOR
 # ==============================================================================
@@ -224,8 +161,14 @@ class StockWeightLearner:
 
     Multipliers start at 1.0 and blend in gradually:
       < MIN_TRADES        -> 0% learned (pure global weights)
-      MIN_TRADES..30      -> linearly up to 70% learned
-      >= 30 trades        -> 70% learned, 30% global (never fully override)
+      MIN_TRADES..60      -> linearly up to 50% learned
+      >= 60 trades        -> 50% learned, 50% global (never fully override)
+
+    [2026-06-12] MIN_TRADES raised 5 -> 30 and blend capped at 50%: learning
+    a per-stock, per-signal multiplier from 5 outcomes is fitting noise —
+    a coin flipped 5 times shows "80% heads" 19% of the time. 30+ outcomes
+    per signal is the floor for the multiplier to mean anything, and the
+    50% cap keeps the global (validated) weights in charge.
 
     Storage:  paper_trading/stock_weights.json
     Called:   paper_trade_tracker.py after each outcome batch
@@ -233,8 +176,8 @@ class StockWeightLearner:
 
     WEIGHTS_FILE      = Path("paper_trading/stock_weights.json")
     EMA_ALPHA         = 0.85   # Slow learner — needs consistent evidence
-    MIN_TRADES        = 5
-    FULL_BLEND_TRADES = 30
+    MIN_TRADES        = 30
+    FULL_BLEND_TRADES = 60
     MAX_MULT          = 2.0
     MIN_MULT          = 0.15
 
@@ -290,9 +233,9 @@ class StockWeightLearner:
                 out[s] = 1.0
                 continue
             blend = min(
-                0.70 * (c - cls.MIN_TRADES) /
+                0.50 * (c - cls.MIN_TRADES) /
                 max(cls.FULL_BLEND_TRADES - cls.MIN_TRADES, 1),
-                0.70
+                0.50
             )
             out[s] = round((1 - blend) * 1.0 + blend * learned.get(s, 1.0), 3)
         return out
@@ -300,12 +243,14 @@ class StockWeightLearner:
     @classmethod
     def update_from_outcome(cls, symbol: str,
                             alpha_scores: Dict,
-                            ret_1d: float):
+                            fwd_ret: float):
         """
-        Update per-stock signal multipliers from one known 1-day outcome.
+        Update per-stock signal multipliers from one known outcome.
+        fwd_ret: the graded net return (5-trading-day horizon preferred —
+        matched to what the alphas actually predict; 1d is noise for them).
         alpha_scores: {'signal_name': {'score': x, 'confidence': y}, ...}
         """
-        if not alpha_scores or ret_1d is None or np.isnan(float(ret_1d)):
+        if not alpha_scores or fwd_ret is None or np.isnan(float(fwd_ret)):
             return
         data = cls._load()
         if symbol not in data:
@@ -314,7 +259,7 @@ class StockWeightLearner:
         sd['n_trades'] = sd.get('n_trades', 0) + 1
         mults = sd.setdefault('multipliers', {})
         counts = sd.setdefault('sig_counts', {})   # per-signal evidence count
-        pos_outcome = float(ret_1d) > 0
+        pos_outcome = float(fwd_ret) > 0
 
         for sig in cls.SIGNALS:
             comp  = alpha_scores.get(sig, {})
@@ -344,8 +289,11 @@ class StockWeightLearner:
             return 0
         updated = 0
         for _, row in perf_df.iterrows():
-            ret_1d = row.get('ret_1d')
-            if pd.isna(ret_1d):
+            # 5d outcome preferred (horizon-matched); 1d only as fallback
+            fwd_ret = row.get('ret_5d')
+            if pd.isna(fwd_ret):
+                fwd_ret = row.get('ret_1d')
+            if pd.isna(fwd_ret):
                 continue
             sym  = str(row.get('symbol', ''))
             sdate = str(row.get('signal_date', ''))
@@ -356,7 +304,7 @@ class StockWeightLearner:
             try:
                 with open(sf) as f:
                     alpha_scores = json.load(f)
-                cls.update_from_outcome(sym, alpha_scores, float(ret_1d))
+                cls.update_from_outcome(sym, alpha_scores, float(fwd_ret))
                 updated += 1
             except Exception:
                 continue
@@ -417,13 +365,31 @@ class RegimeDetector:
             if nifty_df is None or len(nifty_df) < 50:
                 return {
                     'regime': 'SIDEWAYS', 'confidence': 30.0,
-                    'vix': vix_value, 'nifty_trend': 0.0
+                    'vix': vix_value, 'nifty_trend': 0.0,
+                    'trend_gate_open': True, 'nifty_vs_200dma': 0.0,
                 }
 
             close = nifty_df['Close']
             sma20 = close.rolling(20).mean().iloc[-1]
             sma50 = close.rolling(50).mean().iloc[-1]
             nifty_trend = (sma20 / sma50 - 1) if sma50 > 0 else 0.0
+
+            # ── 200-DMA TREND GATE ────────────────────────────────────────────
+            # Master long-only filter: when NIFTY closes below its 200-day
+            # moving average, no new BUY signals are emitted (cash is a
+            # position). The single most reliable drawdown filter for Indian
+            # momentum systems — long-biased signals in a downtrend were the
+            # main driver of the May-June 2026 underperformance.
+            # Fail-open if fewer than 200 sessions of history (a closed gate
+            # from MISSING DATA would silently kill the system).
+            trend_gate_open  = True
+            nifty_vs_200dma  = 0.0
+            if len(close) >= 200:
+                sma200 = float(close.rolling(200).mean().iloc[-1])
+                if sma200 > 0:
+                    last_close       = float(close.iloc[-1])
+                    nifty_vs_200dma  = (last_close / sma200 - 1) * 100
+                    trend_gate_open  = last_close > sma200
 
             # 5-day VIX change
             if vix_path.exists() and len(vix_df) > 5:
@@ -493,6 +459,8 @@ class RegimeDetector:
                 'nifty_3d_change': round(nifty_3d_chg * 100, 2),
                 'regime_momentum': regime_momentum,
                 'transition_risk': round(transition_risk, 2),
+                'trend_gate_open': trend_gate_open,
+                'nifty_vs_200dma': round(nifty_vs_200dma, 2),
             }
 
         except Exception as e:
@@ -501,6 +469,7 @@ class RegimeDetector:
                 'vix': 15.0, 'nifty_trend': 0.0,
                 'nifty_3d_change': 0.0,
                 'regime_momentum': 'STABLE', 'transition_risk': 0.10,
+                'trend_gate_open': True, 'nifty_vs_200dma': 0.0,
             }
 
 
@@ -689,14 +658,18 @@ class MultiAlphaEngine:
             comp  = components.get(alpha_key, {})
             score = comp.get('score', 0.0)
             conf  = comp.get('confidence', 0.0)
-            if conf > 0:
+            # Tier system: shadow alphas (incubating/disabled) carry real
+            # scores for grading but get ZERO composite weight until they
+            # earn promotion with live evidence (signal_decay_detector).
+            is_live = comp.get('live', True)
+            if conf > 0 and is_live:
                 # [Improvement 4] scale regime weight by per-stock multiplier.
                 # Alphas absent from a regime map (e.g. fo_ban) get a small
                 # default so they still contribute; normalisation handles sums.
                 eff_w           = weights.get(weight_key, 0.04) * stock_mults.get(alpha_key, 1.0)
                 weighted_score += score * eff_w
                 total_weight   += eff_w
-            if conf > 0 and abs(score) > 0.05:
+            if conf > 0 and is_live and abs(score) > 0.05:
                 signals_with_view.append((alpha_key, score))
 
         # Normalise
@@ -719,14 +692,12 @@ class MultiAlphaEngine:
                 composite_score *= 0.75   # moderate penalty
             # consensus >= 0.40 → no penalty; score stands as-is
 
-        # ── [Improvement 1] Per-stock performance dampening ─────────────────
-        composite_score, dampen_mult = PerformanceDampener.apply(
-            symbol, composite_score, as_of_date
-        )
+        # (Per-stock performance dampener removed 2026-06-12 — procyclical.
+        #  Portfolio-level protection: circuit_breaker.py + 200-DMA gate.)
 
-        # Composite confidence
+        # Composite confidence — live signals only
         confs = [c.get('confidence', 0) for c in components.values()
-                 if c.get('confidence', 0) > 0]
+                 if c.get('confidence', 0) > 0 and c.get('live', True)]
         if ml_confidence > 0:
             confs.append(ml_confidence)
         composite_conf = float(np.mean(confs)) if confs else 0.0
@@ -755,7 +726,6 @@ class MultiAlphaEngine:
             'alpha_components':     components,
             'weight_used':          round(total_weight, 3),
             'consensus_ratio':      round(consensus_ratio, 2),
-            'dampen_multiplier':    round(dampen_mult, 3),
         }
 
     def rank_universe(
@@ -780,6 +750,8 @@ class MultiAlphaEngine:
         regime_momentum = regime_info.get('regime_momentum', 'STABLE')
         transition_risk = regime_info.get('transition_risk', 0.10)
         nifty_3d        = regime_info.get('nifty_3d_change', 0.0)
+        trend_gate_open = regime_info.get('trend_gate_open', True)
+        nifty_vs_200dma = regime_info.get('nifty_vs_200dma', 0.0)
 
         # ── [Improvement 3] Market breadth ───────────────────────────────────
         breadth = MarketBreadthDetector.compute(as_of_date, symbols, self.data_dir)
@@ -807,6 +779,9 @@ class MultiAlphaEngine:
             if regime_momentum != 'STABLE':
                 print(f"   [!] Regime {regime_momentum} "
                       f"(transition risk {transition_risk:.0%})")
+            gate_str = "OPEN" if trend_gate_open else "CLOSED — no new BUYs"
+            print(f"[GATE]   200-DMA trend gate {gate_str} "
+                  f"(NIFTY {nifty_vs_200dma:+.1f}% vs 200-DMA)")
             bl = breadth['label']
             print(f"[BREADTH] {bl}: {breadth['ad_ratio']:.0%} advancing, "
                   f"{breadth['pct_above_ma5']:.0%} above MA5 "
@@ -891,6 +866,18 @@ class MultiAlphaEngine:
             'signal'
         ] = 'BUY'
 
+        # ── 200-DMA TREND GATE (final word on the long side) ─────────────────
+        # NIFTY below its 200-day MA → every BUY becomes HOLD. Long-only
+        # alpha in a confirmed downtrend is how the system bled vs the index;
+        # holding cash until the gate reopens is itself the position.
+        if not trend_gate_open:
+            n_gated = int((df['signal'] == 'BUY').sum())
+            df.loc[df['signal'] == 'BUY', 'signal'] = 'HOLD'
+            if verbose and n_gated:
+                print(f"\n[GATE] Trend gate CLOSED: {n_gated} BUY signal(s) "
+                      f"downgraded to HOLD (NIFTY {nifty_vs_200dma:+.1f}% "
+                      f"below 200-DMA)")
+
         # ── Save alpha scores for weight-learning feedback loop ───────────────
         # paper_trade_tracker will read these files to update StockWeightLearner
         alpha_dir = Path("paper_trading/alpha_scores")
@@ -914,6 +901,8 @@ class MultiAlphaEngine:
         df['vix']              = regime_info['vix']
         df['breadth_label']    = breadth['label']
         df['breadth_ad_ratio'] = breadth['ad_ratio']
+        df['trend_gate_open']  = trend_gate_open
+        df['nifty_vs_200dma']  = nifty_vs_200dma
 
         if verbose:
             print(f"\n📊 Top 5 BUY Candidates:")

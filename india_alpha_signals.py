@@ -1746,32 +1746,32 @@ class IndiaAlphaAggregator:
                                 symbol, as_of_date),
         }
 
-        # Check for disabled signals (from signal_decay_detector)
-        disabled_signals: set = set()
+        # Tier system (signal_decay_detector): live alphas = core +
+        # promoted - disabled. Everything else runs in SHADOW mode — its
+        # real score is computed and recorded (so the tracker keeps grading
+        # it and it can earn promotion on evidence) but it contributes
+        # ZERO weight to the composite.
         try:
-            from signal_decay_detector import get_disabled_signals
-            disabled_signals = set(get_disabled_signals())
+            from signal_decay_detector import get_live_alphas
+            live_alphas = get_live_alphas()
         except Exception:
-            pass
+            live_alphas = set(alpha_funcs.keys())   # fail-open: all live
 
         for name, func in alpha_funcs.items():
-            # Skip disabled signals
-            if name in disabled_signals:
-                components[name] = {'score': 0.0, 'confidence': 0.0,
-                                    'disabled': True}
-                continue
             try:
                 score, conf = func()
+                is_live = name in live_alphas
                 components[name] = {
                     'score': round(float(score), 3),
-                    'confidence': round(float(conf), 1)
+                    'confidence': round(float(conf), 1),
+                    'live': is_live,
                 }
-                if conf > 0:
+                if conf > 0 and is_live:
                     weighted_score    += score * cls.WEIGHTS[name]
                     total_weight_used += cls.WEIGHTS[name]
             except Exception as e:
                 components[name] = {'score': 0.0, 'confidence': 0.0,
-                                    'error': str(e)}
+                                    'live': False, 'error': str(e)}
 
         # Normalise by weights used (graceful degradation)
         if total_weight_used > 0:
@@ -1781,9 +1781,9 @@ class IndiaAlphaAggregator:
 
         composite_score = float(np.clip(composite_score, -1.0, 1.0))
 
-        # Composite confidence = average of non-zero confidences
+        # Composite confidence = average of non-zero LIVE confidences
         confs = [v['confidence'] for v in components.values()
-                 if v['confidence'] > 0]
+                 if v['confidence'] > 0 and v.get('live', True)]
         composite_conf = float(np.mean(confs)) if confs else 0.0
 
         # Signal threshold

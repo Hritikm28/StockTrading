@@ -8,18 +8,20 @@
     "restored_on": "2026-06-11"
   },
   "mean_rev": {
-    "disabled": true,
+    "disabled": false,
     "disabled_on": "2026-06-11",
-    "reason": "Win rate 19.4% (95% upper bound 31.1%) < 45.0%",
+    "reason": "kill no longer supported (wr 0.0%, upper bound 0.0%, 6 trades)",
     "win_rate": 19.4,
-    "n_trades": 31
+    "n_trades": 31,
+    "restored_on": "2026-06-12"
   },
   "delivery_pct": {
-    "disabled": true,
+    "disabled": false,
     "disabled_on": "2026-06-11",
-    "reason": "Win rate 22.0% (95% upper bound 32.6%) < 45.0%",
+    "reason": "kill no longer supported (wr 20.0%, upper bound 40.8%, 10 trades)",
     "win_rate": 22.0,
-    "n_trades": 41
+    "n_trades": 41,
+    "restored_on": "2026-06-12"
   },
   "corp_event": {
     "disabled": false,

@@ -138,6 +138,8 @@ jobs:
           git add paper_trading/results/wl_processed.json 2>/dev/null || true
           git add paper_trading/stock_weights.json 2>/dev/null || true
           git add paper_trading/disabled_signals.json 2>/dev/null || true
+          git add paper_trading/alpha_tiers.json 2>/dev/null || true
+          git add paper_trading/circuit_breaker.json 2>/dev/null || true
           git add paper_trading/alpha_scores/ 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "Nothing to commit."

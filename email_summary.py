@@ -27,6 +27,60 @@ vix = rows[0].get('vix', '') if rows else ''
 buys = [r for r in rows if r.get('signal') == 'BUY']
 sells = [r for r in rows if r.get('signal') == 'SELL']
 
+# System protections status (from the daily report JSON + state files)
+report = {}
+rj = sig_dir / f'{today}_summary.json'
+if not rj.exists():
+    rj = Path('daily_reports') / f'report_{today}.json'
+if rj.exists():
+    try:
+        report = json.loads(rj.read_text(encoding='utf-8'))
+    except Exception:
+        report = {}
+gate_open = report.get('trend_gate_open', True)
+vs200 = report.get('nifty_vs_200dma')
+breaker_tripped = report.get('breaker_tripped', False)
+if not report:
+    try:
+        cb = json.loads(Path('paper_trading/circuit_breaker.json')
+                        .read_text(encoding='utf-8'))
+        breaker_tripped = bool(cb.get('tripped', False))
+    except Exception:
+        pass
+
+live_alpha_str = ""
+try:
+    import sys
+    sys.path.insert(0, '.')
+    from signal_decay_detector import get_live_alphas
+    live_alpha_str = ", ".join(sorted(get_live_alphas()))
+except Exception:
+    pass
+
+
+def status_banner():
+    items = []
+    if not gate_open:
+        v = f" (NIFTY {vs200:+.1f}% vs 200-DMA)" if vs200 is not None else ""
+        items.append(("#b0322b", f"⛔ TREND GATE CLOSED{v} — no new BUYs; "
+                                 "holding cash until NIFTY reclaims its 200-DMA"))
+    elif vs200 is not None:
+        items.append(("#1a7a3a", f"✅ Trend gate open (NIFTY {vs200:+.1f}% "
+                                 "vs 200-DMA)"))
+    if breaker_tripped:
+        items.append(("#b0322b", "⛔ CIRCUIT BREAKER TRIPPED — recent portfolio "
+                                 "stats breached limits; HOLD-only until probation reset"))
+    if live_alpha_str:
+        items.append(("#555", f"Live (weighted) alphas: <b>{live_alpha_str}</b>"
+                              " — all others incubating in shadow mode"))
+    if not items:
+        return ""
+    rows_html = "".join(
+        f"<div style='color:{c};font-size:13px;margin:2px 0'>{t}</div>"
+        for c, t in items)
+    return (f"<div style='background:#f4f7fb;border-left:4px solid #1a2b4a;"
+            f"padding:8px 12px;margin:8px 0'>{rows_html}</div>")
+
 
 def _fmt(v, nd=2):
     try:
@@ -84,15 +138,17 @@ def scoreboard():
     cost = data.get('cost_model_pct', 0.4)
 
     rows = ""
-    for w in ['1d', '3d', '5d']:
+    for w in ['1d', '3d', '5d', '10d']:
         m = metrics.get(w)
         if not m:
             continue
+        hl = " style='background:#eef6ee'" if w == '5d' else ""
         exc = m.get('avg_excess')
         exc_str = f"{exc:+.2f}%" if exc is not None else "n/a"
         exc_color = '#1a7a3a' if (exc or 0) > 0 else '#b0322b'
+        wlabel = f"{w} ★" if w == '5d' else w
         rows += (
-            f"<tr><td>{w}</td><td align='center'>{m['n_trades']}</td>"
+            f"<tr{hl}><td>{wlabel}</td><td align='center'>{m['n_trades']}</td>"
             f"<td align='center'>{m['win_rate']:.0f}%</td>"
             f"<td align='center'>{m['avg_ret']:+.2f}%</td>"
             f"<td align='center' style='color:{exc_color}'><b>{exc_str}</b></td></tr>"
@@ -130,7 +186,9 @@ html = f"""<html><body style='font-family:Segoe UI,Arial,sans-serif;color:#222'>
 <p style='margin-top:0;color:#555'>
   Market regime: <b>{regime}</b>{f" &nbsp;|&nbsp; VIX: <b>{vix}</b>" if vix else ""}
   &nbsp;|&nbsp; {len(buys)} BUY / {len(sells)} SELL
+  &nbsp;|&nbsp; recommended hold: <b>5 trading days</b>
 </p>
+{status_banner()}
 <h3 style='color:#1a7a3a'>BUY ({len(buys)})</h3>
 {table(buys)}
 <h3 style='color:#b0322b'>SELL ({len(sells)})</h3>
@@ -144,7 +202,12 @@ html = f"""<html><body style='font-family:Segoe UI,Arial,sans-serif;color:#222'>
 </body></html>"""
 
 Path('email_body.html').write_text(html, encoding='utf-8')
-subject = f"Trading Signals {today}: {len(buys)} BUY / {len(sells)} SELL [{regime}]"
+flag = ""
+if breaker_tripped:
+    flag = "[BREAKER] "
+elif not gate_open:
+    flag = "[GATE CLOSED] "
+subject = f"{flag}Trading Signals {today}: {len(buys)} BUY / {len(sells)} SELL [{regime}]"
 Path('email_subject.txt').write_text(subject, encoding='utf-8')
 print("Wrote email_body.html and email_subject.txt")
 print("Subject:", subject)

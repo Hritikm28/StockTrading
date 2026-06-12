@@ -448,12 +448,16 @@ class PortfolioRiskGate:
             reward_per_trade = abs(target - current_price) / current_price
             rr_ratio = reward_per_trade / risk_per_trade if risk_per_trade > 0 else 0
 
-            # ── Position sizing (Kelly-scaled by confidence) ──────────────────
+            # ── Position sizing (Kelly-scaled by confidence, vol-adjusted) ───
             conf_pct = row['composite_confidence'] / 100.0
             kelly_sized_pct = (self.config.MAX_SINGLE_POSITION_PCT *
                                self.config.KELLY_FRACTION *
                                conf_pct * 4)  # scale back to ~2-3% range
-            kelly_sized_pct = min(kelly_sized_pct, self.config.MAX_SINGLE_POSITION_PCT)
+            # Risk parity: a 4%-ATR stock gets half the size of a 2%-ATR
+            # stock so each position risks roughly equal capital.
+            vol_adj = float(np.clip(0.02 / max(atr_pct, 0.005), 0.5, 1.5))
+            kelly_sized_pct = min(kelly_sized_pct * vol_adj,
+                                  self.config.MAX_SINGLE_POSITION_PCT)
             position_size_inr = total_capital * kelly_sized_pct / 100.0
 
             approved.append({
@@ -467,6 +471,10 @@ class PortfolioRiskGate:
                 'risk_reward': round(rr_ratio, 2),
                 'position_size_inr': round(position_size_inr, 0),
                 'position_pct': round(kelly_sized_pct, 2),
+                # Recommended holding window — the validated edges (momentum,
+                # PEAD, pooled ML rank) pay off over ~5 trading days; exiting
+                # daily paid 0.40% round-trip costs for 1d noise.
+                'hold_days': 5,
                 'regime': row.get('regime', 'UNKNOWN'),
                 'vix': row.get('vix', 0),
                 'alpha_breakdown': row.get('alpha_components', {}),
@@ -571,6 +579,37 @@ class DailyRunner:
             verbose=True
         )
 
+        # ── Universe snapshot (survivorship-bias fix) ────────────────────────
+        # Commit today's tradable universe so future backtests can replay
+        # history with the constituents that were ACTUALLY in play, not
+        # today's survivors. A few KB per day.
+        try:
+            udir = Path('signals/universe')
+            udir.mkdir(parents=True, exist_ok=True)
+            pd.DataFrame({'symbol': symbols}).to_csv(
+                udir / f"universe_{as_of_date}.csv", index=False)
+        except Exception:
+            pass
+
+        # ── Portfolio circuit breaker (system-level kill switch) ─────────────
+        # Per-alpha kill switches never stopped a bleeding composite. If the
+        # trailing portfolio stats breach the trip thresholds, every BUY is
+        # downgraded to HOLD; ranking/tracking continue so learning never
+        # stops. Auto-resets after probation with a fresh evaluation epoch.
+        breaker_tripped = False
+        try:
+            from circuit_breaker import evaluate as evaluate_breaker
+            breaker = evaluate_breaker(as_of_date)
+            breaker_tripped = bool(breaker.get('tripped'))
+        except Exception as e:
+            print(f"      Circuit breaker unavailable ({e}) — continuing")
+        if breaker_tripped:
+            n_gated = int((ranked_df['signal'] == 'BUY').sum())
+            if n_gated:
+                ranked_df.loc[ranked_df['signal'] == 'BUY', 'signal'] = 'HOLD'
+                print(f"      [BREAKER] {n_gated} BUY signal(s) downgraded "
+                      f"to HOLD (portfolio circuit breaker tripped)")
+
         # ── STEP 3: Risk gate + Position sizing ─────────────────────────────
         print(f"\n[3/4] Applying risk gates...")
         sector_map = self._get_sector_map()
@@ -598,10 +637,24 @@ class DailyRunner:
         regime = ranked_df['regime'].iloc[0] if len(ranked_df) > 0 else 'UNKNOWN'
         vix = ranked_df['vix'].iloc[0] if len(ranked_df) > 0 else 0
 
+        trend_gate_open = bool(ranked_df['trend_gate_open'].iloc[0]) \
+            if 'trend_gate_open' in ranked_df.columns and len(ranked_df) else True
+        nifty_vs_200dma = float(ranked_df['nifty_vs_200dma'].iloc[0]) \
+            if 'nifty_vs_200dma' in ranked_df.columns and len(ranked_df) else 0.0
+        breaker_tripped = False
+        try:
+            from circuit_breaker import is_tripped
+            breaker_tripped = is_tripped()
+        except Exception:
+            pass
+
         result = {
             'date': today_str,
             'regime': regime,
             'vix': float(vix),
+            'trend_gate_open': trend_gate_open,
+            'nifty_vs_200dma': nifty_vs_200dma,
+            'breaker_tripped': breaker_tripped,
             'total_signals': len(approved),
             'total_capital': total_capital,
             'approved_signals': approved,

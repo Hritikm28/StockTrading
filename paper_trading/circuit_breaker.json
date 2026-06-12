@@ -9,9 +9,9 @@
     }
   ],
   "metrics": {
-    "win_rate": 35.0,
+    "win_rate": 40.0,
     "n_window": 20,
-    "excess_cum": -6.37,
+    "excess_cum": -6.86,
     "n_excess_days": 10
   },
   "checked_on": "2026-06-12",

@@ -1,0 +1,29 @@
+<html><body style='font-family:Segoe UI,Arial,sans-serif;color:#222'>
+<h2 style='margin-bottom:4px'>Weekly Correction Report — 2026-06-14</h2>
+<p style='color:#555;margin-top:0'>Are the auto-corrections making us better?
+(129 graded trades)</p>
+
+<div style='background:#eef3fb;padding:10px 16px;border-radius:6px'>
+<b>Verdict</b><ul style='margin:6px 0'><li><b>System win-rate trend:</b> -9.8%/week <span style='color:#b0322b;font-weight:bold'>(declining)</span></li><li><b>Dampener mechanism:</b> boosted 0.0% vs suppressed 37.5% <span style='color:#b0322b;font-weight:bold'>(not yet helping)</span></li><li><b>Out-of-sample holdout:</b> favoured 15.6% vs suppressed 28.6% (spread -13.0%) <span style='color:#b0322b;font-weight:bold'>(overfit risk)</span></li></ul>
+</div>
+
+<h3>1. System trend (by week)</h3>
+<table cellpadding='6' cellspacing='0' style='border-collapse:collapse;width:100%;font-size:14px'><tr style='background:#1a2b4a;color:#fff'><th>Week</th><th>Trades</th><th>Win %</th><th>Avg %</th></tr><tr style='background:#fff'><td align='center'>2026-05-25</td><td align='center'>50</td><td align='center'>30.0</td><td align='center'>-0.51</td></tr><tr style='background:#f4f7fb'><td align='center'>2026-06-01</td><td align='center'>50</td><td align='center'>46.0</td><td align='center'>-0.18</td></tr><tr style='background:#fff'><td align='center'>2026-06-08</td><td align='center'>29</td><td align='center'>10.3</td><td align='center'>-1.05</td></tr></table>
+
+<h3>2. Does the dampener add value?</h3>
+<p style='color:#555;font-size:13px'>Trades grouped by the dampener active when they fired.
+If <b>boosted</b> win-rate &gt; <b>suppressed</b>, the correction is working.</p>
+<table cellpadding='6' cellspacing='0' style='border-collapse:collapse;width:100%;font-size:14px'><tr style='background:#1a2b4a;color:#fff'><th>Dampener</th><th>Trades</th><th>Win %</th><th>Avg %</th></tr><tr style='background:#fff'><td align='center'>boosted</td><td align='center'>2</td><td align='center'>0.0</td><td align='center'>-0.4</td></tr><tr style='background:#f4f7fb'><td align='center'>neutral</td><td align='center'>103</td><td align='center'>31.1</td><td align='center'>-0.52</td></tr><tr style='background:#fff'><td align='center'>suppressed</td><td align='center'>24</td><td align='center'>37.5</td><td align='center'>-0.46</td></tr></table>
+
+<h3>3. Out-of-sample holdout — does the edge generalise?</h3>
+<p style='color:#555;font-size:13px'>Trained on first 70% of trades, tested on the unseen last 39 trades.</p><ul><li>Favoured trades (dampener≥1.0): <b>15.6%</b> win (32)</li><li>Suppressed trades (dampener&lt;0.9): <b>28.6%</b> win (7)</li></ul><p style='color:#b0322b;font-weight:bold'>Spread -13.0% — OVERFIT RISK — edge does not hold out-of-sample</p>
+
+<h3>4. Stock movers (recent vs prior win-rate)</h3>
+<b style='color:#1a7a3a'>Improved</b>
+<table cellpadding='6' cellspacing='0' style='border-collapse:collapse;width:100%;font-size:14px'><tr style='background:#1a2b4a;color:#fff'><th>Stock</th><th>Prior %</th><th>Recent %</th><th>Δ</th><th>N</th></tr><tr style='background:#fff'><td align='center'>BAJFINANCE.NS</td><td align='center'>0.0</td><td align='center'>67.0</td><td align='center'>67.0</td><td align='center'>6</td></tr><tr style='background:#f4f7fb'><td align='center'>DIVISLAB.NS</td><td align='center'>0.0</td><td align='center'>50.0</td><td align='center'>50.0</td><td align='center'>8</td></tr><tr style='background:#fff'><td align='center'>DRREDDY.NS</td><td align='center'>0.0</td><td align='center'>50.0</td><td align='center'>50.0</td><td align='center'>7</td></tr><tr style='background:#f4f7fb'><td align='center'>SUNPHARMA.NS</td><td align='center'>17.0</td><td align='center'>33.0</td><td align='center'>17.0</td><td align='center'>12</td></tr><tr style='background:#fff'><td align='center'>HINDUNILVR.NS</td><td align='center'>50.0</td><td align='center'>60.0</td><td align='center'>10.0</td><td align='center'>9</td></tr></table>
+<b style='color:#b0322b'>Declined</b>
+<table cellpadding='6' cellspacing='0' style='border-collapse:collapse;width:100%;font-size:14px'><tr style='background:#1a2b4a;color:#fff'><th>Stock</th><th>Prior %</th><th>Recent %</th><th>Δ</th><th>N</th></tr><tr style='background:#fff'><td align='center'>TATASTEEL.NS</td><td align='center'>60.0</td><td align='center'>0.0</td><td align='center'>-60.0</td><td align='center'>10</td></tr><tr style='background:#f4f7fb'><td align='center'>NTPC.NS</td><td align='center'>25.0</td><td align='center'>20.0</td><td align='center'>-5.0</td><td align='center'>9</td></tr></table>
+
+<p style='font-size:12px;color:#999;margin-top:18px'>
+Auto-generated weekly. Reconstructs dampener decisions from the outcome log.</p>
+</body></html>

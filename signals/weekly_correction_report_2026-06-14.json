@@ -1,0 +1,125 @@
+{
+  "date": "2026-06-14",
+  "n_trades": 129,
+  "weekly": [
+    {
+      "week": "2026-05-25",
+      "n": 50,
+      "win_rate": 30.0,
+      "avg_ret": -0.51
+    },
+    {
+      "week": "2026-06-01",
+      "n": 50,
+      "win_rate": 46.0,
+      "avg_ret": -0.18
+    },
+    {
+      "week": "2026-06-08",
+      "n": 29,
+      "win_rate": 10.3,
+      "avg_ret": -1.05
+    }
+  ],
+  "winrate_trend_per_week": -9.85,
+  "dampener_buckets": [
+    {
+      "bucket": "boosted",
+      "n": 2,
+      "win_rate": 0.0,
+      "avg_ret": -0.4
+    },
+    {
+      "bucket": "neutral",
+      "n": 103,
+      "win_rate": 31.1,
+      "avg_ret": -0.52
+    },
+    {
+      "bucket": "suppressed",
+      "n": 24,
+      "win_rate": 37.5,
+      "avg_ret": -0.46
+    }
+  ],
+  "dampener_adds_value": false,
+  "improved": [
+    {
+      "symbol": "BAJFINANCE.NS",
+      "prior_wr": 0.0,
+      "recent_wr": 67.0,
+      "delta": 67.0,
+      "n": 6
+    },
+    {
+      "symbol": "DIVISLAB.NS",
+      "prior_wr": 0.0,
+      "recent_wr": 50.0,
+      "delta": 50.0,
+      "n": 8
+    },
+    {
+      "symbol": "DRREDDY.NS",
+      "prior_wr": 0.0,
+      "recent_wr": 50.0,
+      "delta": 50.0,
+      "n": 7
+    },
+    {
+      "symbol": "SUNPHARMA.NS",
+      "prior_wr": 17.0,
+      "recent_wr": 33.0,
+      "delta": 17.0,
+      "n": 12
+    },
+    {
+      "symbol": "HINDUNILVR.NS",
+      "prior_wr": 50.0,
+      "recent_wr": 60.0,
+      "delta": 10.0,
+      "n": 9
+    }
+  ],
+  "declined": [
+    {
+      "symbol": "TATASTEEL.NS",
+      "prior_wr": 60.0,
+      "recent_wr": 0.0,
+      "delta": -60.0,
+      "n": 10
+    },
+    {
+      "symbol": "NTPC.NS",
+      "prior_wr": 25.0,
+      "recent_wr": 20.0,
+      "delta": -5.0,
+      "n": 9
+    }
+  ],
+  "holdout": {
+    "test_trades": 39,
+    "favored_n": 32,
+    "favored_wr": 15.6,
+    "suppressed_n": 7,
+    "suppressed_wr": 28.6,
+    "spread": -13.0,
+    "generalizes": false
+  },
+  "verdict": [
+    [
+      "System win-rate trend",
+      "-9.8%/week",
+      "declining"
+    ],
+    [
+      "Dampener mechanism",
+      "boosted 0.0% vs suppressed 37.5%",
+      "not yet helping"
+    ],
+    [
+      "Out-of-sample holdout",
+      "favoured 15.6% vs suppressed 28.6% (spread -13.0%)",
+      "overfit risk"
+    ]
+  ]
+}

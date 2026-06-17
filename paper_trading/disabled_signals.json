@@ -16,12 +16,12 @@
     "restored_on": "2026-06-12"
   },
   "delivery_pct": {
-    "disabled": true,
+    "disabled": false,
     "disabled_on": "2026-06-16",
-    "reason": "Win rate 31.2% (95% upper bound 44.7%) < 45.0%",
+    "reason": "kill no longer supported (wr 36.6%, upper bound 49.0%, 41 trades)",
     "win_rate": 31.2,
     "n_trades": 32,
-    "restored_on": "2026-06-12"
+    "restored_on": "2026-06-17"
   },
   "corp_event": {
     "disabled": false,

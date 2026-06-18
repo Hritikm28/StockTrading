@@ -433,5 +433,23 @@
       "delivery_pct": 1,
       "rel_strength": 1
     }
+  },
+  "BLUEDART.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "sector_mom": 1
+    }
+  },
+  "AEGISLOG.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "sector_mom": 1
+    }
   }
 }

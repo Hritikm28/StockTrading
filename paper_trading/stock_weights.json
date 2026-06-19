@@ -127,18 +127,22 @@
     }
   },
   "COLPAL.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 1.075,
-      "mean_rev": 0.925,
-      "delivery_pct": 0.925,
-      "corp_event": 0.925
+      "momentum": 0.989,
+      "mean_rev": 0.861,
+      "delivery_pct": 0.861,
+      "corp_event": 0.925,
+      "hi52": 1.075,
+      "sector_mom": 0.925
     },
     "sig_counts": {
-      "momentum": 1,
-      "mean_rev": 1,
-      "delivery_pct": 1,
-      "corp_event": 1
+      "momentum": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "corp_event": 1,
+      "hi52": 1,
+      "sector_mom": 1
     }
   },
   "HINDALCO.NS": {
@@ -285,16 +289,16 @@
     }
   },
   "BPCL.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 1.075,
-      "delivery_pct": 0.925,
+      "momentum": 0.989,
+      "delivery_pct": 0.861,
       "rel_strength": 1.075,
       "sector_mom": 1.075
     },
     "sig_counts": {
-      "momentum": 1,
-      "delivery_pct": 1,
+      "momentum": 2,
+      "delivery_pct": 2,
       "rel_strength": 1,
       "sector_mom": 1
     }
@@ -317,18 +321,22 @@
     }
   },
   "PIDILITIND.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 1.075,
-      "mean_rev": 1.075,
+      "momentum": 1.139,
+      "mean_rev": 1.139,
       "delivery_pct": 0.925,
-      "rel_strength": 0.925
+      "rel_strength": 0.925,
+      "hi52": 0.925,
+      "sector_mom": 1.075
     },
     "sig_counts": {
-      "momentum": 1,
-      "mean_rev": 1,
+      "momentum": 2,
+      "mean_rev": 2,
       "delivery_pct": 1,
-      "rel_strength": 1
+      "rel_strength": 1,
+      "hi52": 1,
+      "sector_mom": 1
     }
   },
   "SBIN.NS": {
@@ -347,14 +355,20 @@
     }
   },
   "KOTAKBANK.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 1.075,
-      "delivery_pct": 0.925
+      "momentum": 0.989,
+      "delivery_pct": 1.011,
+      "mean_rev": 0.925,
+      "hi52": 1.075,
+      "sector_mom": 1.075
     },
     "sig_counts": {
-      "momentum": 1,
-      "delivery_pct": 1
+      "momentum": 2,
+      "delivery_pct": 2,
+      "mean_rev": 1,
+      "hi52": 1,
+      "sector_mom": 1
     }
   },
   "TATASTEEL.NS": {
@@ -449,6 +463,88 @@
       "sector_mom": 1.075
     },
     "sig_counts": {
+      "sector_mom": 1
+    }
+  },
+  "HDFCAMC.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.925,
+      "delivery_pct": 0.925,
+      "hi52": 0.925,
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1,
+      "hi52": 1,
+      "sector_mom": 1
+    }
+  },
+  "HINDUNILVR.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "delivery_pct": 0.925,
+      "hi52": 0.925,
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1,
+      "hi52": 1,
+      "sector_mom": 1
+    }
+  },
+  "ICICIBANK.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.925,
+      "mean_rev": 0.925,
+      "delivery_pct": 1.075,
+      "hi52": 1.075,
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1,
+      "sector_mom": 1
+    }
+  },
+  "BLUESTARCO.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "delivery_pct": 1.075,
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "delivery_pct": 1,
+      "sector_mom": 1
+    }
+  },
+  "BHARTIHEXA.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "delivery_pct": 0.925
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "delivery_pct": 1
+    }
+  },
+  "AARTIIND.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.075,
+      "hi52": 0.925,
+      "sector_mom": 1.075
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "hi52": 1,
       "sector_mom": 1
     }
   }

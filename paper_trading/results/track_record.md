@@ -1,10 +1,10 @@
 # Verified Track Record
 
-_Auto-generated 2026-06-18 by paper_trade_tracker.py. Every signal is committed to git BEFORE the outcome is known — the git history is the tamper-proof audit trail._
+_Auto-generated 2026-06-19 by paper_trade_tracker.py. Every signal is committed to git BEFORE the outcome is known — the git history is the tamper-proof audit trail._
 
 - **Grading**: entry at next-day open, net of 0.40% costs (0.25% fees/taxes + 0.15% slippage), 1 trading-day horizon, equal-weight across each day's signals.
 - **Inception**: 2026-05-25  |  **Signal days**: 20  |  **Trades graded**: 169
-- **Strategy cumulative (net)**: -10.05%  |  **NIFTY 50 same days**: -3.13%  |  **Excess**: -6.92%
+- **Strategy cumulative (net)**: -10.05%  |  **NIFTY 50 same days**: -3.04%  |  **Excess**: -7.01%
 
 | Date | Signals | Avg net 1d % | NIFTY 1d % | Cum strategy % | Cum NIFTY % |
 |------|---------|--------------|------------|----------------|-------------|
@@ -27,4 +27,4 @@ _Auto-generated 2026-06-18 by paper_trade_tracker.py. Every signal is committed 
 | 2026-06-12 | 10 | -1.06 | -0.55 | -8.80 | -3.56 |
 | 2026-06-15 | 10 | -0.77 | +0.27 | -9.50 | -3.29 |
 | 2026-06-16 | 10 | +0.09 | +0.17 | -9.42 | -3.13 |
-| 2026-06-17 | 10 | -0.69 | n/a | -10.05 | -3.13 |
+| 2026-06-17 | 10 | -0.69 | +0.09 | -10.05 | -3.04 |

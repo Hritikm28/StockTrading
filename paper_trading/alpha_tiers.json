@@ -1,3 +1,11 @@
 {
-  "promoted": {}
+  "promoted": {
+    "sector_mom": {
+      "active": true,
+      "promoted_on": "2026-06-19",
+      "win_rate": 60.5,
+      "n_trades": 38,
+      "wilson_lower": 47.5
+    }
+  }
 }

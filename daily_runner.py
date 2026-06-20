@@ -95,8 +95,13 @@ class RunnerConfig:
     KELLY_FRACTION = 0.25
 
     # Signal quality gates
-    MIN_SIGNAL_CONFIDENCE = 60.0  # % — only show signals above this
-    MIN_COMPOSITE_SCORE = 0.25    # absolute alpha score required
+    # [2026-06-19] Confidence floor 60 -> 65 and score 0.25 -> 0.30. The graded
+    # track record (169 trades) showed composite_score has ~zero rank-correlation
+    # with the 5d outcome (rho +0.02), while composite_confidence is monotonically
+    # predictive (rho +0.29): high-confidence BUYs were ~breakeven vs -2.3% for
+    # low-confidence. So we lean on the confidence gate and tighten the score bar.
+    MIN_SIGNAL_CONFIDENCE = 65.0  # % — only show signals above this
+    MIN_COMPOSITE_SCORE = 0.30    # absolute alpha score required
 
     # Stop-loss / target (ATR multiples)
     ATR_STOP_MULT = 2.0
@@ -374,7 +379,12 @@ class PortfolioRiskGate:
         returns_cache = {}
 
         for _, row in ranked_df.iterrows():
-            if row['signal'] not in ('BUY', 'SELL'):
+            # [2026-06-19] LONG-ONLY: the system is structurally long-only (200-DMA
+            # gate, circuit breaker, "cash is the alternative"). SELL/short signals
+            # were graded with no short sign-flip (a SELL's "return" was just the
+            # stock's forward return), so they were both mis-measured and losing
+            # (-1.85% avg while NIFTY rose). We no longer approve shorts.
+            if row['signal'] != 'BUY':
                 continue
             if row['composite_confidence'] < self.config.MIN_SIGNAL_CONFIDENCE:
                 rejected.append({'symbol': row['symbol'], 'reason': 'low_confidence'})

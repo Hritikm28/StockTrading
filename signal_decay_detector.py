@@ -60,6 +60,11 @@ MIN_TRADES        = 5      # Need at least this many trades to report stats
 MIN_TRADES_TO_KILL = 20    # ...but killing needs real evidence, not noise
 Z_95              = 1.645  # one-sided 95% confidence
 LOOKBACK_DAYS     = 30     # Rolling window for win rate calculation
+# [2026-06-19] Hysteresis: once a signal flips on/off it is LOCKED for this many
+# days before it can flip again. The old detector killed momentum/mean_rev/
+# corp_event/rel_strength on 2026-06-11 and restored them the very next day on
+# noisy week-to-week win-rate wiggle — churn that helped nobody.
+STATE_COOLDOWN_DAYS = 10
 
 # Grading horizon: judge alphas on the 5-trading-day outcome they are built
 # for, not 1-day noise. Falls back to ret_1d for old CSVs without the column.
@@ -70,7 +75,14 @@ RET_COL_FALLBACK  = 'ret_1d'
 # CORE alphas were validated by the 2020-2026 walk-forward (momentum,
 # IC +0.023) or have a structural driver with reliable daily data (fii_dii,
 # pead). Everything else must EARN weight with live evidence.
-CORE_ALPHAS         = {'momentum', 'pead', 'fii_dii'}
+# [2026-06-19] Added delivery_pct + sector_mom. The 169-trade graded record
+# showed these two were the only LIVE-DATA alphas with a positive 5d rank-IC
+# (~+0.09 each), yet they were starved of weight in shadow mode while the
+# promotion bar (52% win rate) is unreachable in a drawdown. Meanwhile pead &
+# fii_dii — also "core" — produced NO data in the cloud feed (0/169 active), so
+# they contribute nothing until that pipeline is fixed (a data problem, not a
+# signal problem). momentum is the one price alpha the 10y walk-forward proved.
+CORE_ALPHAS         = {'momentum', 'pead', 'fii_dii', 'delivery_pct', 'sector_mom'}
 PROMOTE_MIN_TRADES  = 30     # evidence needed before an alpha earns weight
 PROMOTE_WIN_RATE    = 52.0   # observed win rate required
 PROMOTE_LOWER_BOUND = 45.0   # Wilson 95% lower bound must clear this
@@ -245,13 +257,30 @@ def _wilson_lower(wr_pct: float, n: int) -> float:
     return (p - Z_95 * np.sqrt(max(p * (1 - p), 1e-9) / n)) * 100.0
 
 
+def _days_since_last_flip(entry: Dict, today: date) -> Optional[int]:
+    """Days since this signal last changed state (disabled_on / restored_on)."""
+    candidates = []
+    for key in ('disabled_on', 'restored_on'):
+        val = entry.get(key)
+        if val:
+            try:
+                candidates.append(pd.to_datetime(val).date())
+            except Exception:
+                pass
+    if not candidates:
+        return None
+    return (today - max(candidates)).days
+
+
 def detect_decay(winrates: Dict, current_disabled: Dict) -> Dict:
     """
     Compare win rates against thresholds with statistical evidence.
     Returns updated disabled state dict.
 
-    No blind probation re-enable: shadow scoring means disabled alphas keep
-    accruing fresh evidence, so the restore paths below act on real data.
+    Hysteresis: once a signal flips on/off it is LOCKED for STATE_COOLDOWN_DAYS
+    so noisy week-to-week win-rate wiggle cannot ping-pong it. No blind probation
+    re-enable: shadow scoring means disabled alphas keep accruing fresh evidence,
+    so the restore paths below act on real data once the cooldown has elapsed.
     """
     today     = date.today()
     new_state = dict(current_disabled)
@@ -266,42 +295,51 @@ def detect_decay(winrates: Dict, current_disabled: Dict) -> Dict:
         if n < MIN_TRADES:
             continue
 
+        entry = new_state.get(sig_name, {})
+        already_disabled = entry.get('disabled', False)
+
+        # Hysteresis lock — block any state CHANGE inside the cooldown window.
+        since_flip = _days_since_last_flip(entry, today)
+        locked = since_flip is not None and since_flip < STATE_COOLDOWN_DAYS
+
         upper = _wilson_upper(wr, n)
         kill = (n >= MIN_TRADES_TO_KILL and upper < KILL_THRESHOLD)
 
-        if kill:
-            already = new_state.get(sig_name, {}).get('disabled', False)
+        if kill and not already_disabled:
+            if locked:
+                continue   # recently restored — don't kill again yet
             new_state[sig_name] = {
-                **new_state.get(sig_name, {}),
+                **entry,
                 'disabled':     True,
-                'disabled_on':  new_state.get(sig_name, {}).get('disabled_on',
-                                                                str(today))
-                                if already else str(today),
+                'disabled_on':  str(today),
                 'reason':       (f"Win rate {wr:.1f}% (95% upper bound "
                                  f"{upper:.1f}%) < {KILL_THRESHOLD}%"),
                 'win_rate':     wr,
                 'n_trades':     n,
             }
-            if not already:
-                print(f"   [OFF] DISABLED: {sig_name} (win rate {wr:.1f}%, "
-                      f"upper bound {upper:.1f}%, {n} trades)")
-        elif wr >= RESTORE_THRESHOLD:
-            if sig_name in new_state and new_state[sig_name].get('disabled'):
+            print(f"   [OFF] DISABLED: {sig_name} (win rate {wr:.1f}%, "
+                  f"upper bound {upper:.1f}%, {n} trades)")
+        elif kill and already_disabled:
+            # Keep the kill fresh but DON'T reset disabled_on (preserve cooldown).
+            new_state[sig_name].update({'win_rate': wr, 'n_trades': n})
+        elif already_disabled and not locked:
+            # Currently disabled, cooldown elapsed — restore only on real evidence:
+            #   (a) win rate has genuinely recovered above RESTORE_THRESHOLD, or
+            #   (b) the statistical kill rule is no longer met.
+            if wr >= RESTORE_THRESHOLD:
                 new_state[sig_name]['disabled']    = False
                 new_state[sig_name]['restored_on'] = str(today)
                 new_state[sig_name]['win_rate']    = wr
                 print(f"   [ON]  RESTORED: {sig_name} "
                       f"(win rate {wr:.1f}%, {n} trades)")
-        elif sig_name in new_state and new_state[sig_name].get('disabled'):
-            # Currently disabled but evidence no longer supports the kill
-            # under the statistical rule — bring it back.
-            new_state[sig_name]['disabled']    = False
-            new_state[sig_name]['restored_on'] = str(today)
-            new_state[sig_name]['reason']      = (
-                f"kill no longer supported (wr {wr:.1f}%, "
-                f"upper bound {upper:.1f}%, {n} trades)")
-            print(f"   [ON]  RESTORED: {sig_name} — evidence too weak to "
-                  f"keep disabled (wr {wr:.1f}%, ub {upper:.1f}%, n={n})")
+            elif not kill:
+                new_state[sig_name]['disabled']    = False
+                new_state[sig_name]['restored_on'] = str(today)
+                new_state[sig_name]['reason']      = (
+                    f"kill no longer supported (wr {wr:.1f}%, "
+                    f"upper bound {upper:.1f}%, {n} trades)")
+                print(f"   [ON]  RESTORED: {sig_name} — evidence too weak to "
+                      f"keep disabled (wr {wr:.1f}%, ub {upper:.1f}%, n={n})")
 
     return new_state
 

@@ -164,11 +164,16 @@ class StockWeightLearner:
       MIN_TRADES..60      -> linearly up to 50% learned
       >= 60 trades        -> 50% learned, 50% global (never fully override)
 
-    [2026-06-12] MIN_TRADES raised 5 -> 30 and blend capped at 50%: learning
-    a per-stock, per-signal multiplier from 5 outcomes is fitting noise —
-    a coin flipped 5 times shows "80% heads" 19% of the time. 30+ outcomes
-    per signal is the floor for the multiplier to mean anything, and the
-    50% cap keeps the global (validated) weights in charge.
+    [2026-06-12] MIN_TRADES raised 5 -> 30, blend capped at 50%.
+    [2026-06-19] MIN_TRADES 30 -> 12 with a TIGHTER target band and a smaller
+    blend cap. 30 outcomes *per signal per stock* is unreachable in a ~60-stock
+    universe emitting ~8 signals/day — the most-traded name had 12 TOTAL trades —
+    so the learner was permanently frozen at neutral (it "never learned from its
+    mistakes"). Instead we let it start nudging at 12 outcomes but make each nudge
+    gentle: the per-outcome target is 1.25/0.75 (was 1.5/0.5) and the global blend
+    is capped at 35% (was 50%), so even a stock that always agrees/disagrees can
+    only move its effective weight to roughly [0.90, 1.10]. Gentle, bounded
+    adaptation — not noise-chasing swings.
 
     Storage:  paper_trading/stock_weights.json
     Called:   paper_trade_tracker.py after each outcome batch
@@ -176,8 +181,9 @@ class StockWeightLearner:
 
     WEIGHTS_FILE      = Path("paper_trading/stock_weights.json")
     EMA_ALPHA         = 0.85   # Slow learner — needs consistent evidence
-    MIN_TRADES        = 30
-    FULL_BLEND_TRADES = 60
+    MIN_TRADES        = 12
+    FULL_BLEND_TRADES = 40
+    MAX_BLEND         = 0.35   # global (validated) weights always keep >= 65%
     MAX_MULT          = 2.0
     MIN_MULT          = 0.15
 
@@ -233,9 +239,9 @@ class StockWeightLearner:
                 out[s] = 1.0
                 continue
             blend = min(
-                0.50 * (c - cls.MIN_TRADES) /
+                cls.MAX_BLEND * (c - cls.MIN_TRADES) /
                 max(cls.FULL_BLEND_TRADES - cls.MIN_TRADES, 1),
-                0.50
+                cls.MAX_BLEND
             )
             out[s] = round((1 - blend) * 1.0 + blend * learned.get(s, 1.0), 3)
         return out
@@ -269,7 +275,7 @@ class StockWeightLearner:
                 continue
             counts[sig] = counts.get(sig, 0) + 1   # this signal had a real view
             agreed = (score > 0) == pos_outcome
-            target = 1.5 if agreed else 0.5
+            target = 1.25 if agreed else 0.75
             old    = mults.get(sig, 1.0)
             mults[sig] = round(float(np.clip(
                 cls.EMA_ALPHA * old + (1 - cls.EMA_ALPHA) * target,
@@ -482,62 +488,74 @@ class MultiAlphaEngine:
     cross-sectional ranking, and risk gates.
     """
 
-    # Regime-specific alpha weights — what works in each regime
-    # New signals added: delivery_pct, option_chain, corp_event
-    # ml_score weights deliberately SMALL: walk-forward 2020-2026
-    # (walk_forward_report.md) shows the pooled model has no standalone edge
-    # (near-random AUC most years). It stays in the mix at low weight so the
-    # plumbing is live and better future models earn weight back with evidence.
+    # Regime-specific alpha weights — what works in each regime.
+    #
+    # [2026-06-19 RE-WEIGHT] The 169-trade graded record exposed that, of the
+    # alphas with REAL composite weight, only `momentum` had a live data feed —
+    # and its 5d rank-IC this period was ~0 (+0.015). The two alphas that DID
+    # carry a measurable edge in the shadow grades — delivery_pct (+0.09) and
+    # sector_mom (+0.09) — had been starved of weight. pead/fii_dii are validated
+    # but currently produce NO data in the cloud feed (0/169 active), so they
+    # contribute nothing until that pipeline is restored. We therefore route the
+    # bulk of the weight to the data-having, positive-edge alphas (delivery_pct,
+    # sector_mom) while keeping momentum and the validated-but-dark alphas in the
+    # map so they resume weight automatically when their data returns.
+    # ml_score stays SMALL: walk-forward 2020-2026 (walk_forward_report.md) shows
+    # the pooled model has no standalone edge (near-random AUC most years).
     REGIME_WEIGHTS = {
         'BULL': {
-            'ml_score':     0.10,  # capped pending walk-forward evidence
-            'momentum':     0.22,  # 12-1 momentum shines in bull markets
-            'fii_dii':      0.13,  # Flow momentum confirms trend
-            'pead':         0.13,  # Earnings beat follow-through
+            'ml_score':     0.08,
+            'momentum':     0.20,  # 12-1 momentum shines in bull markets
+            'fii_dii':      0.12,  # Flow momentum confirms trend (dark: no data)
+            'pead':         0.12,  # Earnings follow-through (dark: no data)
             'mean_rev':     0.04,  # Less useful in strong trends
             'bulk_deal':    0.05,
             'insider':      0.03,
-            'delivery_pct': 0.05,  # Institutional accumulation confirmation
-            'option_chain': 0.05,  # PCR + max pain
-            'corp_event':   0.03,  # Catalyst signals
-            'hi52':         0.07,  # 52wk-high continuation strongest in bulls
+            'delivery_pct': 0.13,  # institutional accumulation — live + edge
+            'sector_mom':   0.11,  # sector rotation — live + edge
+            'option_chain': 0.04,
+            'corp_event':   0.03,
+            'hi52':         0.06,
         },
         'BEAR': {
-            'ml_score':     0.08,
+            'ml_score':     0.06,
             'momentum':     0.04,  # Momentum destroys capital in bear markets
-            'fii_dii':      0.17,  # FII selling is the bear driver
-            'pead':         0.08,
-            'mean_rev':     0.22,  # Bear market bounces
-            'bulk_deal':    0.08,
+            'fii_dii':      0.15,  # FII selling is the bear driver (dark: no data)
+            'pead':         0.06,
+            'mean_rev':     0.18,  # Bear market bounces
+            'bulk_deal':    0.07,
             'insider':      0.04,
-            'delivery_pct': 0.06,  # Distribution pattern shows real selling
-            'option_chain': 0.06,  # PCR extremes predict reversals
+            'delivery_pct': 0.13,  # distribution pattern — live + edge
+            'sector_mom':   0.10,  # defensive-sector rotation — live + edge
+            'option_chain': 0.05,
             'corp_event':   0.03,
-            'hi52':         0.02,  # anchoring edge fades when highs are distant
+            'hi52':         0.02,
         },
         'SIDEWAYS': {
-            'ml_score':     0.08,
-            'momentum':     0.08,
-            'fii_dii':      0.10,
-            'pead':         0.15,
-            'mean_rev':     0.17,  # Mean reversion dominant
-            'bulk_deal':    0.09,
+            'ml_score':     0.06,
+            'momentum':     0.10,
+            'fii_dii':      0.10,  # dark: no data feed currently
+            'pead':         0.13,  # dark: no data feed currently
+            'mean_rev':     0.12,  # mean reversion useful but shadow (neg edge)
+            'bulk_deal':    0.07,
             'insider':      0.04,
-            'delivery_pct': 0.06,
-            'option_chain': 0.06,
+            'delivery_pct': 0.16,  # live + best measured 5d edge → top weight
+            'sector_mom':   0.12,  # live + edge
+            'option_chain': 0.05,
             'corp_event':   0.03,
             'hi52':         0.05,
         },
         'CRISIS': {
-            'ml_score':     0.05,  # ML unreliable in extreme events
+            'ml_score':     0.04,  # ML unreliable in extreme events
             'momentum':     0.04,
-            'fii_dii':      0.26,  # FII flows are the dominant factor
+            'fii_dii':      0.22,  # FII flows dominate (dark: no data)
+            'mean_rev':     0.22,  # Deep oversold bounces
             'pead':         0.04,
-            'mean_rev':     0.26,  # Deep oversold bounces
-            'bulk_deal':    0.08,
+            'bulk_deal':    0.07,
             'insider':      0.04,
-            'delivery_pct': 0.07,  # Panic selling vs institutional buying
-            'option_chain': 0.05,  # PCR extremes signal reversal
+            'delivery_pct': 0.12,  # panic selling vs institutional buying — live
+            'sector_mom':   0.08,  # live
+            'option_chain': 0.05,
             'corp_event':   0.03,
         },
     }
@@ -547,12 +565,17 @@ class MultiAlphaEngine:
         data_dir: str = "data/stocks",
         model_cache_dir: str = "model_cache",
         min_composite_score: float = 0.30,  # Min abs score to act
-        min_confidence: float = 55.0,       # Min confidence to act
+        min_confidence: float = 65.0,       # Min confidence to act
+        min_alpha_conviction: int = 2,      # Min live alphas with a real view
     ):
         self.data_dir = data_dir
         self.model_cache_dir = Path(model_cache_dir)
         self.min_composite_score = min_composite_score
         self.min_confidence = min_confidence
+        # [2026-06-19] A BUY must be backed by at least this many live alphas that
+        # actually hold an opinion (|score|>0.05). In the graded record, 43% of
+        # trades fired with ZERO alpha conviction (pure noise) and lost -1.6%.
+        self.min_alpha_conviction = min_alpha_conviction
 
         # Load meta-learner if available
         self._meta_model = self._load_meta_model()
@@ -702,11 +725,20 @@ class MultiAlphaEngine:
             confs.append(ml_confidence)
         composite_conf = float(np.mean(confs)) if confs else 0.0
 
-        # Signal determination
-        if composite_score > self.min_composite_score and composite_conf >= self.min_confidence:
+        # Number of live alphas that actually hold a directional view.
+        n_conviction = len(signals_with_view)
+
+        # Signal determination — LONG-ONLY.
+        # The system is structurally long-only (200-DMA gate + circuit breaker;
+        # "cash is the alternative"). A negative composite no longer emits a
+        # tradeable SELL — it just means "not a buy" (HOLD). Weak names are still
+        # surfaced via the cross-sectional AVOID label for visibility/ranking.
+        # A BUY additionally requires >= min_alpha_conviction live alphas with a
+        # real opinion, so we never trade on a thresholded-noise composite.
+        if (composite_score > self.min_composite_score
+                and composite_conf >= self.min_confidence
+                and n_conviction >= self.min_alpha_conviction):
             signal = 'BUY'
-        elif composite_score < -self.min_composite_score and composite_conf >= self.min_confidence:
-            signal = 'SELL'
         else:
             signal = 'HOLD'
 
@@ -726,6 +758,7 @@ class MultiAlphaEngine:
             'alpha_components':     components,
             'weight_used':          round(total_weight, 3),
             'consensus_ratio':      round(consensus_ratio, 2),
+            'n_conviction':         n_conviction,
         }
 
     def rank_universe(
@@ -839,12 +872,15 @@ class MultiAlphaEngine:
         for idx in df.index:
             raw_score = df.at[idx, 'composite_score']
             raw_conf  = df.at[idx, 'composite_confidence']
+            raw_conv  = int(df.at[idx, 'n_conviction']) if 'n_conviction' in df.columns else 0
             cur_sig   = df.at[idx, 'signal']
             if cur_sig == 'BUY' and raw_score < adj_min:
                 df.at[idx, 'signal'] = 'HOLD'   # score not strong enough after scaling
-            elif cur_sig == 'HOLD' and raw_score > adj_min and raw_conf >= self.min_confidence:
+            elif (cur_sig == 'HOLD' and raw_score > adj_min
+                  and raw_conf >= self.min_confidence
+                  and raw_conv >= self.min_alpha_conviction):
                 df.at[idx, 'signal'] = 'BUY'    # score now qualifies after easing
-            # SELL signals: scale doesn't apply to short side (no breadth logic there)
+            # LONG-ONLY: the breadth re-evaluation never creates SELLs.
 
         # ── Cross-sectional ranking labels ───────────────────────────────────
         df['rank'] = range(1, len(df) + 1)
@@ -858,11 +894,15 @@ class MultiAlphaEngine:
         bottom_mask = df['rank'] > (len(df) - top_n_avoid)
         df.loc[bottom_mask & (df['composite_score'] < -0.15), 'cs_label'] = 'AVOID'
 
-        # Upgrade HOLD → BUY only if score also passes scaled threshold
+        # Upgrade HOLD → BUY only if score passes the scaled threshold AND the
+        # name clears the confidence floor and the minimum-alpha-conviction gate.
+        # (A high cross-sectional rank alone must not bypass the quality gates.)
         df.loc[
             (df['cs_label'] == 'TOP_BUY') &
             (df['signal'] == 'HOLD') &
-            (df['composite_score'] >= adj_min),
+            (df['composite_score'] >= adj_min) &
+            (df['composite_confidence'] >= self.min_confidence) &
+            (df['n_conviction'] >= self.min_alpha_conviction),
             'signal'
         ] = 'BUY'
 

@@ -127,22 +127,22 @@
     }
   },
   "COLPAL.NS": {
-    "n_trades": 3,
+    "n_trades": 4,
     "multipliers": {
-      "momentum": 0.953,
-      "mean_rev": 0.861,
-      "delivery_pct": 0.844,
+      "momentum": 0.923,
+      "mean_rev": 0.844,
+      "delivery_pct": 0.905,
       "corp_event": 0.925,
-      "hi52": 1.101,
-      "sector_mom": 0.899
+      "hi52": 1.123,
+      "sector_mom": 0.877
     },
     "sig_counts": {
-      "momentum": 3,
-      "mean_rev": 2,
-      "delivery_pct": 3,
+      "momentum": 4,
+      "mean_rev": 3,
+      "delivery_pct": 4,
       "corp_event": 1,
-      "hi52": 2,
-      "sector_mom": 2
+      "hi52": 3,
+      "sector_mom": 3
     }
   },
   "HINDALCO.NS": {
@@ -482,18 +482,20 @@
     }
   },
   "HINDUNILVR.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 1.075,
-      "delivery_pct": 0.925,
-      "hi52": 0.925,
-      "sector_mom": 1.075
+      "momentum": 1.026,
+      "delivery_pct": 0.974,
+      "hi52": 0.974,
+      "sector_mom": 1.026,
+      "mean_rev": 0.963
     },
     "sig_counts": {
-      "momentum": 1,
-      "delivery_pct": 1,
-      "hi52": 1,
-      "sector_mom": 1
+      "momentum": 2,
+      "delivery_pct": 2,
+      "hi52": 2,
+      "sector_mom": 2,
+      "mean_rev": 1
     }
   },
   "ICICIBANK.NS": {
@@ -525,31 +527,31 @@
     }
   },
   "BHARTIHEXA.NS": {
-    "n_trades": 2,
+    "n_trades": 3,
     "multipliers": {
-      "momentum": 1.101,
-      "delivery_pct": 0.974
+      "momentum": 1.123,
+      "delivery_pct": 1.015
     },
     "sig_counts": {
-      "momentum": 2,
-      "delivery_pct": 2
+      "momentum": 3,
+      "delivery_pct": 3
     }
   },
   "AARTIIND.NS": {
-    "n_trades": 2,
+    "n_trades": 3,
     "multipliers": {
-      "momentum": 1.026,
-      "hi52": 0.974,
-      "sector_mom": 1.101,
-      "mean_rev": 0.963,
-      "delivery_pct": 0.963
+      "momentum": 0.985,
+      "hi52": 1.015,
+      "sector_mom": 1.123,
+      "mean_rev": 0.931,
+      "delivery_pct": 0.931
     },
     "sig_counts": {
-      "momentum": 2,
-      "hi52": 2,
-      "sector_mom": 2,
-      "mean_rev": 1,
-      "delivery_pct": 1
+      "momentum": 3,
+      "hi52": 3,
+      "sector_mom": 3,
+      "mean_rev": 2,
+      "delivery_pct": 2
     }
   },
   "BIKAJI.NS": {
@@ -577,12 +579,14 @@
     }
   },
   "ARE&M.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 1.038
+      "momentum": 1.07,
+      "delivery_pct": 0.963
     },
     "sig_counts": {
-      "momentum": 1
+      "momentum": 2,
+      "delivery_pct": 1
     }
   },
   "ANGELONE.NS": {
@@ -601,50 +605,76 @@
     }
   },
   "TECHM.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 1.038,
-      "mean_rev": 0.963,
+      "momentum": 0.995,
+      "mean_rev": 1.006,
       "delivery_pct": 0.963,
-      "hi52": 0.963,
-      "sector_mom": 1.038
+      "hi52": 1.006,
+      "sector_mom": 0.995
     },
     "sig_counts": {
-      "momentum": 1,
-      "mean_rev": 1,
+      "momentum": 2,
+      "mean_rev": 2,
       "delivery_pct": 1,
-      "hi52": 1,
-      "sector_mom": 1
+      "hi52": 2,
+      "sector_mom": 2
     }
   },
   "CHOLAFIN.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 1.038,
-      "mean_rev": 1.038,
-      "delivery_pct": 0.963,
-      "hi52": 0.963,
+      "momentum": 1.07,
+      "mean_rev": 1.07,
+      "delivery_pct": 0.931,
+      "hi52": 0.931,
       "sector_mom": 1.038
     },
     "sig_counts": {
-      "momentum": 1,
-      "mean_rev": 1,
-      "delivery_pct": 1,
-      "hi52": 1,
+      "momentum": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "hi52": 2,
       "sector_mom": 1
     }
   },
   "DABUR.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 0.931,
+      "mean_rev": 0.931,
+      "delivery_pct": 1.07,
+      "sector_mom": 0.931
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "sector_mom": 2
+    }
+  },
+  "BALKRISIND.NS": {
     "n_trades": 1,
     "multipliers": {
       "momentum": 0.963,
-      "mean_rev": 0.963,
+      "hi52": 1.038,
+      "sector_mom": 1.038
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "hi52": 1,
+      "sector_mom": 1
+    }
+  },
+  "ABBOTINDIA.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.963,
       "delivery_pct": 1.038,
       "sector_mom": 0.963
     },
     "sig_counts": {
       "momentum": 1,
-      "mean_rev": 1,
       "delivery_pct": 1,
       "sector_mom": 1
     }

@@ -458,12 +458,20 @@
     }
   },
   "AEGISLOG.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "sector_mom": 1.075
+      "sector_mom": 1.026,
+      "momentum": 1.038,
+      "mean_rev": 1.038,
+      "delivery_pct": 1.038,
+      "hi52": 0.963
     },
     "sig_counts": {
-      "sector_mom": 1
+      "sector_mom": 2,
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1
     }
   },
   "HDFCAMC.NS": {
@@ -538,20 +546,20 @@
     }
   },
   "AARTIIND.NS": {
-    "n_trades": 3,
+    "n_trades": 4,
     "multipliers": {
       "momentum": 0.985,
-      "hi52": 1.015,
+      "hi52": 1.05,
       "sector_mom": 1.123,
-      "mean_rev": 0.931,
-      "delivery_pct": 0.931
+      "mean_rev": 0.904,
+      "delivery_pct": 0.904
     },
     "sig_counts": {
       "momentum": 3,
-      "hi52": 3,
+      "hi52": 4,
       "sector_mom": 3,
-      "mean_rev": 2,
-      "delivery_pct": 2
+      "mean_rev": 3,
+      "delivery_pct": 3
     }
   },
   "BIKAJI.NS": {
@@ -568,14 +576,18 @@
     }
   },
   "HAL.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 1.038,
-      "hi52": 0.963
+      "momentum": 0.995,
+      "hi52": 1.006,
+      "mean_rev": 0.963,
+      "delivery_pct": 0.963
     },
     "sig_counts": {
-      "momentum": 1,
-      "hi52": 1
+      "momentum": 2,
+      "hi52": 2,
+      "mean_rev": 1,
+      "delivery_pct": 1
     }
   },
   "ARE&M.NS": {
@@ -639,18 +651,18 @@
     }
   },
   "DABUR.NS": {
-    "n_trades": 2,
+    "n_trades": 3,
     "multipliers": {
-      "momentum": 0.931,
+      "momentum": 0.904,
       "mean_rev": 0.931,
       "delivery_pct": 1.07,
-      "sector_mom": 0.931
+      "sector_mom": 0.904
     },
     "sig_counts": {
-      "momentum": 2,
+      "momentum": 3,
       "mean_rev": 2,
       "delivery_pct": 2,
-      "sector_mom": 2
+      "sector_mom": 3
     }
   },
   "BALKRISIND.NS": {
@@ -667,16 +679,93 @@
     }
   },
   "ABBOTINDIA.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 0.931,
+      "delivery_pct": 1.07,
+      "sector_mom": 0.931,
+      "mean_rev": 1.038
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "delivery_pct": 2,
+      "sector_mom": 2,
+      "mean_rev": 1
+    }
+  },
+  "BSOFT.NS": {
     "n_trades": 1,
     "multipliers": {
       "momentum": 0.963,
-      "delivery_pct": 1.038,
+      "mean_rev": 0.963,
+      "hi52": 0.963,
       "sector_mom": 0.963
     },
     "sig_counts": {
       "momentum": 1,
-      "delivery_pct": 1,
+      "mean_rev": 1,
+      "hi52": 1,
       "sector_mom": 1
+    }
+  },
+  "AMBUJACEM.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.038,
+      "mean_rev": 1.038,
+      "delivery_pct": 0.963,
+      "hi52": 1.038,
+      "sector_mom": 1.038
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1,
+      "sector_mom": 1
+    }
+  },
+  "ATUL.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.038,
+      "mean_rev": 0.963,
+      "delivery_pct": 0.963,
+      "hi52": 0.963
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1
+    }
+  },
+  "DMART.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "mean_rev": 1.038,
+      "delivery_pct": 0.963,
+      "hi52": 0.963
+    },
+    "sig_counts": {
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1
+    }
+  },
+  "AEGISVOPAK.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.963,
+      "mean_rev": 0.963,
+      "delivery_pct": 0.963,
+      "hi52": 1.038
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1
     }
   }
 }

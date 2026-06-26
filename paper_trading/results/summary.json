@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-25",
+  "generated": "2026-06-26",
   "total_signals": 169,
   "cost_model_pct": 0.4,
   "benchmark": "NIFTY50",
@@ -998,19 +998,24 @@
       }
     },
     "10d": {
-      "n_trades": 129,
-      "win_rate": 41.1,
-      "avg_ret": -1.11,
+      "n_trades": 139,
+      "win_rate": 41.0,
+      "avg_ret": -1.1,
       "median_ret": -1.43,
-      "avg_win": 2.93,
-      "avg_loss": -3.92,
-      "sharpe": -1.3,
+      "avg_win": 2.86,
+      "avg_loss": -3.86,
+      "sharpe": -1.32,
       "best": 18.87,
       "worst": -11.07,
       "avg_nifty": 1.28,
       "avg_excess": -2.38,
       "beat_nifty_rate": 24.8,
       "by_symbol": {
+        "AARTIIND.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -4.43
+        },
         "ADANIENT.NS": {
           "n": 2,
           "win_rate": 50.0,
@@ -1051,15 +1056,25 @@
           "win_rate": 37.5,
           "avg_ret": -1.56
         },
+        "BHARTIHEXA.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.8
+        },
         "BLUEDART.NS": {
           "n": 1,
           "win_rate": 100.0,
           "avg_ret": 4.93
         },
-        "BPCL.NS": {
+        "BLUESTARCO.NS": {
           "n": 1,
           "win_rate": 0.0,
-          "avg_ret": -7.27
+          "avg_ret": -1.59
+        },
+        "BPCL.NS": {
+          "n": 2,
+          "win_rate": 50.0,
+          "avg_ret": -3.0
         },
         "BRITANNIA.NS": {
           "n": 3,
@@ -1077,9 +1092,9 @@
           "avg_ret": -3.31
         },
         "COLPAL.NS": {
-          "n": 1,
-          "win_rate": 0.0,
-          "avg_ret": -1.43
+          "n": 2,
+          "win_rate": 50.0,
+          "avg_ret": 1.63
         },
         "DIVISLAB.NS": {
           "n": 8,
@@ -1106,20 +1121,25 @@
           "win_rate": 100.0,
           "avg_ret": 6.31
         },
+        "HDFCAMC.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -6.39
+        },
         "HINDALCO.NS": {
           "n": 4,
           "win_rate": 0.0,
           "avg_ret": -6.16
         },
         "HINDUNILVR.NS": {
-          "n": 9,
-          "win_rate": 66.7,
-          "avg_ret": 1.29
+          "n": 10,
+          "win_rate": 70.0,
+          "avg_ret": 1.23
         },
         "ICICIBANK.NS": {
-          "n": 1,
+          "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -5.17
+          "avg_ret": -4.0
         },
         "ITC.NS": {
           "n": 1,
@@ -1132,9 +1152,9 @@
           "avg_ret": 0.99
         },
         "KOTAKBANK.NS": {
-          "n": 2,
+          "n": 3,
           "win_rate": 0.0,
-          "avg_ret": -4.55
+          "avg_ret": -3.25
         },
         "LT.NS": {
           "n": 1,
@@ -1172,9 +1192,9 @@
           "avg_ret": -5.58
         },
         "PIDILITIND.NS": {
-          "n": 1,
+          "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -7.62
+          "avg_ret": -4.91
         },
         "POWERGRID.NS": {
           "n": 1,

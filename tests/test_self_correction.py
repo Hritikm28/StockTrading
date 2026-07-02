@@ -190,10 +190,10 @@ class TestWeightLearnerFreeze:
         yield
         StockWeightLearner._data = None
 
-    def test_no_learning_below_30_outcomes(self):
+    def test_no_learning_below_min_trades(self):
         from multi_alpha_engine import StockWeightLearner as WL
         scores = {'momentum': {'score': 0.8, 'confidence': 70.0}}
-        for _ in range(29):                       # 29 < MIN_TRADES=30
+        for _ in range(WL.MIN_TRADES - 1):        # just below the freeze bar
             WL.update_from_outcome('TEST.NS', scores, -1.0)
         mults = WL.get_multipliers('TEST.NS')
         assert mults['momentum'] == 1.0           # frozen at neutral

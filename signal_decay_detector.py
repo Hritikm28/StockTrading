@@ -82,7 +82,14 @@ RET_COL_FALLBACK  = 'ret_1d'
 # fii_dii — also "core" — produced NO data in the cloud feed (0/169 active), so
 # they contribute nothing until that pipeline is fixed (a data problem, not a
 # signal problem). momentum is the one price alpha the 10y walk-forward proved.
-CORE_ALPHAS         = {'momentum', 'pead', 'fii_dii', 'delivery_pct', 'sector_mom'}
+# [2026-07-02] DEMOTED pead + fii_dii from core. Rule tightened: "core" now
+# means VALIDATED — by the 10y walk-forward (momentum) or by positive live
+# rank-IC on real graded trades (delivery_pct, sector_mom). pead & fii_dii
+# have neither: no point-in-time backtest exists and they produced ~no live
+# evidence (dark feeds). They stay in ALL_SIGNALS and are shadow-graded, so
+# once their data flows they can EARN promotion through the incubator like
+# sector_mom did — but faith alone no longer grants composite weight.
+CORE_ALPHAS         = {'momentum', 'delivery_pct', 'sector_mom'}
 PROMOTE_MIN_TRADES  = 30     # evidence needed before an alpha earns weight
 PROMOTE_WIN_RATE    = 52.0   # observed win rate required
 PROMOTE_LOWER_BOUND = 45.0   # Wilson 95% lower bound must clear this

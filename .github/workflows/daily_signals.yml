@@ -100,6 +100,9 @@ jobs:
       - name: Kill-switch — disable alphas with decayed win rates
         run: python signal_decay_detector.py || true
 
+      - name: Calibrate per-alpha confidence from graded outcomes
+        run: python confidence_calibration.py || true
+
       - name: Run real multi-alpha engine
         run: python daily_runner.py --quick
 
@@ -143,6 +146,11 @@ jobs:
           git add paper_trading/alpha_tiers.json 2>/dev/null || true
           git add paper_trading/circuit_breaker.json 2>/dev/null || true
           git add paper_trading/alpha_scores/ 2>/dev/null || true
+          git add paper_trading/alpha_confidence.json 2>/dev/null || true
+          # Alpha data cache (FII/DII flow history etc.) — commit to git, not
+          # just actions/cache: the rolling 5d flow signal needs accumulated
+          # history and cache eviction was silently zeroing the alpha.
+          git add -f data/alpha_cache/ 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "Nothing to commit."
             exit 0

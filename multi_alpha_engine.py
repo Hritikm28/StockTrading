@@ -148,6 +148,30 @@ class MarketBreadthDetector:
 # ==============================================================================
 # IMPROVEMENT 4 — PER-STOCK SIGNAL WEIGHT LEARNER
 # ==============================================================================
+_CONF_MULT_CACHE: Optional[Dict[str, float]] = None
+
+
+def _confidence_multipliers() -> Dict[str, float]:
+    """Per-alpha confidence multipliers from confidence_calibration.py.
+
+    Measured live precision scales each alpha's self-reported (hardcoded)
+    confidence. Missing file or thin evidence -> neutral 1.0.
+    """
+    global _CONF_MULT_CACHE
+    if _CONF_MULT_CACHE is None:
+        mults: Dict[str, float] = {}
+        f = Path("paper_trading/alpha_confidence.json")
+        if f.exists():
+            try:
+                data = json.loads(f.read_text())
+                mults = {k: float(v.get('multiplier', 1.0))
+                         for k, v in data.items()}
+            except Exception:
+                mults = {}
+        _CONF_MULT_CACHE = mults
+    return _CONF_MULT_CACHE
+
+
 class StockWeightLearner:
     """
     Maintains per-stock multipliers for each of the 10 alpha signals.
@@ -677,10 +701,14 @@ class MultiAlphaEngine:
             'sast':         'sast',
             'shp_delta':    'shp_delta',
         }
+        conf_mults = _confidence_multipliers()
         for alpha_key, weight_key in alpha_name_map.items():
             comp  = components.get(alpha_key, {})
             score = comp.get('score', 0.0)
-            conf  = comp.get('confidence', 0.0)
+            # Calibrated confidence: the modules report hardcoded numbers
+            # (momentum always says 70); scale by each alpha's measured live
+            # precision so the confidence gate reflects reality, not optimism.
+            conf  = comp.get('confidence', 0.0) * conf_mults.get(alpha_key, 1.0)
             # Tier system: shadow alphas (incubating/disabled) carry real
             # scores for grading but get ZERO composite weight until they
             # earn promotion with live evidence (signal_decay_detector).
@@ -718,8 +746,9 @@ class MultiAlphaEngine:
         # (Per-stock performance dampener removed 2026-06-12 — procyclical.
         #  Portfolio-level protection: circuit_breaker.py + 200-DMA gate.)
 
-        # Composite confidence — live signals only
-        confs = [c.get('confidence', 0) for c in components.values()
+        # Composite confidence — live signals only, calibrated
+        confs = [c.get('confidence', 0) * conf_mults.get(name, 1.0)
+                 for name, c in components.items()
                  if c.get('confidence', 0) > 0 and c.get('live', True)]
         if ml_confidence > 0:
             confs.append(ml_confidence)

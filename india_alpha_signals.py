@@ -36,21 +36,65 @@ _CACHE_DIR = Path("data/alpha_cache")
 _CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
+_NSE_SESSION: Optional[requests.Session] = None
+
+
+def _nse_session() -> requests.Session:
+    """Session pre-warmed on the NSE homepage.
+
+    www.nseindia.com/api/* endpoints reject cookie-less requests from
+    datacenter IPs (GitHub Actions) with 401/403 or an HTML error page —
+    this is why the API-backed alphas (option_chain, corp_event, sast,
+    shp_delta...) scored 0.0 on every cloud run while the static
+    nsearchives.nseindia.com files kept working. Hitting the homepage
+    first issues the required cookies; reuse the session for all calls.
+    """
+    global _NSE_SESSION
+    if _NSE_SESSION is None:
+        s = requests.Session()
+        s.headers.update({
+            'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                           'AppleWebKit/537.36 (KHTML, like Gecko) '
+                           'Chrome/124.0 Safari/537.36'),
+            'Accept': 'application/json,text/html,*/*',
+            'Accept-Language': 'en-US,en;q=0.9',
+        })
+        try:
+            s.get('https://www.nseindia.com/', timeout=10)
+        except Exception:
+            pass
+        _NSE_SESSION = s
+    return _NSE_SESSION
+
+
 def _safe_get(url: str, timeout: int = 10, headers: dict = None) -> Optional[requests.Response]:
-    """Robust HTTP GET with retries."""
+    """Robust HTTP GET with retries; NSE API calls go through the
+    cookie-warmed session, everything else through plain requests."""
     _headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
         'Accept': 'application/json,text/html,*/*'
     }
     if headers:
         _headers.update(headers)
+    needs_cookies = 'www.nseindia.com/api' in url
     for attempt in range(3):
         try:
-            resp = requests.get(url, headers=_headers, timeout=timeout)
+            if needs_cookies:
+                resp = _nse_session().get(url, headers=headers or {},
+                                          timeout=timeout)
+            else:
+                resp = requests.get(url, headers=_headers, timeout=timeout)
             if resp.status_code == 200:
-                return resp
+                body_head = resp.text[:200].lstrip().lower()
+                # NSE serves an HTML block page with HTTP 200 — treat as miss
+                if needs_cookies and body_head.startswith(('<!doctype', '<html')):
+                    global _NSE_SESSION
+                    _NSE_SESSION = None      # force a cookie refresh
+                else:
+                    return resp
         except Exception:
-            pass
+            if needs_cookies:
+                _NSE_SESSION = None
         import time; time.sleep(1.5 ** attempt)
     return None
 

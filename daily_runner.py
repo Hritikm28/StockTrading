@@ -87,7 +87,11 @@ class RunnerConfig:
         DEFAULT_UNIVERSE = NIFTY_50 + NIFTY_NEXT_50_ADDITIONS
 
     # Risk
-    MAX_POSITIONS = 10
+    # [2026-07-02] 10 -> 5. Costs were eating the edge: ~8-10 signals/day on
+    # 5-day holds churns ~40% of capital weekly at 0.40% a round trip, versus
+    # a measured alpha edge of IC ~0.02. Half the positions + 4x the hold
+    # (below) cuts cost drag ~5x for the same signal quality.
+    MAX_POSITIONS = 5
     MAX_PORTFOLIO_HEAT_PCT = 30.0
     MAX_SINGLE_POSITION_PCT = 2.4
     MAX_CORRELATION = 0.70
@@ -481,10 +485,12 @@ class PortfolioRiskGate:
                 'risk_reward': round(rr_ratio, 2),
                 'position_size_inr': round(position_size_inr, 0),
                 'position_pct': round(kelly_sized_pct, 2),
-                # Recommended holding window — the validated edges (momentum,
-                # PEAD, pooled ML rank) pay off over ~5 trading days; exiting
-                # daily paid 0.40% round-trip costs for 1d noise.
-                'hold_days': 5,
+                # Recommended holding window. [2026-07-02] 5 -> 20 days: with
+                # IC ~0.02 edges, 0.40% round-trip costs dominate at 5d holds
+                # (track record: -10% in 20 days, most of it cost churn).
+                # Momentum/PEAD-class edges persist for weeks — hold longer,
+                # pay the toll a quarter as often.
+                'hold_days': 20,
                 'regime': row.get('regime', 'UNKNOWN'),
                 'vix': row.get('vix', 0),
                 'alpha_breakdown': row.get('alpha_components', {}),
@@ -658,10 +664,35 @@ class DailyRunner:
         except Exception:
             pass
 
+        # Alpha data coverage — % of universe where each alpha produced a
+        # non-zero signal today. Dead data feeds used to fail SILENTLY
+        # (every fetch error returns 0.0/0.0); this makes them loud so a
+        # dark alpha shows up in the daily summary/email instead of being
+        # discovered months later in the graded record.
+        alpha_coverage = {}
+        if 'alpha_components' in ranked_df.columns and len(ranked_df):
+            comps_col = ranked_df['alpha_components']
+            names = set()
+            for comps in comps_col:
+                if isinstance(comps, dict):
+                    names.update(comps.keys())
+            n_rows = len(ranked_df)
+            for name in sorted(names):
+                active = sum(
+                    1 for comps in comps_col
+                    if isinstance(comps, dict)
+                    and comps.get(name, {}).get('confidence', 0) > 0)
+                alpha_coverage[name] = round(100.0 * active / n_rows, 1)
+            dark = [n for n, pct in alpha_coverage.items() if pct == 0.0]
+            if dark:
+                print(f"      [DATA WARNING] alphas with ZERO coverage today: "
+                      f"{', '.join(dark)}")
+
         result = {
             'date': today_str,
             'regime': regime,
             'vix': float(vix),
+            'alpha_coverage': alpha_coverage,
             'trend_gate_open': trend_gate_open,
             'nifty_vs_200dma': nifty_vs_200dma,
             'breaker_tripped': breaker_tripped,
@@ -744,7 +775,7 @@ def main():
         description='Daily Trading Signal Runner'
     )
     parser.add_argument('--stocks', nargs='+', help='Specific stocks to analyse')
-    parser.add_argument('--top', type=int, default=10, help='Max top signals to show')
+    parser.add_argument('--top', type=int, default=5, help='Max top signals to show')
     parser.add_argument('--capital', type=float, default=1_000_000, help='Portfolio capital (INR)')
     parser.add_argument('--quick', action='store_true', help='Skip ML training, alpha-only mode')
     parser.add_argument('--date', type=str, default=None,

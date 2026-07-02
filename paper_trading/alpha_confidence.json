@@ -1,0 +1,32 @@
+{
+  "mean_rev": {
+    "multiplier": 0.856,
+    "win_rate": 47.1,
+    "n": 51
+  },
+  "delivery_pct": {
+    "multiplier": 0.938,
+    "win_rate": 51.6,
+    "n": 31
+  },
+  "corp_event": {
+    "multiplier": 1.0,
+    "win_rate": 16.7,
+    "n": 6
+  },
+  "momentum": {
+    "multiplier": 0.877,
+    "win_rate": 48.2,
+    "n": 56
+  },
+  "rel_strength": {
+    "multiplier": 0.741,
+    "win_rate": 40.7,
+    "n": 27
+  },
+  "sector_mom": {
+    "multiplier": 1.049,
+    "win_rate": 57.7,
+    "n": 26
+  }
+}

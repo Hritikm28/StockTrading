@@ -19,7 +19,7 @@
     "excess_cum": null,
     "n_excess_days": 0
   },
-  "checked_on": "2026-07-14",
+  "checked_on": "2026-07-15",
   "tripped_on": "2026-06-12",
   "reason": "win rate 30.0% over last 20 trades < 40.0%; -7.72% cumulative excess vs NIFTY over last 10 signal days < -2.0%"
 }

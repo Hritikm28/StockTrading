@@ -1,6 +1,6 @@
 # Verified Track Record
 
-_Auto-generated 2026-07-16 by paper_trade_tracker.py. Every signal is committed to git BEFORE the outcome is known — the git history is the tamper-proof audit trail._
+_Auto-generated 2026-07-17 by paper_trade_tracker.py. Every signal is committed to git BEFORE the outcome is known — the git history is the tamper-proof audit trail._
 
 - **Grading**: entry at next-day open, net of 0.40% costs (0.25% fees/taxes + 0.15% slippage), 1 trading-day horizon, equal-weight across each day's signals.
 - **Inception**: 2026-05-25  |  **Signal days**: 20  |  **Trades graded**: 169

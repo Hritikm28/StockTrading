@@ -106,6 +106,9 @@ jobs:
       - name: Run real multi-alpha engine
         run: python daily_runner.py --quick
 
+      - name: Grade untraded predictions (shadow portfolio + signal ICs)
+        run: python shadow_grader.py || true
+
       - name: Publish signals
         run: python publish_signals.py
 
@@ -147,6 +150,8 @@ jobs:
           git add paper_trading/circuit_breaker.json 2>/dev/null || true
           git add paper_trading/alpha_scores/ 2>/dev/null || true
           git add paper_trading/alpha_confidence.json 2>/dev/null || true
+          git add paper_trading/results/shadow_report.json 2>/dev/null || true
+          git add paper_trading/results/shadow_report.md 2>/dev/null || true
           # Alpha data cache (FII/DII flow history etc.) — commit to git, not
           # just actions/cache: the rolling 5d flow signal needs accumulated
           # history and cache eviction was silently zeroing the alpha.

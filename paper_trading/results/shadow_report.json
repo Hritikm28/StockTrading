@@ -1,0 +1,190 @@
+{
+  "generated": "2026-10-12",
+  "since": "2026-07-01",
+  "hold_days": 20,
+  "top_n": 5,
+  "cost_pct": 0.4,
+  "window": {
+    "first_signal": "2026-07-01",
+    "last_signal": "2026-10-08",
+    "signal_days": 70,
+    "gate_open_days": 0,
+    "last_price_date": "2026-10-12",
+    "stocks_with_prices": 158
+  },
+  "shadow_portfolio": {
+    "top_picks_net_pct": -3.35,
+    "nifty_same_timing_pct": -7.04,
+    "excess_vs_nifty_pct": 3.69,
+    "nifty_buy_and_hold_pct": -6.84,
+    "live_gated_pct": 0.0,
+    "max_drawdown_pct": -5.04,
+    "nifty_max_drawdown_pct": -9.95,
+    "avg_exposure_pct": 80.9
+  },
+  "cohorts": {
+    "n_matured": 48,
+    "avg_net_excess_pct": 0.78,
+    "beat_nifty_rate_pct": 58.3,
+    "t_stat": 0.34,
+    "n_independent": 2
+  },
+  "top_vs_bottom": {
+    "avg_spread_pct": 4.02,
+    "pct_positive": 70.8,
+    "t_stat": 1.06
+  },
+  "rank_ic": {
+    "composite": {
+      "5d": {
+        "ic": 0.0693,
+        "t_stat": 1.93,
+        "n_dates": 65,
+        "pct_positive": 64.6
+      },
+      "20d": {
+        "ic": 0.0926,
+        "t_stat": 1.03,
+        "n_dates": 48,
+        "pct_positive": 75.0
+      }
+    },
+    "bulk_deal": {
+      "5d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "20d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "coverage_pct": 0.7
+    },
+    "corp_event": {
+      "5d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "20d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "coverage_pct": 0.0
+    },
+    "delivery_pct": {
+      "5d": {
+        "ic": 0.0235,
+        "t_stat": 0.73,
+        "n_dates": 65,
+        "pct_positive": 60.0
+      },
+      "20d": {
+        "ic": -0.0104,
+        "t_stat": -0.22,
+        "n_dates": 48,
+        "pct_positive": 47.9
+      },
+      "coverage_pct": 94.3
+    },
+    "fii_dii": {
+      "5d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "20d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "coverage_pct": 94.3
+    },
+    "fo_ban": {
+      "5d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "20d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "coverage_pct": 0.3
+    },
+    "hi52": {
+      "5d": {
+        "ic": 0.0063,
+        "t_stat": 0.18,
+        "n_dates": 65,
+        "pct_positive": 56.9
+      },
+      "20d": {
+        "ic": 0.0371,
+        "t_stat": 0.41,
+        "n_dates": 48,
+        "pct_positive": 66.7
+      },
+      "coverage_pct": 74.6
+    },
+    "mean_rev": {
+      "5d": {
+        "ic": 0.0489,
+        "t_stat": 1.5,
+        "n_dates": 65,
+        "pct_positive": 63.1
+      },
+      "20d": {
+        "ic": 0.0315,
+        "t_stat": 0.32,
+        "n_dates": 48,
+        "pct_positive": 54.2
+      },
+      "coverage_pct": 48.2
+    },
+    "momentum": {
+      "5d": {
+        "ic": 0.0497,
+        "t_stat": 1.19,
+        "n_dates": 65,
+        "pct_positive": 63.1
+      },
+      "20d": {
+        "ic": 0.1177,
+        "t_stat": 0.99,
+        "n_dates": 48,
+        "pct_positive": 64.6
+      },
+      "coverage_pct": 93.1
+    },
+    "sector_mom": {
+      "5d": {
+        "ic": -0.017,
+        "t_stat": -0.35,
+        "n_dates": 65,
+        "pct_positive": 49.2
+      },
+      "20d": {
+        "ic": -0.1075,
+        "t_stat": -0.97,
+        "n_dates": 48,
+        "pct_positive": 29.2
+      },
+      "coverage_pct": 45.7
+    }
+  },
+  "verdict": "UNPROVEN",
+  "verdict_text": "Top-5 picks beat NIFTY by +0.78% per hold after costs, but t=0.34 is too weak to rule out luck."
+}

@@ -86,11 +86,20 @@ class NSEFetcher:
     Single instance is reused (singleton via get_fetcher()).
     """
 
+    # An endpoint that fails this many calls in a row is skipped for the rest
+    # of the run. NSE blocks datacenter IPs (GitHub Actions) on several /api/
+    # routes; retrying every one of them for every stock cost ~35s per symbol
+    # and pushed the daily run past its 50-minute limit with no data to show.
+    BREAKER_LIMIT    = 3
+    YF_OPTIONS_LIMIT = 15   # consecutive empty yfinance option chains
+
     def __init__(self, cache_hours: int = 4):
         self.session      = requests.Session()
         self.session.headers.update(_HEADERS)
         self.cache_hours  = cache_hours
         self._initialized = False
+        self._fails: Dict[str, int] = {}
+        self._yf_option_misses = 0
 
     # ------------------------------------------------------------------ #
     #  Session management                                                  #
@@ -125,7 +134,13 @@ class NSEFetcher:
 
     def _get(self, url: str, retries: int = 3,
              extra_headers: dict = None) -> Optional[requests.Response]:
-        """Authenticated GET with retry + session re-init on 401/403."""
+        """Authenticated GET with retry + session re-init on 401/403.
+
+        NSE answers blocked requests with an HTML page and HTTP 200, so a
+        200 whose body is HTML counts as a failure, not a response."""
+        endpoint = url.split('?', 1)[0]
+        if self._fails.get(endpoint, 0) >= self.BREAKER_LIMIT:
+            return None
         self._init_session()
         headers = {
             **_HEADERS,
@@ -137,9 +152,13 @@ class NSEFetcher:
         for attempt in range(retries):
             try:
                 resp = self.session.get(url, headers=headers, timeout=15)
-                if resp.status_code == 200:
+                blocked = resp.status_code in (401, 403) or (
+                    resp.status_code == 200
+                    and resp.text.lstrip()[:1] == '<')
+                if resp.status_code == 200 and not blocked:
+                    self._fails[endpoint] = 0
                     return resp
-                if resp.status_code in (401, 403):
+                if blocked:
                     # Re-initialize session and retry
                     self._initialized = False
                     self._init_session()
@@ -147,6 +166,10 @@ class NSEFetcher:
             except Exception:
                 pass
             time.sleep(1.5 ** attempt)
+        self._fails[endpoint] = self._fails.get(endpoint, 0) + 1
+        if self._fails[endpoint] == self.BREAKER_LIMIT:
+            print(f"   [NSEFetcher] {endpoint} failed {self.BREAKER_LIMIT}x "
+                  f"in a row; skipping it for the rest of this run")
         return None
 
     # ------------------------------------------------------------------ #
@@ -196,8 +219,12 @@ class NSEFetcher:
         if cached:
             return cached
 
-        # Primary: yfinance (works reliably for NSE stocks)
-        result = self._get_option_chain_yf(sym)
+        # Primary: yfinance, until it has come back empty too many times
+        # in a row this run
+        result = None
+        if self._yf_option_misses < self.YF_OPTIONS_LIMIT:
+            result = self._get_option_chain_yf(sym)
+            self._yf_option_misses = 0 if result else self._yf_option_misses + 1
 
         # Fallback: NSE direct API
         if not result:

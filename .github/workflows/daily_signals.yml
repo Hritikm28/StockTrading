@@ -103,11 +103,17 @@ jobs:
       - name: Calibrate per-alpha confidence from graded outcomes
         run: python confidence_calibration.py || true
 
-      - name: Run real multi-alpha engine
-        run: python daily_runner.py --quick
-
+      # Before the engine: it only needs today's prices and past rankings, so
+      # a slow or failed engine run can't stop the edge check from updating.
       - name: Grade untraded predictions (shadow portfolio + signal ICs)
         run: python shadow_grader.py || true
+
+      - name: Run real multi-alpha engine
+        # Own limit, below the job's 50: a hung engine then FAILS this step
+        # (commit + failure email still run) instead of the whole job being
+        # cancelled silently with nothing saved.
+        timeout-minutes: 35
+        run: python daily_runner.py --quick
 
       - name: Publish signals
         run: python publish_signals.py
@@ -134,6 +140,7 @@ jobs:
           from: Trading Bot <${{ secrets.MAIL_USERNAME }}>
 
       - name: Commit signals + learning state
+        if: ${{ !cancelled() }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

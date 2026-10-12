@@ -6,7 +6,7 @@ _Generated 2026-10-12 by shadow_grader.py. Grades every evening ranking since 20
 
 Top-5 picks beat NIFTY by +0.78% per hold after costs, but t=0.34 is too weak to rule out luck.
 
-- Signal days graded: 70 (2026-07-01 to 2026-10-08), prices through 2026-10-12, 158 stocks priced
+- Signal days graded: 71 (2026-07-01 to 2026-10-12), prices through 2026-10-12, 158 stocks priced
 - Days the live trend gate allowed trading: 0
 
 ## If we had traded every pick (top-5, ignoring the gate)
@@ -34,10 +34,10 @@ Excess of picks over NIFTY (same timing): **3.69%**
 |---|---|---|---|---|---|
 | momentum | 0.0497 | 0.1177 | 0.99 | 48 | 93.1% |
 | composite | 0.0693 | 0.0926 | 1.03 | 48 | — |
-| hi52 | 0.0063 | 0.0371 | 0.41 | 48 | 74.6% |
-| mean_rev | 0.0489 | 0.0315 | 0.32 | 48 | 48.2% |
+| hi52 | 0.0063 | 0.0371 | 0.41 | 48 | 74.4% |
+| mean_rev | 0.0489 | 0.0315 | 0.32 | 48 | 48.0% |
 | delivery_pct | 0.0235 | -0.0104 | -0.22 | 48 | 94.3% |
-| sector_mom | -0.017 | -0.1075 | -0.97 | 48 | 45.7% |
+| sector_mom | -0.017 | -0.1075 | -0.97 | 48 | 45.9% |
 | bulk_deal | — | — | — | 0 | 0.7% |
 | corp_event | — | — | — | 0 | 0.0% |
 | fii_dii | — | — | — | 0 | 94.3% |

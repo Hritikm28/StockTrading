@@ -6,8 +6,8 @@
   "cost_pct": 0.4,
   "window": {
     "first_signal": "2026-07-01",
-    "last_signal": "2026-10-08",
-    "signal_days": 70,
+    "last_signal": "2026-10-12",
+    "signal_days": 71,
     "gate_open_days": 0,
     "last_price_date": "2026-10-12",
     "stocks_with_prices": 158
@@ -137,7 +137,7 @@
         "n_dates": 48,
         "pct_positive": 66.7
       },
-      "coverage_pct": 74.6
+      "coverage_pct": 74.4
     },
     "mean_rev": {
       "5d": {
@@ -152,7 +152,7 @@
         "n_dates": 48,
         "pct_positive": 54.2
       },
-      "coverage_pct": 48.2
+      "coverage_pct": 48.0
     },
     "momentum": {
       "5d": {
@@ -182,7 +182,7 @@
         "n_dates": 48,
         "pct_positive": 29.2
       },
-      "coverage_pct": 45.7
+      "coverage_pct": 45.9
     }
   },
   "verdict": "UNPROVEN",

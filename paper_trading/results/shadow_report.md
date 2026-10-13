@@ -1,6 +1,6 @@
 # Shadow Grade: untraded predictions vs reality
 
-_Generated 2026-10-12 by shadow_grader.py. Grades every evening ranking since 2026-07-01, whether or not the trend gate let it trade. Entry at next-day open, 20-day holds, 0.4% round-trip costs._
+_Generated 2026-10-13 by shadow_grader.py. Grades every evening ranking since 2026-07-01, whether or not the trend gate let it trade. Entry at next-day open, 20-day holds, 0.4% round-trip costs._
 
 ## Verdict: **UNPROVEN**
 

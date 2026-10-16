@@ -1,12 +1,12 @@
 # Shadow Grade: untraded predictions vs reality
 
-_Generated 2026-10-15 by shadow_grader.py. Grades every evening ranking since 2026-07-01, whether or not the trend gate let it trade. Entry at next-day open, 20-day holds, 0.4% round-trip costs._
+_Generated 2026-10-16 by shadow_grader.py. Grades every evening ranking since 2026-07-01, whether or not the trend gate let it trade. Entry at next-day open, 20-day holds, 0.4% round-trip costs._
 
 ## Verdict: **UNPROVEN**
 
 Top-5 picks beat NIFTY by +0.94% per hold after costs, but t=0.44 is too weak to rule out luck.
 
-- Signal days graded: 73 (2026-07-01 to 2026-10-14), prices through 2026-10-15, 158 stocks priced
+- Signal days graded: 74 (2026-07-01 to 2026-10-15), prices through 2026-10-15, 158 stocks priced
 - Days the live trend gate allowed trading: 0
 
 ## If we had traded every pick (top-5, ignoring the gate)
@@ -34,9 +34,9 @@ Excess of picks over NIFTY (same timing): **0.7%**
 |---|---|---|---|---|---|
 | momentum | 0.0398 | 0.1055 | 0.94 | 52 | 93.0% |
 | composite | 0.0609 | 0.0857 | 1.01 | 52 | — |
-| hi52 | -0.01 | 0.0299 | 0.35 | 52 | 74.1% |
-| mean_rev | 0.0467 | 0.0168 | 0.17 | 52 | 47.6% |
-| delivery_pct | 0.0196 | -0.0147 | -0.32 | 52 | 94.3% |
+| hi52 | -0.01 | 0.0299 | 0.35 | 52 | 74.0% |
+| mean_rev | 0.0467 | 0.0168 | 0.17 | 52 | 47.7% |
+| delivery_pct | 0.0196 | -0.0147 | -0.32 | 52 | 94.2% |
 | sector_mom | -0.0249 | -0.0988 | -0.93 | 52 | 45.8% |
 | bulk_deal | — | — | — | 0 | 0.7% |
 | corp_event | — | — | — | 0 | 0.0% |

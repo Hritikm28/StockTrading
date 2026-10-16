@@ -1,13 +1,13 @@
 {
-  "generated": "2026-10-15",
+  "generated": "2026-10-16",
   "since": "2026-07-01",
   "hold_days": 20,
   "top_n": 5,
   "cost_pct": 0.4,
   "window": {
     "first_signal": "2026-07-01",
-    "last_signal": "2026-10-14",
-    "signal_days": 73,
+    "last_signal": "2026-10-15",
+    "signal_days": 74,
     "gate_open_days": 0,
     "last_price_date": "2026-10-15",
     "stocks_with_prices": 158
@@ -92,7 +92,7 @@
         "n_dates": 52,
         "pct_positive": 44.2
       },
-      "coverage_pct": 94.3
+      "coverage_pct": 94.2
     },
     "fii_dii": {
       "5d": {
@@ -137,7 +137,7 @@
         "n_dates": 52,
         "pct_positive": 61.5
       },
-      "coverage_pct": 74.1
+      "coverage_pct": 74.0
     },
     "mean_rev": {
       "5d": {
@@ -152,7 +152,7 @@
         "n_dates": 52,
         "pct_positive": 50.0
       },
-      "coverage_pct": 47.6
+      "coverage_pct": 47.7
     },
     "momentum": {
       "5d": {

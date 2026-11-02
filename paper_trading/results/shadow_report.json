@@ -1,52 +1,52 @@
 {
-  "generated": "2026-10-30",
+  "generated": "2026-11-02",
   "since": "2026-07-01",
   "hold_days": 20,
   "top_n": 5,
   "cost_pct": 0.4,
   "window": {
     "first_signal": "2026-07-01",
-    "last_signal": "2026-10-29",
-    "signal_days": 84,
+    "last_signal": "2026-10-30",
+    "signal_days": 85,
     "gate_open_days": 0,
-    "last_price_date": "2026-10-29",
+    "last_price_date": "2026-10-30",
     "stocks_with_prices": 159
   },
   "shadow_portfolio": {
-    "top_picks_net_pct": -3.94,
-    "nifty_same_timing_pct": -4.77,
-    "excess_vs_nifty_pct": 0.83,
-    "nifty_buy_and_hold_pct": -4.45,
+    "top_picks_net_pct": -5.44,
+    "nifty_same_timing_pct": -4.32,
+    "excess_vs_nifty_pct": -1.12,
+    "nifty_buy_and_hold_pct": -3.97,
     "live_gated_pct": 0.0,
     "max_drawdown_pct": -10.24,
     "nifty_max_drawdown_pct": -9.95,
-    "avg_exposure_pct": 83.0
+    "avg_exposure_pct": 83.1
   },
   "cohorts": {
-    "n_matured": 61,
-    "avg_net_excess_pct": 0.4,
-    "beat_nifty_rate_pct": 54.1,
-    "t_stat": 0.2,
+    "n_matured": 62,
+    "avg_net_excess_pct": 0.44,
+    "beat_nifty_rate_pct": 54.8,
+    "t_stat": 0.22,
     "n_independent": 3
   },
   "top_vs_bottom": {
-    "avg_spread_pct": 3.55,
-    "pct_positive": 72.1,
-    "t_stat": 1.12
+    "avg_spread_pct": 3.61,
+    "pct_positive": 72.6,
+    "t_stat": 1.15
   },
   "rank_ic": {
     "composite": {
       "5d": {
-        "ic": 0.0457,
-        "t_stat": 1.23,
-        "n_dates": 77,
-        "pct_positive": 59.7
+        "ic": 0.0478,
+        "t_stat": 1.29,
+        "n_dates": 78,
+        "pct_positive": 60.3
       },
       "20d": {
-        "ic": 0.0653,
-        "t_stat": 0.83,
-        "n_dates": 61,
-        "pct_positive": 63.9
+        "ic": 0.065,
+        "t_stat": 0.84,
+        "n_dates": 62,
+        "pct_positive": 64.5
       }
     },
     "bulk_deal": {
@@ -81,18 +81,18 @@
     },
     "delivery_pct": {
       "5d": {
-        "ic": 0.0324,
-        "t_stat": 1.06,
-        "n_dates": 77,
-        "pct_positive": 62.3
+        "ic": 0.0337,
+        "t_stat": 1.11,
+        "n_dates": 78,
+        "pct_positive": 62.8
       },
       "20d": {
-        "ic": 0.0005,
-        "t_stat": 0.01,
-        "n_dates": 61,
-        "pct_positive": 49.2
+        "ic": 0.0055,
+        "t_stat": 0.1,
+        "n_dates": 62,
+        "pct_positive": 50.0
       },
-      "coverage_pct": 93.6
+      "coverage_pct": 93.5
     },
     "fii_dii": {
       "5d": {
@@ -126,65 +126,65 @@
     },
     "hi52": {
       "5d": {
-        "ic": -0.0086,
-        "t_stat": -0.21,
-        "n_dates": 77,
-        "pct_positive": 54.5
+        "ic": -0.0039,
+        "t_stat": -0.09,
+        "n_dates": 78,
+        "pct_positive": 55.1
       },
       "20d": {
-        "ic": -0.0026,
+        "ic": -0.0029,
         "t_stat": -0.03,
-        "n_dates": 61,
-        "pct_positive": 52.5
+        "n_dates": 62,
+        "pct_positive": 51.6
       },
-      "coverage_pct": 71.7
+      "coverage_pct": 71.5
     },
     "mean_rev": {
       "5d": {
-        "ic": 0.0343,
-        "t_stat": 1.04,
-        "n_dates": 77,
-        "pct_positive": 58.4
+        "ic": 0.0335,
+        "t_stat": 1.02,
+        "n_dates": 78,
+        "pct_positive": 57.7
       },
       "20d": {
-        "ic": 0.036,
-        "t_stat": 0.38,
-        "n_dates": 61,
-        "pct_positive": 54.1
+        "ic": 0.0365,
+        "t_stat": 0.39,
+        "n_dates": 62,
+        "pct_positive": 54.8
       },
-      "coverage_pct": 48.5
+      "coverage_pct": 48.4
     },
     "momentum": {
       "5d": {
-        "ic": 0.0259,
-        "t_stat": 0.6,
-        "n_dates": 77,
-        "pct_positive": 55.8
+        "ic": 0.0296,
+        "t_stat": 0.68,
+        "n_dates": 78,
+        "pct_positive": 56.4
       },
       "20d": {
-        "ic": 0.0668,
+        "ic": 0.0658,
         "t_stat": 0.6,
-        "n_dates": 61,
-        "pct_positive": 52.5
+        "n_dates": 62,
+        "pct_positive": 53.2
       },
       "coverage_pct": 92.4
     },
     "sector_mom": {
       "5d": {
-        "ic": -0.0393,
-        "t_stat": -0.89,
-        "n_dates": 77,
-        "pct_positive": 42.9
+        "ic": -0.0391,
+        "t_stat": -0.9,
+        "n_dates": 78,
+        "pct_positive": 42.3
       },
       "20d": {
-        "ic": -0.1082,
+        "ic": -0.1067,
         "t_stat": -1.16,
-        "n_dates": 61,
-        "pct_positive": 27.9
+        "n_dates": 62,
+        "pct_positive": 27.4
       },
-      "coverage_pct": 44.0
+      "coverage_pct": 43.8
     }
   },
   "verdict": "UNPROVEN",
-  "verdict_text": "Top-5 picks beat NIFTY by +0.40% per hold after costs, but t=0.2 is too weak to rule out luck."
+  "verdict_text": "Top-5 picks beat NIFTY by +0.44% per hold after costs, but t=0.22 is too weak to rule out luck."
 }

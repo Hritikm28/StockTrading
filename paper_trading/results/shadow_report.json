@@ -137,7 +137,7 @@
         "n_dates": 66,
         "pct_positive": 48.5
       },
-      "coverage_pct": 71.2
+      "coverage_pct": 71.3
     },
     "mean_rev": {
       "5d": {
@@ -152,7 +152,22 @@
         "n_dates": 66,
         "pct_positive": 56.1
       },
-      "coverage_pct": 48.4
+      "coverage_pct": 48.5
+    },
+    "mom_riskadj": {
+      "5d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "20d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "coverage_pct": 1.0
     },
     "momentum": {
       "5d": {
@@ -197,7 +212,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 0.4
+      "coverage_pct": 0.7
     },
     "sector_mom": {
       "5d": {

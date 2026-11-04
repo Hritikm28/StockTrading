@@ -34,15 +34,16 @@ Excess of picks over NIFTY (same timing): **-3.08%**
 |---|---|---|---|---|---|
 | composite | 0.044 | 0.0574 | 0.77 | 66 | — |
 | momentum | 0.0286 | 0.0554 | 0.52 | 66 | 92.3% |
-| mean_rev | 0.0336 | 0.0349 | 0.4 | 66 | 48.4% |
+| mean_rev | 0.0336 | 0.0349 | 0.4 | 66 | 48.5% |
 | delivery_pct | 0.0341 | 0.0188 | 0.32 | 66 | 93.5% |
-| hi52 | -0.0008 | -0.0094 | -0.11 | 66 | 71.2% |
+| hi52 | -0.0008 | -0.0094 | -0.11 | 66 | 71.3% |
 | sector_mom | -0.0467 | -0.11 | -1.24 | 66 | 43.5% |
 | bulk_deal | — | — | — | 0 | 0.6% |
 | corp_event | — | — | — | 0 | 0.0% |
 | fii_dii | — | — | — | 0 | 93.8% |
 | fo_ban | — | — | — | 0 | 0.3% |
+| mom_riskadj | — | — | — | 0 | 1.0% |
 | pead | — | — | — | 0 | 0.4% |
-| quality | — | — | — | 0 | 0.4% |
+| quality | — | — | — | 0 | 0.7% |
 
 _IC of 0.02-0.05 is a tradeable edge, above 0.05 is strong, negative means the signal points the wrong way. |t| below 2 means the number could easily be luck._

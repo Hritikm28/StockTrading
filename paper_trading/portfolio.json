@@ -3,8 +3,144 @@
  "start_capital": 1000000.0,
  "cash": 1000000.0,
  "holdings": {},
- "pending": [],
- "last_rebalance": null,
+ "pending": [
+  {
+   "symbol": "CPPLUS.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 1,
+   "score": 0.986
+  },
+  {
+   "symbol": "AETHER.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 2,
+   "score": 0.973
+  },
+  {
+   "symbol": "ATHERENERG.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 3,
+   "score": 0.959
+  },
+  {
+   "symbol": "APARINDS.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 4,
+   "score": 0.946
+  },
+  {
+   "symbol": "AZAD.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 5,
+   "score": 0.932
+  },
+  {
+   "symbol": "AEGISLOG.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 6,
+   "score": 0.918
+  },
+  {
+   "symbol": "ACUTAAS.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 7,
+   "score": 0.905
+  },
+  {
+   "symbol": "BHEL.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 8,
+   "score": 0.891
+  },
+  {
+   "symbol": "ACMESOLAR.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 9,
+   "score": 0.878
+  },
+  {
+   "symbol": "BELRISE.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 10,
+   "score": 0.864
+  },
+  {
+   "symbol": "BBOX.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 11,
+   "score": 0.85
+  },
+  {
+   "symbol": "BALRAMCHIN.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 12,
+   "score": 0.837
+  },
+  {
+   "symbol": "AUROPHARMA.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 13,
+   "score": 0.823
+  },
+  {
+   "symbol": "AJANTPHARM.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 14,
+   "score": 0.81
+  },
+  {
+   "symbol": "BHARATFORG.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 15,
+   "score": 0.796
+  }
+ ],
+ "last_rebalance": "2026-11",
  "nav": [
   {
    "date": "2026-11-04",
@@ -14,5 +150,6 @@
    "nifty": 23960.599609375
   }
  ],
- "trades": []
+ "trades": [],
+ "exposure": 0.5
 }

@@ -408,111 +408,24 @@ class BulkDealAlpha:
 # ==============================================================================
 class InsiderAlpha:
     """
-    SEBI insider trading disclosure signals.
+    Insider buying and selling (SEBI insider-trading disclosures).
 
-    SEBI mandates insiders (promoters, directors, KMPs) to disclose
-    all trades within 2 trading days. Research: promoter open-market
-    purchases predict 3-12 month outperformance.
+    Promoters, directors and key managers must report every trade within
+    two days. Net open-market buying by them over the last 90 days, weighted
+    towards recent trades, scores positive; net selling negative. Gifts,
+    ESOPs, pledges and transfers between family members are ignored.
+    Research: insider purchases, especially by promoters, predict
+    outperformance over the following months.
 
-    Data: BSE corporate filings XML/JSON + SEBI EDIFAR (free, public)
-    Edge: Information signal from people who know the company best.
+    Data: NSE's static insider-trading RSS feed and the XBRL filing behind
+    each item, collected into a history by nse_disclosures.py (the old BSE
+    and NSE JSON endpoints are blocked from GitHub's servers).
     """
 
-    _cache_file = _CACHE_DIR / "insider_trades.parquet"
-
     @classmethod
-    def fetch_insider_trades(cls, days_back: int = 60) -> Optional[pd.DataFrame]:
-        """Fetch insider trades from BSE bulk insider disclosures."""
-        cache_age_ok = (cls._cache_file.exists() and
-                        (datetime.now() - datetime.fromtimestamp(cls._cache_file.stat().st_mtime)).seconds < 86400 * 2)
-        if cache_age_ok:
-            try:
-                return pd.read_parquet(cls._cache_file)
-            except Exception:
-                pass
-
-        today = date.today()
-        from_dt = (today - timedelta(days=days_back)).strftime('%Y%m%d')
-        to_dt = today.strftime('%Y%m%d')
-
-        # BSE insider trading data
-        url = (f"https://api.bseindia.com/BseIndiaAPI/api/InsiderData/w?"
-               f"dtfrom={from_dt}&dtto={to_dt}&type=i")
-
-        resp = _safe_get(url, headers={'Referer': 'https://www.bseindia.com/'})
-        if resp is None:
-            return None
-
-        try:
-            data = resp.json()
-            if not data:
-                return None
-
-            records = []
-            for entry in data:
-                try:
-                    records.append({
-                        'date': pd.to_datetime(entry.get('DT_TM', '')),
-                        'symbol': str(entry.get('SCRIP_CD', '') or entry.get('SYMBOL', '')).strip().upper(),
-                        'insider_name': str(entry.get('ACQNAME', '')),
-                        'buy_sell': 'B' if float(entry.get('TOTACQSHRS', 0) or 0) > 0 else 'S',
-                        'qty': float(entry.get('TOTACQSHRS', 0) or 0),
-                        'value_cr': float(entry.get('ACQCOST', 0) or 0),
-                    })
-                except Exception:
-                    continue
-
-            if not records:
-                return None
-
-            df = pd.DataFrame(records).set_index('date').sort_index()
-            try:
-                df.to_parquet(cls._cache_file)
-            except Exception:
-                pass
-            return df
-
-        except Exception as e:
-            return None  # Silently fail - BSE API unreliable
-
-    @classmethod
-    def get_signal(cls, symbol: str, as_of_date: date,
-                   lookback_days: int = 30) -> Tuple[float, float]:
-        """
-        Returns (score, confidence).
-
-        Positive score = promoter net buying in last 30 days.
-        Negative score = promoter net selling (possible red flag).
-        """
-        df = cls.fetch_insider_trades(days_back=lookback_days + 10)
-        if df is None:
-            return 0.0, 0.0
-
-        nse_sym = symbol.replace('.NS', '').upper()
-        cutoff = as_of_date - timedelta(days=lookback_days)
-
-        mask = (
-            (df['symbol'].str.contains(nse_sym, na=False)) &
-            (df.index.date >= cutoff) &
-            (df.index.date <= as_of_date)
-        )
-        recent = df[mask]
-
-        if len(recent) == 0:
-            return 0.0, 0.0
-
-        buy_val = recent[recent['buy_sell'] == 'B']['value_cr'].sum()
-        sell_val = recent[recent['buy_sell'] == 'S']['value_cr'].sum()
-        total_val = buy_val + sell_val
-
-        if total_val == 0:
-            return 0.0, 0.0
-
-        score = (buy_val - sell_val) / total_val
-        confidence = min(total_val / 10.0 * 10, 85.0)  # ₹10cr+ = max confidence
-
-        return float(np.clip(score, -1.0, 1.0)), float(confidence)
-
+    def get_signal(cls, symbol: str, as_of_date: date) -> Tuple[float, float]:
+        from nse_disclosures import score
+        return score('insider', symbol, as_of_date)
 
 # ==============================================================================
 # 4. POST-EARNINGS ANNOUNCEMENT DRIFT (PEAD) ALPHA
@@ -1496,114 +1409,23 @@ class SectorRotationAlpha:
 # ==============================================================================
 class PromoterPledgeAlpha:
     """
-    Promoter share-pledging signal.
+    Promoter share pledging.
 
-    Promoters pledging their own shares to borrow money is one of the most
-    reliable red flags in Indian markets (pledged stakes get dumped by lenders
-    on margin calls, crashing the stock). The reverse — pledge RELEASE — is a
-    strong positive: promoters' finances are improving.
+    Promoters pledging their own shares to borrow money is a red flag in
+    Indian markets: lenders sell pledged stakes on margin calls. Pledge
+    creation by promoters or directors over the last 180 days scores
+    negative (an invocation, when the lender actually seizes shares, counts
+    double); pledge release scores positive.
 
-    Score uses the % of the PROMOTER STAKE that is pledged:
-      >= 50% pledged → -0.7   (severe risk)
-      >= 25% pledged → -0.4
-      >= 10% pledged → -0.2
-    Plus a trend term once we have >= 7 days of snapshot history:
-      pledge falling  → +0.4 bonus (release = bullish)
-      pledge rising   → -0.3 extra
-    Data: NSE corporate-pledgedata (free; keyed by company name — mapped to
-    symbols via the Nifty 500 constituent list).
+    Data: the same SEBI insider-trading filings, which carry pledge events
+    (nse_disclosures.py). The old NSE pledge API is blocked from GitHub's
+    servers, and the SAST pledge feed only links to scanned PDFs.
     """
-
-    _history_file = _CACHE_DIR / "pledge_history.parquet"
-    _snapshot: Optional[Dict[str, float]] = None     # {SYMBOL: pledge_ratio}
-    _snapshot_date: Optional[date] = None
-
-    @classmethod
-    def _build_snapshot(cls) -> Dict[str, float]:
-        """{SYMBOL: % of promoter stake pledged}, persisted daily for trend."""
-        today = date.today()
-        if cls._snapshot_date == today and cls._snapshot is not None:
-            return cls._snapshot
-        try:
-            from nse_fetcher import get_fetcher
-            from universe import get_name_to_symbol_map, normalize_company_name
-            df = get_fetcher().get_pledge_data()
-            if df is None or df.empty:
-                cls._snapshot = cls._snapshot or {}
-                return cls._snapshot
-            name_map = get_name_to_symbol_map()
-            snap: Dict[str, float] = {}
-            for _, r in df.iterrows():
-                sym = name_map.get(normalize_company_name(r['com_name']))
-                if not sym:
-                    continue
-                promoter = float(r['pct_promoter_holding'] or 0)
-                pledged  = float(r['pct_shares_pledged'] or 0)
-                if promoter > 1:
-                    snap[sym] = round(pledged / promoter * 100, 2)
-            cls._snapshot = snap
-            cls._snapshot_date = today
-
-            # Append today's snapshot to history (for the trend term)
-            try:
-                hist = pd.read_parquet(cls._history_file) \
-                    if cls._history_file.exists() else pd.DataFrame()
-                new = pd.DataFrame(
-                    [{'date': str(today), 'symbol': s, 'pledge_ratio': v}
-                     for s, v in snap.items()])
-                hist = pd.concat([hist, new], ignore_index=True)
-                hist = hist.drop_duplicates(subset=['date', 'symbol'], keep='last')
-                cutoff = str(today - timedelta(days=120))
-                hist = hist[hist['date'] >= cutoff]
-                hist.to_parquet(cls._history_file)
-            except Exception:
-                pass
-            return snap
-        except Exception:
-            cls._snapshot = cls._snapshot or {}
-            return cls._snapshot
 
     @classmethod
     def get_signal(cls, symbol: str, as_of_date: date) -> Tuple[float, float]:
-        try:
-            snap = cls._build_snapshot()
-            nse_sym = symbol.replace('.NS', '').upper()
-            if nse_sym not in snap:
-                return 0.0, 0.0
-            ratio = snap[nse_sym]
-
-            if ratio >= 50:
-                score, conf = -0.7, 75.0
-            elif ratio >= 25:
-                score, conf = -0.4, 60.0
-            elif ratio >= 10:
-                score, conf = -0.2, 45.0
-            else:
-                score, conf = 0.0, 0.0
-
-            # Trend: compare against the oldest snapshot >= 7 days back
-            try:
-                if cls._history_file.exists():
-                    hist = pd.read_parquet(cls._history_file)
-                    h = hist[hist['symbol'] == nse_sym].sort_values('date')
-                    old = h[h['date'] <= str(as_of_date - timedelta(days=7))]
-                    if not old.empty:
-                        change = ratio - float(old['pledge_ratio'].iloc[-1])
-                        if change <= -5:          # release ≥5pp = bullish
-                            score += 0.4
-                            conf = max(conf, 60.0)
-                        elif change >= 5:         # fresh pledging = bearish
-                            score -= 0.3
-                            conf = max(conf, 65.0)
-            except Exception:
-                pass
-
-            if conf == 0:
-                return 0.0, 0.0
-            return float(np.clip(score, -1.0, 1.0)), float(min(conf, 85.0))
-        except Exception:
-            return 0.0, 0.0
-
+        from nse_disclosures import score
+        return score('pledge', symbol, as_of_date)
 
 # ==============================================================================
 # 14. SAST STAKE-CHANGE ALPHA  (Reg 29 disclosures)
@@ -1730,6 +1552,53 @@ class ShareholdingDeltaAlpha:
 
 
 # ==============================================================================
+# RISK-ADJUSTED MOMENTUM ALPHA  (NIFTY200 Momentum 30 style, cross-sectional)
+# ==============================================================================
+class RiskAdjMomentumAlpha:
+    """
+    Risk-adjusted momentum: 6- and 12-month returns (to one month ago), each
+    divided by the stock's 1-year volatility, standardised across the
+    universe and averaged — the ranking behind NSE's NIFTY200 Momentum 30.
+
+    Plain momentum rewards a stock that jumped 60% on one burst of news as
+    much as one that climbed 60% steadily; dividing by volatility prefers the
+    steady climber, which is less prone to the sharp reversals that make
+    momentum crash. Definitions live in factors.py and are shared with the
+    research lab, so the backtested and live versions are identical.
+    """
+
+    _key: Optional[Tuple] = None
+    _scores: Dict[str, float] = {}
+
+    @classmethod
+    def _build(cls, as_of_date: date, data_dir: str) -> Dict[str, float]:
+        from factors import riskadj_scores, rank_to_score
+        closes = {}
+        cutoff = pd.Timestamp(as_of_date)
+        for f in Path(data_dir).glob("*.parquet"):
+            if f.stem in ('NIFTY50', 'NIFTYBANK', 'INDIAVIX'):
+                continue
+            try:
+                df = pd.read_parquet(f, columns=['Close'])
+                df.index = pd.to_datetime(df.index)
+                c = df[df.index <= cutoff].sort_index()['Close'].dropna()
+                closes[f.stem] = c.to_numpy()[-300:]
+            except Exception:
+                continue
+        return rank_to_score(riskadj_scores(closes))
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date,
+                   data_dir: str = "data/stocks") -> Tuple[float, float]:
+        key = (as_of_date, data_dir)
+        if cls._key != key:
+            cls._scores = cls._build(as_of_date, data_dir)
+            cls._key = key
+        s = cls._scores.get(symbol.replace('.NS', '').upper())
+        return (0.0, 0.0) if s is None else (float(s), 70.0)
+
+
+# ==============================================================================
 # QUALITY ALPHA  (profitability + low leverage, cross-sectional)
 # ==============================================================================
 class QualityAlpha:
@@ -1837,6 +1706,7 @@ class IndiaAlphaAggregator:
         'sast':         0.06,   # SAST stake changes (new)
         'shp_delta':    0.05,   # quarterly promoter stake delta (new)
         'quality':      0.06,   # ROE + low debt (incubating)
+        'mom_riskadj':  0.17,   # NSE-style risk-adjusted momentum (incubating)
     }
 
     @classmethod
@@ -1887,6 +1757,8 @@ class IndiaAlphaAggregator:
             'shp_delta':    lambda: ShareholdingDeltaAlpha.get_signal(
                                 symbol, as_of_date),
             'quality':      lambda: QualityAlpha.get_signal(symbol, as_of_date),
+            'mom_riskadj':  lambda: RiskAdjMomentumAlpha.get_signal(
+                                symbol, as_of_date, data_dir),
         }
 
         # Tier system (signal_decay_detector): live alphas = core +

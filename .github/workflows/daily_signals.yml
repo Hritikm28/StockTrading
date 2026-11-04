@@ -97,6 +97,17 @@ jobs:
       - name: Update quality fundamentals (feeds quality alpha)
         run: python quality_data.py --update || true
 
+      - name: Restore insider filings history (collected every 2 hours)
+        uses: actions/cache@v4
+        with:
+          path: data/insider_cache
+          key: insider-${{ github.run_id }}
+          restore-keys: |
+            insider-
+
+      - name: Collect insider filings (feeds insider + pledge alphas)
+        run: python nse_disclosures.py || true
+
       - name: Grade past predictions + auto-correct weights
         run: python paper_trade_tracker.py --today || true
 

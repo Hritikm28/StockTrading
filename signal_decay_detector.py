@@ -125,6 +125,7 @@ ALL_SIGNALS = [
     'sast',
     'shp_delta',
     'quality',
+    'mom_riskadj',
 ]
 
 

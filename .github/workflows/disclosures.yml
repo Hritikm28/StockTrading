@@ -1,0 +1,44 @@
+name: Insider Filings Collector
+
+# NSE's insider-trading feed holds only the newest ~20 filings (a few
+# hours), so collect every two hours into an Actions cache. The daily
+# signals run merges this cache and commits the history; nothing is
+# committed here, which keeps master's history clean and avoids racing the
+# daily run's push.
+on:
+  schedule:
+    - cron: '23 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: insider-collector
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Restore filings history
+        uses: actions/cache@v4
+        with:
+          path: data/insider_cache
+          key: insider-${{ github.run_id }}
+          restore-keys: |
+            insider-
+
+      - name: Install dependencies
+        run: pip install pandas numpy requests
+
+      - name: Collect new filings
+        run: python nse_disclosures.py

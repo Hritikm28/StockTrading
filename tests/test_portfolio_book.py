@@ -197,3 +197,22 @@ def test_partial_sell_keeps_cost_basis_proportional(market, tmp_path):
     after = pb.load_book(d('2026-11-06'), tmp_path / "book.json")['holdings']['S00.NS']
     assert after['shares'] == pytest.approx(before['shares'] / 2)
     assert after['cost_basis'] == pytest.approx(before['cost_basis'] / 2)
+
+
+def test_universe_ranks_the_whole_list_once_data_exists(tmp_path, monkeypatch):
+    """With data for every candidate, the universe is the most liquid names,
+    not whichever came first alphabetically."""
+    import universe as u
+    syms = [f"{c}CO" for c in "ABCDEFGHIJ"]
+    data = tmp_path / "stocks"
+    data.mkdir()
+    days = pd.bdate_range('2026-08-01', periods=80)
+    for k, s in enumerate(syms):                 # later letters trade more
+        pd.DataFrame({'Close': 100.0, 'Volume': 1e6 * (k + 1)},
+                     index=days).to_parquet(data / f"{s}.parquet")
+    monkeypatch.setattr(u, 'DATA_DIR', data)
+    monkeypatch.setattr(u, 'fetch_nifty500_list',
+                        lambda force=False: pd.DataFrame({'Symbol': syms}))
+    assert u.get_candidates() == [f"{s}.NS" for s in syms]
+    top = u.get_universe(max_size=3, min_traded_value=0)
+    assert top == ['JCO.NS', 'ICO.NS', 'HCO.NS']

@@ -1,8 +1,9 @@
 """
 Quick Data Updater
 ==================
-Refreshes OHLCV parquet files for the 70-stock trading universe.
-Runs in ~2-3 minutes using yfinance.
+Refreshes OHLCV parquet files for every NIFTY 500 constituent (the
+trading universe is picked from these by liquidity) plus the indices.
+Incremental runs take a couple of minutes using yfinance.
 Called by RUN_DAILY_SIGNALS.bat before generating signals.
 
 Usage:
@@ -22,11 +23,14 @@ warnings.filterwarnings('ignore')
 DATA_DIR = Path("data/stocks")
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-# Dynamic universe: Nifty 500 with liquidity floor (see universe.py).
-# Falls back to the legacy 70-stock list if the NSE list is unreachable.
+# Every NIFTY 500 constituent, not just the 150-stock trading universe:
+# the universe is the most liquid 150, and liquidity can only be measured
+# for stocks that have data (see universe.get_candidates).
+# Falls back to a minimal list if the NSE list is unreachable.
 try:
-    from universe import get_universe
-    UNIVERSE = get_universe(verbose=True)
+    from universe import get_candidates
+    UNIVERSE = get_candidates()
+    print(f"  Updating data for {len(UNIVERSE)} NIFTY 500 candidates")
 except Exception as _e:
     print(f"  [WARN] universe module failed ({_e}); using minimal fallback")
     UNIVERSE = [

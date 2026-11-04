@@ -221,6 +221,39 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
             'invested_pct': invested_days / max(len(days) - rules.history, 1) * 100}
 
 
+def gated_index(nifty: pd.Series, band: float = 0.02,
+                cost: float = 0.001) -> Dict:
+    """The trend gate applied to NIFTY itself: hold the index while it is
+    above its 200-day average, sell when it falls `band` below, re-buy above.
+    Uses no stock list, so it carries no survivorship bias and isolates
+    what the gate alone adds or costs."""
+    n = nifty.dropna()
+    vs = (n / n.rolling(200).mean() - 1).to_numpy()
+    r = n.pct_change().fillna(0).to_numpy()
+    nav, pos, switches = [1.0], 0, 0
+    for t in range(1, len(n)):
+        v = nav[-1] * (1 + pos * r[t])
+        want = pos
+        if np.isfinite(vs[t]):
+            if pos and vs[t] < -band:
+                want = 0
+            elif not pos and vs[t] > 0:
+                want = 1
+        if want != pos:                 # decided at today's close
+            v *= 1 - cost
+            switches += 1
+            pos = want
+        nav.append(v)
+    s = pd.Series(nav, index=n.index).iloc[200:]
+    bh = n.iloc[200:]
+    years = (s.index[-1] - s.index[0]).days / 365.25
+    cagr = lambda x: ((x.iloc[-1] / x.iloc[0]) ** (1 / years) - 1) * 100
+    mdd = lambda x: (x / x.cummax() - 1).min() * 100
+    return {'gated_cagr_pct': round(cagr(s), 2), 'buyhold_cagr_pct': round(cagr(bh), 2),
+            'gated_max_dd_pct': round(mdd(s), 1), 'buyhold_max_dd_pct': round(mdd(bh), 1),
+            'switches_per_year': round(switches / years, 1)}
+
+
 # ---------------------------------------------------------------------------
 # Statistics
 # ---------------------------------------------------------------------------
@@ -365,7 +398,8 @@ def run(panel, nifty, variants=VARIANTS, sectors=None) -> Dict:
     return {'generated': date.today().isoformat(),
             'period': [str(first.date()), str(days[-1].date())],
             'n_candidates': int(panel['Close'].shape[1]),
-            'n_variants': len(results), 'variants': results}
+            'n_variants': len(results), 'variants': results,
+            'gate_on_nifty': gated_index(nifty.reindex(days).ffill())}
 
 
 def to_markdown(r: Dict) -> str:
@@ -401,6 +435,7 @@ def to_markdown(r: Dict) -> str:
               "skill. It does not charge for ideas tried before this lab "
               "existed, so read it as an upper bound too._", "",
               "## Year by year (strategy % / NIFTY %)", ""]
+    g = r.get('gate_on_nifty')
     years = sorted({y for m in v.values() for y in m['yearly']})
     lines.append("| Variant | " + " | ".join(str(y) for y in years) + " |")
     lines.append("|---|" + "---|" * len(years))
@@ -410,6 +445,16 @@ def to_markdown(r: Dict) -> str:
             s = m['yearly'].get(y) or m['yearly'].get(str(y))
             cells.append('' if not s else f"{s[0]} / {s[1]}")
         lines.append(f"| {m['label']} | " + " | ".join(cells) + " |")
+    if g:
+        lines += ["", "## The trend gate on NIFTY itself (no survivorship bias)", "",
+                  "Holding NIFTY only while it is above its 200-day average "
+                  "(selling 2% below, 0.1% cost per switch), versus simply "
+                  "holding it. No stock list is involved, so this isolates "
+                  "what the gate adds or costs.", "",
+                  "| | Yearly return | Worst fall |", "|---|---|---|",
+                  f"| NIFTY with the gate | {g['gated_cagr_pct']}% | {g['gated_max_dd_pct']}% |",
+                  f"| NIFTY held throughout | {g['buyhold_cagr_pct']}% | {g['buyhold_max_dd_pct']}% |",
+                  "", f"The gate switched {g['switches_per_year']} times a year."]
     return "\n".join(lines) + "\n"
 
 

@@ -142,3 +142,16 @@ def test_sector_cap_limits_names_per_industry():
     # with the cap it must hold at most 4 of them, so it trails the uncapped run
     uncapped = fl.simulate(panel, nifty, oracle(truth), rules)
     assert sim['nav'].iloc[-1] < uncapped['nav'].iloc[-1]
+
+
+def test_gate_on_index_steps_aside_in_a_crash():
+    days = pd.bdate_range('2018-01-01', periods=900)
+    r = np.full(900, 0.0008)
+    r[500:600] = -0.01                       # a 100-day slide
+    nifty = pd.Series(100 * np.cumprod(1 + r), index=days)
+    g = fl.gated_index(nifty)
+    assert g['gated_max_dd_pct'] > g['buyhold_max_dd_pct']    # smaller fall
+    assert g['switches_per_year'] > 0
+    calm = pd.Series(100 * np.cumprod(np.full(900, 1.0008)), index=days)
+    g2 = fl.gated_index(calm)
+    assert g2['gated_cagr_pct'] == pytest.approx(g2['buyhold_cagr_pct'], abs=0.2)

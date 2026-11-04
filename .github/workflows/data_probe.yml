@@ -1,0 +1,28 @@
+name: Data Source Probe
+
+# One-off: which earnings / quality data sources answer from GitHub's servers?
+# Prints a JSON summary to the job log; commits nothing.
+on:
+  push:
+    paths:
+      - 'cloud_data_probe.py'
+      - '.github/workflows/data_probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - name: Install dependencies
+        run: pip install -r requirements_engine.txt
+      - name: Run data probe
+        run: python cloud_data_probe.py

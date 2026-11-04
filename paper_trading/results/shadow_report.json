@@ -10,7 +10,7 @@
     "signal_days": 88,
     "gate_open_days": 0,
     "last_price_date": "2026-11-04",
-    "stocks_with_prices": 159
+    "stocks_with_prices": 236
   },
   "shadow_portfolio": {
     "top_picks_net_pct": -3.87,
@@ -62,7 +62,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 0.6
+      "coverage_pct": 0.4
     },
     "corp_event": {
       "5d": {
@@ -92,7 +92,7 @@
         "n_dates": 66,
         "pct_positive": 53.0
       },
-      "coverage_pct": 93.5
+      "coverage_pct": 63.5
     },
     "fii_dii": {
       "5d": {
@@ -107,7 +107,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 93.8
+      "coverage_pct": 63.7
     },
     "fo_ban": {
       "5d": {
@@ -122,7 +122,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 0.3
+      "coverage_pct": 0.2
     },
     "hi52": {
       "5d": {
@@ -137,7 +137,7 @@
         "n_dates": 66,
         "pct_positive": 48.5
       },
-      "coverage_pct": 71.3
+      "coverage_pct": 48.4
     },
     "mean_rev": {
       "5d": {
@@ -152,7 +152,7 @@
         "n_dates": 66,
         "pct_positive": 56.1
       },
-      "coverage_pct": 48.5
+      "coverage_pct": 32.9
     },
     "mom_riskadj": {
       "5d": {
@@ -167,7 +167,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 1.0
+      "coverage_pct": 1.1
     },
     "momentum": {
       "5d": {
@@ -182,7 +182,7 @@
         "n_dates": 66,
         "pct_positive": 50.0
       },
-      "coverage_pct": 92.3
+      "coverage_pct": 62.7
     },
     "pead": {
       "5d": {
@@ -197,7 +197,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 0.4
+      "coverage_pct": 0.3
     },
     "quality": {
       "5d": {
@@ -212,7 +212,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 0.7
+      "coverage_pct": 0.5
     },
     "sector_mom": {
       "5d": {
@@ -227,7 +227,7 @@
         "n_dates": 66,
         "pct_positive": 25.8
       },
-      "coverage_pct": 43.5
+      "coverage_pct": 29.7
     }
   },
   "verdict": "NO_EDGE",

@@ -8,13 +8,13 @@
     "delivery_pct": 98.7,
     "fii_dii": 100.0,
     "fo_ban": 1.3,
-    "hi52": 74.0,
+    "hi52": 73.3,
     "insider": 0.0,
-    "mean_rev": 62.0,
+    "mean_rev": 62.7,
     "mom_riskadj": 96.0,
     "momentum": 96.0,
     "option_chain": 0.0,
-    "pead": 31.3,
+    "pead": 32.0,
     "pledge": 0.0,
     "quality": 21.3,
     "sast": 0.0,
@@ -30,10 +30,10 @@
     {
       "symbol": "STLTECH.NS",
       "signal": "BUY",
-      "confidence": 70.7,
+      "confidence": 69.0,
       "composite_score": 0.986,
       "rank": 1,
-      "current_price": 797.6,
+      "current_price": 759.65,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
       "hold_days": 20,
@@ -56,10 +56,10 @@
     {
       "symbol": "HFCL.NS",
       "signal": "BUY",
-      "confidence": 72.8,
+      "confidence": 73.2,
       "composite_score": 0.958,
       "rank": 3,
-      "current_price": 228.16,
+      "current_price": 217.3,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
       "hold_days": 20,
@@ -382,7 +382,7 @@
       "symbol": "STLTECH.NS",
       "signal": "HOLD",
       "composite_score": 0.986,
-      "composite_confidence": 70.7,
+      "composite_confidence": 69.0,
       "cs_label": "TOP_BUY"
     },
     {
@@ -396,7 +396,7 @@
       "symbol": "HFCL.NS",
       "signal": "HOLD",
       "composite_score": 0.958,
-      "composite_confidence": 72.8,
+      "composite_confidence": 73.2,
       "cs_label": "TOP_BUY"
     },
     {
@@ -627,7 +627,7 @@
       "symbol": "PAYTM.NS",
       "signal": "HOLD",
       "composite_score": 0.5,
-      "composite_confidence": 73.2,
+      "composite_confidence": 72.8,
       "cs_label": "NEUTRAL"
     },
     {
@@ -823,7 +823,7 @@
       "symbol": "MRPL.NS",
       "signal": "HOLD",
       "composite_score": 0.111,
-      "composite_confidence": 69.9,
+      "composite_confidence": 70.3,
       "cs_label": "NEUTRAL"
     },
     {
@@ -858,7 +858,7 @@
       "symbol": "BANDHANBNK.NS",
       "signal": "HOLD",
       "composite_score": 0.042,
-      "composite_confidence": 69.0,
+      "composite_confidence": 69.4,
       "cs_label": "NEUTRAL"
     },
     {
@@ -1229,7 +1229,7 @@
       "symbol": "DIXON.NS",
       "signal": "HOLD",
       "composite_score": -0.611,
-      "composite_confidence": 69.4,
+      "composite_confidence": 69.9,
       "cs_label": "NEUTRAL"
     },
     {
@@ -1425,7 +1425,7 @@
       "symbol": "KAYNES.NS",
       "signal": "HOLD",
       "composite_score": -1.0,
-      "composite_confidence": 70.3,
+      "composite_confidence": 70.7,
       "cs_label": "AVOID"
     }
   ]

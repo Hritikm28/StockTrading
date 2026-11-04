@@ -1,0 +1,18 @@
+{
+ "inception": "2026-11-04",
+ "start_capital": 1000000.0,
+ "cash": 1000000.0,
+ "holdings": {},
+ "pending": [],
+ "last_rebalance": null,
+ "nav": [
+  {
+   "date": "2026-11-04",
+   "nav": 1000000.0,
+   "cash": 1000000.0,
+   "n_holdings": 0,
+   "nifty": 23960.599609375
+  }
+ ],
+ "trades": []
+}

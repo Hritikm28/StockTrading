@@ -1,43 +1,43 @@
 # Shadow Grade: untraded predictions vs reality
 
-_Generated 2026-11-03 by shadow_grader.py. Grades every evening ranking since 2026-07-01, whether or not the trend gate let it trade. Entry at next-day open, 20-day holds, 0.4% round-trip costs._
+_Generated 2026-11-04 by shadow_grader.py. Grades every evening ranking since 2026-07-01, whether or not the trend gate let it trade. Entry at next-day open, 20-day holds, 0.4% round-trip costs._
 
-## Verdict: **UNPROVEN**
+## Verdict: **NO_EDGE**
 
-Top-5 picks beat NIFTY by +0.63% per hold after costs, but t=0.31 is too weak to rule out luck.
+Top-15 picks trailed NIFTY by -0.10% per 20-day hold after costs. The ranking is not adding value over simply holding the index.
 
-- Signal days graded: 86 (2026-07-01 to 2026-11-02), prices through 2026-11-02, 159 stocks priced
+- Signal days graded: 87 (2026-07-01 to 2026-11-03), prices through 2026-11-04, 159 stocks priced
 - Days the live trend gate allowed trading: 0
 
-## If we had traded every pick (top-5, ignoring the gate)
+## If we had traded every pick (top-15, ignoring the gate)
 
 | | Return | Max drawdown |
 |---|---|---|
-| Shadow top picks (net) | -5.22% | -10.24% |
-| NIFTY, same timing | -2.83% | -9.95% |
-| NIFTY buy and hold | -2.35% | |
+| Shadow top picks (net) | -5.15% | -10.45% |
+| NIFTY, same timing | -0.79% | -9.95% |
+| NIFTY buy and hold | -0.19% | |
 | What the gated live system did | 0.0% | |
 
-Excess of picks over NIFTY (same timing): **-2.39%**
+Excess of picks over NIFTY (same timing): **-4.36%**
 
 ## Per-cohort (20-day holds)
 
-- Matured cohorts: 64 (about 3 independent)
-- Average excess vs NIFTY after costs: 0.63%
-- Cohorts that beat NIFTY: 56.2%
-- t-stat (overlap-adjusted): 0.31
-- Top-5 minus bottom-5: 3.98% per hold, positive 73.4% of days (t=1.22)
+- Matured cohorts: 66 (about 3 independent)
+- Average excess vs NIFTY after costs: -0.1%
+- Cohorts that beat NIFTY: 51.5%
+- t-stat (overlap-adjusted): -0.06
+- Top-15 minus bottom-15: 2.04% per hold, positive 72.7% of days (t=0.98)
 
 ## Which signals actually predict? (rank IC vs NIFTY-relative forward return)
 
 | Signal | IC 5d | IC 20d | t 20d | days | coverage |
 |---|---|---|---|---|---|
-| composite | 0.0484 | 0.0611 | 0.8 | 64 | — |
-| momentum | 0.0309 | 0.0609 | 0.57 | 64 | 92.4% |
-| mean_rev | 0.0331 | 0.0351 | 0.39 | 64 | 48.4% |
-| delivery_pct | 0.0338 | 0.0127 | 0.23 | 64 | 93.5% |
-| hi52 | -0.002 | -0.0056 | -0.07 | 64 | 71.4% |
-| sector_mom | -0.0406 | -0.1062 | -1.19 | 64 | 43.7% |
+| composite | 0.0439 | 0.0569 | 0.76 | 66 | — |
+| momentum | 0.0274 | 0.0552 | 0.52 | 66 | 92.3% |
+| mean_rev | 0.0323 | 0.034 | 0.39 | 66 | 48.4% |
+| delivery_pct | 0.0348 | 0.0189 | 0.33 | 66 | 93.5% |
+| hi52 | 0.0003 | -0.0097 | -0.12 | 66 | 71.3% |
+| sector_mom | -0.0431 | -0.1101 | -1.24 | 66 | 43.6% |
 | bulk_deal | — | — | — | 0 | 0.6% |
 | corp_event | — | — | — | 0 | 0.0% |
 | fii_dii | — | — | — | 0 | 93.8% |

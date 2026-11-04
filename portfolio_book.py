@@ -14,11 +14,18 @@ turned that tie into -10%. This book trades far less:
   - Held names are replaced only at the monthly rebalance (first run of
     each calendar month): a holding stays while it ranks inside the top
     BUFFER_RANK with a positive score.
-  - Empty slots are filled on any day the trend gate allows buying, so the
-    book enters from cash as soon as NIFTY reclaims its 200-day average.
-  - Everything is sold if NIFTY falls more than EXIT_BAND_PCT below its
-    200-day average. Entering above the average but exiting only below the
-    band keeps a hovering market from churning the book in and out.
+  - Exposure follows the market trend: 100% while NIFTY is above its
+    200-day average; when it falls more than EXIT_BAND_PCT below, every
+    holding is cut to LOW_EXPOSURE (half, the owner's choice of 2026-11-04;
+    0 would sell everything) and new names are bought at that size. When
+    NIFTY climbs back above its average, holdings are topped back up.
+    Cutting only below the band but restoring above the average keeps a
+    hovering market from churning the book.
+  - Empty slots are filled whenever buying is allowed, at the current
+    exposure. The factor lab (factor_lab.py) measured the trade-off over
+    ten years on NIFTY itself: selling everything returned 6.6% a year with
+    a -20.5% worst fall, selling half 8.7% with -27.3%, never selling 10.4%
+    with -38.4%.
   - Decisions are made after the close and filled at the NEXT session's
     open, paying COST_PER_SIDE_PCT on each side.
 
@@ -40,6 +47,7 @@ TARGET_HOLDINGS   = 15
 BUFFER_RANK       = 30
 MAX_PER_SECTOR    = 4
 EXIT_BAND_PCT     = 2.0
+LOW_EXPOSURE      = 0.5    # share kept invested while the trend is broken
 COST_PER_SIDE_PCT = 0.20
 ORDER_EXPIRY_DAYS = 7      # unfillable buys are dropped, sells marked out
 NIFTY             = "NIFTY50"
@@ -144,27 +152,38 @@ def fill_pending(book: Dict, as_of: date, px: Prices) -> List[Dict]:
                 continue                        # suspended/delisted: drop
             hit = (today, book['holdings'][sym]['last_price'])
         day, price = hit
+        h = book['holdings'].get(sym)
         if o['side'] == 'SELL':
-            h = book['holdings'].pop(sym, None)
             if h is None:
                 continue
-            gross = h['shares'] * price
+            frac = min(float(o.get('fraction', 1.0)), 1.0)
+            shares, basis = h['shares'] * frac, h['cost_basis'] * frac
+            gross = shares * price
             book['cash'] += gross * (1 - cost)
+            if frac >= 1.0:
+                book['holdings'].pop(sym)
+            else:
+                h['shares'] -= shares
+                h['cost_basis'] -= basis
             trade = {'date': day, 'symbol': sym, 'side': 'SELL',
-                     'price': round(price, 2), 'shares': h['shares'],
-                     'value': round(gross, 2), 'reason': o.get('reason'),
-                     'pnl_pct': round((gross * (1 - cost) / h['cost_basis']
-                                       - 1) * 100, 2)}
+                     'price': round(price, 2), 'shares': shares,
+                     'fraction': frac, 'value': round(gross, 2),
+                     'reason': o.get('reason'),
+                     'pnl_pct': round((gross * (1 - cost) / basis - 1) * 100, 2)}
         else:
             value = min(o['value'], book['cash'] / (1 + cost))
-            if value <= 0 or sym in book['holdings']:
+            if value <= 0 or (h is not None) != bool(o.get('topup')):
                 continue
             shares = value / price
             book['cash'] -= value * (1 + cost)
-            book['holdings'][sym] = {
-                'shares': shares, 'entry_date': day,
-                'entry_price': round(price, 2),
-                'cost_basis': value * (1 + cost), 'last_price': price}
+            if h is not None:
+                h['shares'] += shares
+                h['cost_basis'] += value * (1 + cost)
+            else:
+                book['holdings'][sym] = {
+                    'shares': shares, 'entry_date': day,
+                    'entry_price': round(price, 2),
+                    'cost_basis': value * (1 + cost), 'last_price': price}
             trade = {'date': day, 'symbol': sym, 'side': 'BUY',
                      'price': round(price, 2), 'shares': shares,
                      'value': round(value, 2), 'reason': o.get('reason')}
@@ -207,13 +226,41 @@ def decide(book: Dict, ranked: pd.DataFrame, as_of: date, nav: float,
         return {'symbol': sym, 'side': 'SELL', 'decided_on': today,
                 'reason': reason}
 
-    if nifty_vs_200dma is not None and nifty_vs_200dma < -EXIT_BAND_PCT:
-        orders = [sell(s, 'trend_exit') for s in held]
-        book['pending'] = [o for o in book['pending']
-                           if o['side'] != 'BUY'] + orders
-        return ('TREND_EXIT' if orders else 'CASH'), orders
+    # Exposure: 1.0 in an uptrend, LOW_EXPOSURE once NIFTY breaks the band.
+    # A book holding stocks from before this field existed was fully sized.
+    v = nifty_vs_200dma
+    prev = book.get('exposure', 1.0 if book['holdings'] else None)
+    exposure = prev
+    if prev is None:
+        up = v > 0 if v is not None else gate_open
+        exposure = 1.0 if up else LOW_EXPOSURE
+    elif v is not None:
+        if prev == 1.0 and v < -EXIT_BAND_PCT:
+            exposure = LOW_EXPOSURE
+        elif prev < 1.0 and v > 0:
+            exposure = 1.0
+    book['exposure'] = exposure
 
-    can_buy = gate_open and not breaker_tripped
+    if prev is not None and exposure != prev and held:
+        if exposure < prev:                 # trend broke: cut every holding
+            frac = round(1 - exposure / prev, 4)
+            why = 'trend_cut' if exposure > 0 else 'trend_exit'
+            orders = [{**sell(s, why), 'fraction': frac} for s in held]
+            book['pending'] = [o for o in book['pending']
+                               if o['side'] != 'BUY'] + orders
+            return why.upper(), orders
+        if prev > 0:                        # trend back: top holdings up
+            orders = [{'symbol': s, 'side': 'BUY', 'decided_on': today,
+                       'reason': 'trend_restored', 'topup': True,
+                       'value': round(book['holdings'][s]['shares']
+                                      * book['holdings'][s]['last_price']
+                                      * (exposure / prev - 1), 2)}
+                      for s in held]
+            book['pending'] += orders
+            return 'TREND_RESTORED', orders
+
+    can_buy = (exposure > 0 and not breaker_tripped
+               and (exposure < 1.0 or gate_open))
     month = today[:7]
     rebalance = bool(held) and book.get('last_rebalance') != month
 
@@ -253,7 +300,8 @@ def decide(book: Dict, ranked: pd.DataFrame, as_of: date, nav: float,
                     for o in orders if o['side'] == 'SELL') * (1 - cost)
         budget = book['cash'] + freed - sum(
             o['value'] for o in book['pending'] if o['side'] == 'BUY')
-        per = min(nav / TARGET_HOLDINGS, budget / (len(buys) * (1 + cost)))
+        per = min(exposure * nav / TARGET_HOLDINGS,
+                  budget / (len(buys) * (1 + cost)))
         if per <= 0:
             buys = []
         for sym in buys:
@@ -315,6 +363,7 @@ def run_book(ranked: pd.DataFrame, as_of: date, gate_open: bool,
         'cash_pct': round(book['cash'] / nav * 100, 1) if nav else 100.0,
         'n_holdings': len(book['holdings']),
         'target_holdings': TARGET_HOLDINGS,
+        'exposure_pct': round((book.get('exposure') or 0) * 100),
         'holdings': holdings, 'orders': orders, 'fills': fills,
         'last_rebalance': book.get('last_rebalance'),
     }

@@ -52,17 +52,25 @@ except Exception:
 
 REASONS = {'rank_dropped': 'fell out of the top 30 at the monthly review',
            'trend_exit': 'NIFTY fell 2% below its 200-day average',
+           'trend_cut': 'NIFTY fell 2% below its 200-day average: '
+                        'selling half of every holding',
+           'trend_restored': 'NIFTY is back above its 200-day average: '
+                             'buying back to full size',
            'top_rank': 'top-ranked, fills an empty slot'}
+exposure = book.get('exposure_pct')
 
 
 def status_banner():
     items = []
-    if not gate_open:
-        v = f" (NIFTY {vs200:+.1f}% vs 200-DMA)" if vs200 is not None else ""
-        held = (" Current holdings are kept unless NIFTY falls 2% below it."
-                if book.get('n_holdings') else "")
-        items.append(("#b0322b", f"⛔ TREND GATE CLOSED{v}: no new buys until "
-                                 f"NIFTY reclaims its 200-day average.{held}"))
+    v = f" (NIFTY {vs200:+.1f}% vs 200-DMA)" if vs200 is not None else ""
+    if exposure is not None and exposure < 100:
+        items.append(("#8a6d00", f"⚠️ MARKET TREND DOWN{v}: staying {exposure}% "
+                                 f"invested until NIFTY climbs back above its "
+                                 f"200-day average."))
+    elif not gate_open:
+        items.append(("#8a6d00", f"⚠️ NIFTY just below its 200-day average{v}: "
+                                 f"holding, no new buys. Holdings are cut to "
+                                 f"half if it falls 2% below."))
     elif vs200 is not None:
         items.append(("#1a7a3a", f"✅ Trend gate open (NIFTY {vs200:+.1f}% "
                                  "vs 200-DMA)"))
@@ -116,13 +124,16 @@ def portfolio_section():
     status = (f"Holding <b>{book['n_holdings']}</b> of "
               f"{book['target_holdings']} stocks, {book['cash_pct']:.0f}% cash"
               if book['n_holdings'] else "<b>All in cash</b>")
+    if exposure is not None:
+        status += f" (target {exposure}% invested)"
     perf = (f"Since {book['inception']}: portfolio {_pct(book.get('return_pct'))}"
             f" vs NIFTY {_pct(book.get('nifty_return_pct'))}"
             f" (value ₹{book['nav']:,.0f}, costs included)")
     buy_rows = [(f"<b>{o['symbol']}</b>", o.get('rank', ''),
                  _fmt(o.get('score')), f"₹{o['value']:,.0f}") for o in buys]
-    sell_rows = [(f"<b>{o['symbol']}</b>", REASONS.get(o.get('reason'),
-                                                       o.get('reason', '')))
+    sell_rows = [(f"<b>{o['symbol']}</b>",
+                  ("half — " if o.get('fraction', 1) < 1 else "")
+                  + REASONS.get(o.get('reason'), o.get('reason', '')))
                  for o in sells]
     hold_rows = [(f"<b>{h['symbol']}</b>", h['entry_date'],
                   _fmt(h['entry_price']), _fmt(h['last_price']),
@@ -244,8 +255,9 @@ html = f"""<html><body style='font-family:Segoe UI,Arial,sans-serif;color:#222'>
 <p style='font-size:12px;color:#999;margin-top:20px'>
   Paper portfolio, auto-generated on GitHub Actions after market close from
   today's closing data. Orders are for the next market open. Up to 15
-  stocks, replaced only at the monthly review, 0.4% round-trip costs
-  charged. This is a research experiment, not investment advice.
+  stocks, replaced only at the monthly review; half invested while the
+  market trend is down; 0.4% round-trip costs charged. This is a research
+  experiment, not investment advice.
 </p>
 </body></html>"""
 
@@ -253,8 +265,10 @@ Path('email_body.html').write_text(html, encoding='utf-8')
 flag = ""
 if breaker_tripped:
     flag = "[BREAKER] "
+elif exposure is not None and exposure < 100:
+    flag = f"[TREND DOWN: {exposure}% INVESTED] "
 elif not gate_open:
-    flag = "[GATE CLOSED] "
+    flag = "[BELOW 200-DMA] "
 held = book.get('n_holdings', 0)
 subject = (f"{flag}Portfolio {today}: {len(buys)} buy / {len(sells)} sell, "
            f"{held} held [{regime}]")

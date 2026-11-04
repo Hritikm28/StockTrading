@@ -58,6 +58,7 @@ class Rules:
     cost: float = 0.002            # per side
     exit_band: float = 0.02
     gate: bool = True
+    low_exposure: float = 0.0      # share kept invested while the trend is broken
     max_per_sector: int = 4
     universe_size: int = 150
     min_traded_value: float = 5e7  # Rs 5 crore
@@ -108,6 +109,8 @@ VARIANTS = [
     ('hi52', 'Closeness to 52-week high', v_hi52, Rules()),
     ('riskadj_hi52', 'Risk-adjusted momentum + 52-week high', v_riskadj_hi52, Rules()),
     ('mom_12_1_nogate', 'Momentum 12-1 without the trend gate', v_mom, Rules(gate=False)),
+    ('mom_12_1_half', 'Momentum 12-1, half invested when the trend breaks', v_mom,
+     Rules(low_exposure=0.5)),
 ]
 
 
@@ -118,7 +121,12 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
              score_fn: Callable, rules: Rules,
              sectors: Optional[Dict[str, str]] = None) -> Dict:
     """Day-by-day replay of the portfolio rules. Decisions use closes up to
-    day t and fill at day t+1's open."""
+    day t and fill at day t+1's open.
+
+    Exposure is 100% while NIFTY is above its 200-day average. When it falls
+    exit_band below, every holding is cut to low_exposure (0 = sell all, the
+    live rule; 0.5 = sell half) and new names are bought at that size; when
+    NIFTY climbs back above, holdings are scaled back up."""
     days = panel['Close'].index.intersection(nifty.index)
     close = panel['Close'].reindex(days)
     opn = panel['Open'].reindex(days)
@@ -132,6 +140,7 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
     valid_count = np.cumsum(np.isfinite(C), axis=0)
 
     cash, holdings, pending = START_CAPITAL, {}, []
+    exposure: Optional[float] = None
     last_px: Dict[int, float] = {}
     last_month, nav, traded, invested_days = None, [], 0.0, 0
     cost = rules.cost
@@ -152,23 +161,31 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
 
     for t in range(len(days)):
         # 1. fill yesterday's decisions at today's open (sells first)
+        # S = sell all, P = sell a fraction, B = buy, T = top up a holding
         if pending:
-            for side, i, value in sorted(pending, key=lambda p: p[0] != 'S'):
+            left = []
+            for order in sorted(pending, key=lambda p: p[0] not in 'SP'):
+                side, i, value = order
                 px = O[t, i] if np.isfinite(O[t, i]) else C[t, i]
                 if not np.isfinite(px) or px <= 0:
-                    continue        # no trade today: sells retry, buys lapse
-                if side == 'S' and i in holdings:
-                    proceeds = holdings.pop(i) * px
-                    cash += proceeds * (1 - cost)
-                    traded += proceeds
-                elif side == 'B' and i not in holdings:
+                    if side in 'SP' and i in holdings:
+                        left.append(order)  # no trade today: sells retry
+                    continue                # buys lapse
+                if side in 'SP' and i in holdings:
+                    n = holdings[i] if side == 'S' else holdings[i] * value
+                    cash += n * px * (1 - cost)
+                    traded += n * px
+                    holdings[i] -= n
+                    if side == 'S' or value >= 1:
+                        holdings.pop(i)
+                elif side in 'BT' and (i in holdings) == (side == 'T'):
                     v = min(value, cash / (1 + cost))
                     if v > 0:
-                        holdings[i] = v / px
-                        last_px[i] = px
+                        holdings[i] = holdings.get(i, 0.0) + v / px
+                        last_px.setdefault(i, px)
                         cash -= v * (1 + cost)
                         traded += v
-            pending = [p for p in pending if p[0] == 'S' and p[1] in holdings]
+            pending = left
         # 2. mark at today's close
         for i in holdings:
             if np.isfinite(C[t, i]):
@@ -181,12 +198,26 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
             continue
         # 3. decide for tomorrow's open
         month = (days[t].year, days[t].month)
-        gate_open = (not rules.gate) or vs200[t] > 0
-        if rules.gate and holdings and vs200[t] < -rules.exit_band:
-            pending = [('S', i, 0.0) for i in holdings]
+        v = vs200[t]
+        prev = exposure
+        if not rules.gate:
+            exposure = 1.0
+        elif prev is None:
+            exposure = 1.0 if v > 0 else rules.low_exposure
+        elif prev == 1.0 and v < -rules.exit_band:
+            exposure = rules.low_exposure
+        elif prev < 1.0 and v > 0:
+            exposure = 1.0
+        if prev is not None and exposure != prev and holdings:
+            if exposure < prev:              # trend broke: cut every holding
+                pending = [('P', i, 1 - exposure / prev) for i in holdings]
+            elif prev > 0:                   # trend back: scale holdings up
+                pending = [('T', i, holdings[i] * last_px[i] * (exposure / prev - 1))
+                           for i in holdings]
             continue
+        can_buy = exposure > 0 and (exposure < 1.0 or not rules.gate or v > 0)
         rebalance = bool(holdings) and month != last_month
-        entering = not holdings and gate_open
+        entering = not holdings and can_buy
         if not (rebalance or entering):
             continue
         ranked = pick(t)
@@ -194,7 +225,7 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
         keep = [i for i in holdings if rank_of.get(i, 10 ** 9) <= rules.buffer]
         sells = [i for i in holdings if i not in keep]
         buys = []
-        if gate_open:
+        if can_buy:
             per_sector: Dict[str, int] = {}
             for i in keep:
                 if sector_of[i]:
@@ -211,7 +242,7 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
         freed = sum(holdings[i] * last_px[i] for i in sells) * (1 - cost)
         per = 0.0
         if buys:
-            per = min(value / rules.top_n,
+            per = min(exposure * value / rules.top_n,
                       (cash + freed) / (len(buys) * (1 + cost)))
         pending = [('S', i, 0.0) for i in sells] + [('B', i, per) for i in buys]
         last_month = month
@@ -221,26 +252,27 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
             'invested_pct': invested_days / max(len(days) - rules.history, 1) * 100}
 
 
-def gated_index(nifty: pd.Series, band: float = 0.02,
-                cost: float = 0.001) -> Dict:
-    """The trend gate applied to NIFTY itself: hold the index while it is
-    above its 200-day average, sell when it falls `band` below, re-buy above.
-    Uses no stock list, so it carries no survivorship bias and isolates
-    what the gate alone adds or costs."""
+def gated_index(nifty: pd.Series, band: float = 0.02, cost: float = 0.001,
+                low: float = 0.0) -> Dict:
+    """The trend gate applied to NIFTY itself: fully invested while the
+    index is above its 200-day average, cut to `low` (0 = all out) when it
+    falls `band` below, back to full above. Uses no stock list, so it
+    carries no survivorship bias and isolates what the gate alone adds or
+    costs."""
     n = nifty.dropna()
     vs = (n / n.rolling(200).mean() - 1).to_numpy()
     r = n.pct_change().fillna(0).to_numpy()
-    nav, pos, switches = [1.0], 0, 0
+    nav, pos, switches = [1.0], low, 0
     for t in range(1, len(n)):
         v = nav[-1] * (1 + pos * r[t])
         want = pos
         if np.isfinite(vs[t]):
-            if pos and vs[t] < -band:
-                want = 0
-            elif not pos and vs[t] > 0:
-                want = 1
+            if pos == 1.0 and vs[t] < -band:
+                want = low
+            elif pos < 1.0 and vs[t] > 0:
+                want = 1.0
         if want != pos:                 # decided at today's close
-            v *= 1 - cost
+            v *= 1 - cost * abs(want - pos)
             switches += 1
             pos = want
         nav.append(v)
@@ -399,7 +431,9 @@ def run(panel, nifty, variants=VARIANTS, sectors=None) -> Dict:
             'period': [str(first.date()), str(days[-1].date())],
             'n_candidates': int(panel['Close'].shape[1]),
             'n_variants': len(results), 'variants': results,
-            'gate_on_nifty': gated_index(nifty.reindex(days).ffill())}
+            'gate_on_nifty': {
+                'all_out': gated_index(nifty.reindex(days).ffill()),
+                'half': gated_index(nifty.reindex(days).ffill(), low=0.5)}}
 
 
 def to_markdown(r: Dict) -> str:
@@ -446,15 +480,17 @@ def to_markdown(r: Dict) -> str:
             cells.append('' if not s else f"{s[0]} / {s[1]}")
         lines.append(f"| {m['label']} | " + " | ".join(cells) + " |")
     if g:
+        out, half = g['all_out'], g['half']
         lines += ["", "## The trend gate on NIFTY itself (no survivorship bias)", "",
-                  "Holding NIFTY only while it is above its 200-day average "
-                  "(selling 2% below, 0.1% cost per switch), versus simply "
-                  "holding it. No stock list is involved, so this isolates "
-                  "what the gate adds or costs.", "",
+                  "Holding NIFTY fully while it is above its 200-day average "
+                  "and cutting back when it falls 2% below (0.1% cost per "
+                  "switch), versus simply holding it. No stock list is "
+                  "involved, so this isolates what the gate adds or costs.", "",
                   "| | Yearly return | Worst fall |", "|---|---|---|",
-                  f"| NIFTY with the gate | {g['gated_cagr_pct']}% | {g['gated_max_dd_pct']}% |",
-                  f"| NIFTY held throughout | {g['buyhold_cagr_pct']}% | {g['buyhold_max_dd_pct']}% |",
-                  "", f"The gate switched {g['switches_per_year']} times a year."]
+                  f"| Gate: sell everything | {out['gated_cagr_pct']}% | {out['gated_max_dd_pct']}% |",
+                  f"| Gate: sell half | {half['gated_cagr_pct']}% | {half['gated_max_dd_pct']}% |",
+                  f"| NIFTY held throughout | {out['buyhold_cagr_pct']}% | {out['buyhold_max_dd_pct']}% |",
+                  "", f"The gate switched {out['switches_per_year']} times a year."]
     return "\n".join(lines) + "\n"
 
 

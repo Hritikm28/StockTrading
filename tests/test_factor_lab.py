@@ -155,3 +155,29 @@ def test_gate_on_index_steps_aside_in_a_crash():
     calm = pd.Series(100 * np.cumprod(np.full(900, 1.0008)), index=days)
     g2 = fl.gated_index(calm)
     assert g2['gated_cagr_pct'] == pytest.approx(g2['buyhold_cagr_pct'], abs=0.2)
+
+
+def test_half_exposure_sits_between_all_out_and_no_gate():
+    panel, nifty, truth = make_market(crash_at=500)
+    base = dict(min_traded_value=1e7)
+    out = fl.simulate(panel, nifty, oracle(truth), fl.Rules(**base))
+    half = fl.simulate(panel, nifty, oracle(truth), fl.Rules(low_exposure=0.5, **base))
+    none = fl.simulate(panel, nifty, oracle(truth), fl.Rules(gate=False, **base))
+    dd = lambda s: (s['nav'] / s['nav'].cummax() - 1).min()
+    assert dd(out) >= dd(half) >= dd(none)          # falls get bigger
+    assert out['invested_pct'] < half['invested_pct']
+    crash = half['nav'].iloc[540:560]
+    assert crash.max() - crash.min() > 0               # still half invested
+    # back to full size after the trend recovers
+    end = half['nav'].iloc[-60:]
+    full = none['nav'].iloc[-60:]
+    assert abs(end.pct_change().std() / full.pct_change().std() - 1) < 0.35
+
+
+def test_half_gate_on_index():
+    days = pd.bdate_range('2018-01-01', periods=900)
+    r = np.full(900, 0.0008)
+    r[500:600] = -0.01
+    nifty = pd.Series(100 * np.cumprod(1 + r), index=days)
+    out, half = fl.gated_index(nifty), fl.gated_index(nifty, low=0.5)
+    assert out['gated_max_dd_pct'] >= half['gated_max_dd_pct'] >= half['buyhold_max_dd_pct']

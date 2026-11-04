@@ -3,22 +3,22 @@
   "regime": "SIDEWAYS",
   "vix": 15.0,
   "alpha_coverage": {
-    "bulk_deal": 0.0,
+    "bulk_deal": 0.7,
     "corp_event": 0.0,
     "delivery_pct": 98.7,
     "fii_dii": 100.0,
-    "fo_ban": 0.0,
-    "hi52": 72.0,
+    "fo_ban": 1.3,
+    "hi52": 74.0,
     "insider": 0.0,
-    "mean_rev": 59.3,
-    "mom_riskadj": 98.0,
-    "momentum": 98.0,
+    "mean_rev": 62.0,
+    "mom_riskadj": 96.0,
+    "momentum": 96.0,
     "option_chain": 0.0,
-    "pead": 34.0,
+    "pead": 31.3,
     "pledge": 0.0,
-    "quality": 69.3,
+    "quality": 21.3,
     "sast": 0.0,
-    "sector_mom": 39.3,
+    "sector_mom": 64.7,
     "shp_delta": 0.0
   },
   "trend_gate_open": false,
@@ -28,12 +28,12 @@
   "total_capital": 1000000,
   "approved_signals": [
     {
-      "symbol": "CPPLUS.NS",
+      "symbol": "STLTECH.NS",
       "signal": "BUY",
-      "confidence": 73.2,
+      "confidence": 70.7,
       "composite_score": 0.986,
       "rank": 1,
-      "current_price": 3999.8,
+      "current_price": 797.6,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
       "hold_days": 20,
@@ -41,12 +41,51 @@
       "vix": 15.0
     },
     {
-      "symbol": "AETHER.NS",
+      "symbol": "CUPID.NS",
       "signal": "BUY",
-      "confidence": 48.2,
-      "composite_score": 0.973,
+      "confidence": 73.2,
+      "composite_score": 0.972,
       "rank": 2,
-      "current_price": 1540.7,
+      "current_price": 336.5,
+      "position_size_inr": 33333.33,
+      "position_pct": 3.33,
+      "hold_days": 20,
+      "regime": "SIDEWAYS",
+      "vix": 15.0
+    },
+    {
+      "symbol": "HFCL.NS",
+      "signal": "BUY",
+      "confidence": 72.8,
+      "composite_score": 0.958,
+      "rank": 3,
+      "current_price": 228.16,
+      "position_size_inr": 33333.33,
+      "position_pct": 3.33,
+      "hold_days": 20,
+      "regime": "SIDEWAYS",
+      "vix": 15.0
+    },
+    {
+      "symbol": "WELCORP.NS",
+      "signal": "BUY",
+      "confidence": 73.2,
+      "composite_score": 0.944,
+      "rank": 4,
+      "current_price": 2400.0,
+      "position_size_inr": 33333.33,
+      "position_pct": 3.33,
+      "hold_days": 20,
+      "regime": "SIDEWAYS",
+      "vix": 15.0
+    },
+    {
+      "symbol": "TDPOWERSYS.NS",
+      "signal": "BUY",
+      "confidence": 73.2,
+      "composite_score": 0.931,
+      "rank": 5,
+      "current_price": 728.4,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
       "hold_days": 20,
@@ -57,8 +96,8 @@
       "symbol": "ATHERENERG.NS",
       "signal": "BUY",
       "confidence": 73.2,
-      "composite_score": 0.959,
-      "rank": 3,
+      "composite_score": 0.917,
+      "rank": 6,
       "current_price": 1840.0,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
@@ -70,9 +109,35 @@
       "symbol": "APARINDS.NS",
       "signal": "BUY",
       "confidence": 73.2,
-      "composite_score": 0.946,
-      "rank": 4,
+      "composite_score": 0.903,
+      "rank": 7,
       "current_price": 15998.0,
+      "position_size_inr": 33333.33,
+      "position_pct": 3.33,
+      "hold_days": 20,
+      "regime": "SIDEWAYS",
+      "vix": 15.0
+    },
+    {
+      "symbol": "SYRMA.NS",
+      "signal": "BUY",
+      "confidence": 71.9,
+      "composite_score": 0.889,
+      "rank": 8,
+      "current_price": 1512.6,
+      "position_size_inr": 33333.33,
+      "position_pct": 3.33,
+      "hold_days": 20,
+      "regime": "SIDEWAYS",
+      "vix": 15.0
+    },
+    {
+      "symbol": "LAURUSLABS.NS",
+      "signal": "BUY",
+      "confidence": 73.2,
+      "composite_score": 0.875,
+      "rank": 9,
+      "current_price": 2323.8,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
       "hold_days": 20,
@@ -82,9 +147,9 @@
     {
       "symbol": "AZAD.NS",
       "signal": "BUY",
-      "confidence": 69.6,
-      "composite_score": 0.932,
-      "rank": 5,
+      "confidence": 67.8,
+      "composite_score": 0.861,
+      "rank": 10,
       "current_price": 2581.3,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
@@ -93,12 +158,12 @@
       "vix": 15.0
     },
     {
-      "symbol": "AEGISLOG.NS",
+      "symbol": "POWERINDIA.NS",
       "signal": "BUY",
-      "confidence": 70.4,
-      "composite_score": 0.918,
-      "rank": 6,
-      "current_price": 1224.9,
+      "confidence": 70.3,
+      "composite_score": 0.847,
+      "rank": 11,
+      "current_price": 29100.0,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
       "hold_days": 20,
@@ -106,12 +171,25 @@
       "vix": 15.0
     },
     {
-      "symbol": "ACUTAAS.NS",
+      "symbol": "MCX.NS",
+      "signal": "BUY",
+      "confidence": 72.4,
+      "composite_score": 0.833,
+      "rank": 12,
+      "current_price": 3315.0,
+      "position_size_inr": 33333.33,
+      "position_pct": 3.33,
+      "hold_days": 20,
+      "regime": "SIDEWAYS",
+      "vix": 15.0
+    },
+    {
+      "symbol": "CHENNPETRO.NS",
       "signal": "BUY",
       "confidence": 73.2,
-      "composite_score": 0.905,
-      "rank": 7,
-      "current_price": 3777.3,
+      "composite_score": 0.819,
+      "rank": 13,
+      "current_price": 1566.9,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
       "hold_days": 20,
@@ -121,9 +199,9 @@
     {
       "symbol": "BHEL.NS",
       "signal": "BUY",
-      "confidence": 49.4,
-      "composite_score": 0.891,
-      "rank": 8,
+      "confidence": 52.8,
+      "composite_score": 0.806,
+      "rank": 14,
       "current_price": 423.85,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
@@ -132,90 +210,12 @@
       "vix": 15.0
     },
     {
-      "symbol": "ACMESOLAR.NS",
+      "symbol": "SONACOMS.NS",
       "signal": "BUY",
-      "confidence": 71.6,
-      "composite_score": 0.878,
-      "rank": 9,
-      "current_price": 421.0,
-      "position_size_inr": 33333.33,
-      "position_pct": 3.33,
-      "hold_days": 20,
-      "regime": "SIDEWAYS",
-      "vix": 15.0
-    },
-    {
-      "symbol": "BELRISE.NS",
-      "signal": "BUY",
-      "confidence": 70.0,
-      "composite_score": 0.864,
-      "rank": 10,
-      "current_price": 219.7,
-      "position_size_inr": 33333.33,
-      "position_pct": 3.33,
-      "hold_days": 20,
-      "regime": "SIDEWAYS",
-      "vix": 15.0
-    },
-    {
-      "symbol": "BBOX.NS",
-      "signal": "BUY",
-      "confidence": 73.2,
-      "composite_score": 0.85,
-      "rank": 11,
-      "current_price": 807.7,
-      "position_size_inr": 33333.33,
-      "position_pct": 3.33,
-      "hold_days": 20,
-      "regime": "SIDEWAYS",
-      "vix": 15.0
-    },
-    {
-      "symbol": "BALRAMCHIN.NS",
-      "signal": "BUY",
-      "confidence": 71.2,
-      "composite_score": 0.837,
-      "rank": 12,
-      "current_price": 673.65,
-      "position_size_inr": 33333.33,
-      "position_pct": 3.33,
-      "hold_days": 20,
-      "regime": "SIDEWAYS",
-      "vix": 15.0
-    },
-    {
-      "symbol": "AUROPHARMA.NS",
-      "signal": "BUY",
-      "confidence": 55.6,
-      "composite_score": 0.823,
-      "rank": 13,
-      "current_price": 1705.0,
-      "position_size_inr": 33333.33,
-      "position_pct": 3.33,
-      "hold_days": 20,
-      "regime": "SIDEWAYS",
-      "vix": 15.0
-    },
-    {
-      "symbol": "AJANTPHARM.NS",
-      "signal": "BUY",
-      "confidence": 53.5,
-      "composite_score": 0.81,
-      "rank": 14,
-      "current_price": 3316.7,
-      "position_size_inr": 33333.33,
-      "position_pct": 3.33,
-      "hold_days": 20,
-      "regime": "SIDEWAYS",
-      "vix": 15.0
-    },
-    {
-      "symbol": "BHARATFORG.NS",
-      "signal": "BUY",
-      "confidence": 69.2,
-      "composite_score": 0.796,
+      "confidence": 71.5,
+      "composite_score": 0.792,
       "rank": 15,
-      "current_price": 1812.8,
+      "current_price": 893.7,
       "position_size_inr": 33333.33,
       "position_pct": 3.33,
       "hold_days": 20,
@@ -239,7 +239,7 @@
     "holdings": [],
     "orders": [
       {
-        "symbol": "CPPLUS.NS",
+        "symbol": "STLTECH.NS",
         "side": "BUY",
         "decided_on": "2026-11-04",
         "value": 33333.33,
@@ -248,13 +248,40 @@
         "score": 0.986
       },
       {
-        "symbol": "AETHER.NS",
+        "symbol": "CUPID.NS",
         "side": "BUY",
         "decided_on": "2026-11-04",
         "value": 33333.33,
         "reason": "top_rank",
         "rank": 2,
-        "score": 0.973
+        "score": 0.972
+      },
+      {
+        "symbol": "HFCL.NS",
+        "side": "BUY",
+        "decided_on": "2026-11-04",
+        "value": 33333.33,
+        "reason": "top_rank",
+        "rank": 3,
+        "score": 0.958
+      },
+      {
+        "symbol": "WELCORP.NS",
+        "side": "BUY",
+        "decided_on": "2026-11-04",
+        "value": 33333.33,
+        "reason": "top_rank",
+        "rank": 4,
+        "score": 0.944
+      },
+      {
+        "symbol": "TDPOWERSYS.NS",
+        "side": "BUY",
+        "decided_on": "2026-11-04",
+        "value": 33333.33,
+        "reason": "top_rank",
+        "rank": 5,
+        "score": 0.931
       },
       {
         "symbol": "ATHERENERG.NS",
@@ -262,8 +289,8 @@
         "decided_on": "2026-11-04",
         "value": 33333.33,
         "reason": "top_rank",
-        "rank": 3,
-        "score": 0.959
+        "rank": 6,
+        "score": 0.917
       },
       {
         "symbol": "APARINDS.NS",
@@ -271,8 +298,26 @@
         "decided_on": "2026-11-04",
         "value": 33333.33,
         "reason": "top_rank",
-        "rank": 4,
-        "score": 0.946
+        "rank": 7,
+        "score": 0.903
+      },
+      {
+        "symbol": "SYRMA.NS",
+        "side": "BUY",
+        "decided_on": "2026-11-04",
+        "value": 33333.33,
+        "reason": "top_rank",
+        "rank": 8,
+        "score": 0.889
+      },
+      {
+        "symbol": "LAURUSLABS.NS",
+        "side": "BUY",
+        "decided_on": "2026-11-04",
+        "value": 33333.33,
+        "reason": "top_rank",
+        "rank": 9,
+        "score": 0.875
       },
       {
         "symbol": "AZAD.NS",
@@ -280,26 +325,35 @@
         "decided_on": "2026-11-04",
         "value": 33333.33,
         "reason": "top_rank",
-        "rank": 5,
-        "score": 0.932
+        "rank": 10,
+        "score": 0.861
       },
       {
-        "symbol": "AEGISLOG.NS",
+        "symbol": "POWERINDIA.NS",
         "side": "BUY",
         "decided_on": "2026-11-04",
         "value": 33333.33,
         "reason": "top_rank",
-        "rank": 6,
-        "score": 0.918
+        "rank": 11,
+        "score": 0.847
       },
       {
-        "symbol": "ACUTAAS.NS",
+        "symbol": "MCX.NS",
         "side": "BUY",
         "decided_on": "2026-11-04",
         "value": 33333.33,
         "reason": "top_rank",
-        "rank": 7,
-        "score": 0.905
+        "rank": 12,
+        "score": 0.833
+      },
+      {
+        "symbol": "CHENNPETRO.NS",
+        "side": "BUY",
+        "decided_on": "2026-11-04",
+        "value": 33333.33,
+        "reason": "top_rank",
+        "rank": 13,
+        "score": 0.819
       },
       {
         "symbol": "BHEL.NS",
@@ -307,71 +361,17 @@
         "decided_on": "2026-11-04",
         "value": 33333.33,
         "reason": "top_rank",
-        "rank": 8,
-        "score": 0.891
-      },
-      {
-        "symbol": "ACMESOLAR.NS",
-        "side": "BUY",
-        "decided_on": "2026-11-04",
-        "value": 33333.33,
-        "reason": "top_rank",
-        "rank": 9,
-        "score": 0.878
-      },
-      {
-        "symbol": "BELRISE.NS",
-        "side": "BUY",
-        "decided_on": "2026-11-04",
-        "value": 33333.33,
-        "reason": "top_rank",
-        "rank": 10,
-        "score": 0.864
-      },
-      {
-        "symbol": "BBOX.NS",
-        "side": "BUY",
-        "decided_on": "2026-11-04",
-        "value": 33333.33,
-        "reason": "top_rank",
-        "rank": 11,
-        "score": 0.85
-      },
-      {
-        "symbol": "BALRAMCHIN.NS",
-        "side": "BUY",
-        "decided_on": "2026-11-04",
-        "value": 33333.33,
-        "reason": "top_rank",
-        "rank": 12,
-        "score": 0.837
-      },
-      {
-        "symbol": "AUROPHARMA.NS",
-        "side": "BUY",
-        "decided_on": "2026-11-04",
-        "value": 33333.33,
-        "reason": "top_rank",
-        "rank": 13,
-        "score": 0.823
-      },
-      {
-        "symbol": "AJANTPHARM.NS",
-        "side": "BUY",
-        "decided_on": "2026-11-04",
-        "value": 33333.33,
-        "reason": "top_rank",
         "rank": 14,
-        "score": 0.81
+        "score": 0.806
       },
       {
-        "symbol": "BHARATFORG.NS",
+        "symbol": "SONACOMS.NS",
         "side": "BUY",
         "decided_on": "2026-11-04",
         "value": 33333.33,
         "reason": "top_rank",
         "rank": 15,
-        "score": 0.796
+        "score": 0.792
       }
     ],
     "fills": [],
@@ -379,514 +379,535 @@
   },
   "full_ranking": [
     {
-      "symbol": "CPPLUS.NS",
+      "symbol": "STLTECH.NS",
       "signal": "HOLD",
       "composite_score": 0.986,
+      "composite_confidence": 70.7,
+      "cs_label": "TOP_BUY"
+    },
+    {
+      "symbol": "CUPID.NS",
+      "signal": "HOLD",
+      "composite_score": 0.972,
       "composite_confidence": 73.2,
       "cs_label": "TOP_BUY"
     },
     {
-      "symbol": "AETHER.NS",
+      "symbol": "HFCL.NS",
       "signal": "HOLD",
-      "composite_score": 0.973,
-      "composite_confidence": 48.2,
+      "composite_score": 0.958,
+      "composite_confidence": 72.8,
+      "cs_label": "TOP_BUY"
+    },
+    {
+      "symbol": "WELCORP.NS",
+      "signal": "HOLD",
+      "composite_score": 0.944,
+      "composite_confidence": 73.2,
+      "cs_label": "TOP_BUY"
+    },
+    {
+      "symbol": "TDPOWERSYS.NS",
+      "signal": "HOLD",
+      "composite_score": 0.931,
+      "composite_confidence": 73.2,
       "cs_label": "TOP_BUY"
     },
     {
       "symbol": "ATHERENERG.NS",
       "signal": "HOLD",
-      "composite_score": 0.959,
+      "composite_score": 0.917,
       "composite_confidence": 73.2,
-      "cs_label": "TOP_BUY"
+      "cs_label": "NEUTRAL"
     },
     {
       "symbol": "APARINDS.NS",
       "signal": "HOLD",
-      "composite_score": 0.946,
+      "composite_score": 0.903,
       "composite_confidence": 73.2,
-      "cs_label": "TOP_BUY"
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "SYRMA.NS",
+      "signal": "HOLD",
+      "composite_score": 0.889,
+      "composite_confidence": 71.9,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "LAURUSLABS.NS",
+      "signal": "HOLD",
+      "composite_score": 0.875,
+      "composite_confidence": 73.2,
+      "cs_label": "NEUTRAL"
     },
     {
       "symbol": "AZAD.NS",
       "signal": "HOLD",
-      "composite_score": 0.932,
-      "composite_confidence": 69.6,
-      "cs_label": "TOP_BUY"
-    },
-    {
-      "symbol": "AEGISLOG.NS",
-      "signal": "HOLD",
-      "composite_score": 0.918,
-      "composite_confidence": 70.4,
+      "composite_score": 0.861,
+      "composite_confidence": 67.8,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "ACUTAAS.NS",
+      "symbol": "POWERINDIA.NS",
       "signal": "HOLD",
-      "composite_score": 0.905,
+      "composite_score": 0.847,
+      "composite_confidence": 70.3,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "MCX.NS",
+      "signal": "HOLD",
+      "composite_score": 0.833,
+      "composite_confidence": 72.4,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "CHENNPETRO.NS",
+      "signal": "HOLD",
+      "composite_score": 0.819,
       "composite_confidence": 73.2,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BHEL.NS",
       "signal": "HOLD",
-      "composite_score": 0.891,
-      "composite_confidence": 49.4,
+      "composite_score": 0.806,
+      "composite_confidence": 52.8,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "ACMESOLAR.NS",
+      "symbol": "SONACOMS.NS",
       "signal": "HOLD",
-      "composite_score": 0.878,
-      "composite_confidence": 71.6,
+      "composite_score": 0.792,
+      "composite_confidence": 71.5,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "BELRISE.NS",
+      "symbol": "WOCKPHARMA.NS",
       "signal": "HOLD",
-      "composite_score": 0.864,
-      "composite_confidence": 70.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BBOX.NS",
-      "signal": "HOLD",
-      "composite_score": 0.85,
+      "composite_score": 0.778,
       "composite_confidence": 73.2,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "BALRAMCHIN.NS",
+      "symbol": "REDINGTON.NS",
       "signal": "HOLD",
-      "composite_score": 0.837,
-      "composite_confidence": 71.2,
+      "composite_score": 0.764,
+      "composite_confidence": 66.1,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "DATAPATTNS.NS",
+      "signal": "HOLD",
+      "composite_score": 0.75,
+      "composite_confidence": 69.0,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "AUROPHARMA.NS",
       "signal": "HOLD",
-      "composite_score": 0.823,
-      "composite_confidence": 55.6,
+      "composite_score": 0.736,
+      "composite_confidence": 50.7,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "AJANTPHARM.NS",
+      "symbol": "MOTHERSON.NS",
       "signal": "HOLD",
-      "composite_score": 0.81,
-      "composite_confidence": 53.5,
+      "composite_score": 0.722,
+      "composite_confidence": 53.2,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "NATIONALUM.NS",
+      "signal": "HOLD",
+      "composite_score": 0.708,
+      "composite_confidence": 53.2,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "DIVISLAB.NS",
+      "signal": "HOLD",
+      "composite_score": 0.694,
+      "composite_confidence": 65.7,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "SOLARINDS.NS",
+      "signal": "HOLD",
+      "composite_score": 0.681,
+      "composite_confidence": 63.2,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BHARATFORG.NS",
       "signal": "HOLD",
-      "composite_score": 0.796,
-      "composite_confidence": 69.2,
+      "composite_score": 0.667,
+      "composite_confidence": 67.4,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "MAHABANK.NS",
+      "symbol": "FEDERALBNK.NS",
       "signal": "HOLD",
-      "composite_score": 0.782,
-      "composite_confidence": 62.6,
+      "composite_score": 0.653,
+      "composite_confidence": 51.9,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "ANANDRATHI.NS",
+      "symbol": "GVT&D.NS",
       "signal": "HOLD",
-      "composite_score": 0.769,
-      "composite_confidence": 55.2,
+      "composite_score": 0.639,
+      "composite_confidence": 66.9,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ADANIENSOL.NS",
       "signal": "HOLD",
-      "composite_score": 0.755,
-      "composite_confidence": 65.0,
+      "composite_score": 0.625,
+      "composite_confidence": 63.6,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ABB.NS",
       "signal": "HOLD",
-      "composite_score": 0.741,
-      "composite_confidence": 72.9,
+      "composite_score": 0.611,
+      "composite_confidence": 73.2,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "HINDCOPPER.NS",
+      "signal": "HOLD",
+      "composite_score": 0.597,
+      "composite_confidence": 57.4,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "IDEA.NS",
+      "signal": "HOLD",
+      "composite_score": 0.583,
+      "composite_confidence": 66.5,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "HSCL.NS",
+      "signal": "HOLD",
+      "composite_score": 0.569,
+      "composite_confidence": 73.2,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "TORNTPHARM.NS",
+      "signal": "HOLD",
+      "composite_score": 0.556,
+      "composite_confidence": 68.6,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BSE.NS",
       "signal": "HOLD",
-      "composite_score": 0.728,
-      "composite_confidence": 58.9,
+      "composite_score": 0.542,
+      "composite_confidence": 59.4,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "ABSLAMC.NS",
+      "symbol": "NYKAA.NS",
       "signal": "HOLD",
-      "composite_score": 0.714,
-      "composite_confidence": 72.0,
+      "composite_score": 0.528,
+      "composite_confidence": 57.8,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "SHRIRAMFIN.NS",
+      "signal": "HOLD",
+      "composite_score": 0.514,
+      "composite_confidence": 65.3,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "PAYTM.NS",
+      "signal": "HOLD",
+      "composite_score": 0.5,
+      "composite_confidence": 73.2,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ADANIPOWER.NS",
       "signal": "HOLD",
-      "composite_score": 0.701,
-      "composite_confidence": 72.4,
+      "composite_score": 0.486,
+      "composite_confidence": 72.8,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "ANTHEM.NS",
+      "symbol": "SAIL.NS",
       "signal": "HOLD",
-      "composite_score": 0.687,
-      "composite_confidence": 73.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "AARTIIND.NS",
-      "signal": "HOLD",
-      "composite_score": 0.673,
-      "composite_confidence": 61.8,
+      "composite_score": 0.472,
+      "composite_confidence": 65.7,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ADANIPORTS.NS",
       "signal": "HOLD",
-      "composite_score": 0.66,
-      "composite_confidence": 57.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "SIEMENS.NS",
-      "signal": "HOLD",
-      "composite_score": 0.646,
-      "composite_confidence": 73.2,
+      "composite_score": 0.458,
+      "composite_confidence": 58.6,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ADANIENT.NS",
       "signal": "HOLD",
-      "composite_score": 0.633,
-      "composite_confidence": 71.2,
+      "composite_score": 0.444,
+      "composite_confidence": 70.7,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "CGPOWER.NS",
       "signal": "HOLD",
-      "composite_score": 0.619,
-      "composite_confidence": 66.7,
+      "composite_score": 0.431,
+      "composite_confidence": 64.9,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "NETWEB.NS",
+      "signal": "HOLD",
+      "composite_score": 0.417,
+      "composite_confidence": 64.4,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "APLAPOLLO.NS",
       "signal": "HOLD",
-      "composite_score": 0.605,
-      "composite_confidence": 49.8,
+      "composite_score": 0.403,
+      "composite_confidence": 53.6,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "OFSS.NS",
+      "signal": "HOLD",
+      "composite_score": 0.389,
+      "composite_confidence": 71.1,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ADANIGREEN.NS",
       "signal": "HOLD",
-      "composite_score": 0.592,
-      "composite_confidence": 67.9,
+      "composite_score": 0.375,
+      "composite_confidence": 66.5,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "TITAN.NS",
       "signal": "HOLD",
-      "composite_score": 0.578,
+      "composite_score": 0.361,
       "composite_confidence": 73.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "AIAENG.NS",
-      "signal": "HOLD",
-      "composite_score": 0.565,
-      "composite_confidence": 72.4,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "HINDALCO.NS",
       "signal": "HOLD",
-      "composite_score": 0.551,
-      "composite_confidence": 65.5,
+      "composite_score": 0.347,
+      "composite_confidence": 62.4,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BOSCHLTD.NS",
       "signal": "HOLD",
-      "composite_score": 0.537,
-      "composite_confidence": 59.3,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "CCL.NS",
-      "signal": "HOLD",
-      "composite_score": 0.524,
-      "composite_confidence": 57.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ANGELONE.NS",
-      "signal": "HOLD",
-      "composite_score": 0.51,
-      "composite_confidence": 64.6,
+      "composite_score": 0.333,
+      "composite_confidence": 59.9,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "AUBANK.NS",
       "signal": "HOLD",
-      "composite_score": 0.497,
-      "composite_confidence": 63.4,
+      "composite_score": 0.319,
+      "composite_confidence": 61.5,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "CANHLIFE.NS",
+      "symbol": "HINDZINC.NS",
       "signal": "HOLD",
-      "composite_score": 0.483,
-      "composite_confidence": 61.4,
+      "composite_score": 0.306,
+      "composite_confidence": 56.5,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "INDUSINDBK.NS",
       "signal": "HOLD",
-      "composite_score": 0.469,
-      "composite_confidence": 58.5,
+      "composite_score": 0.292,
+      "composite_confidence": 54.9,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "TVSMOTOR.NS",
+      "signal": "HOLD",
+      "composite_score": 0.278,
+      "composite_confidence": 54.4,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "UNIONBANK.NS",
+      "signal": "HOLD",
+      "composite_score": 0.264,
+      "composite_confidence": 54.0,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BAJAJ-AUTO.NS",
       "signal": "HOLD",
-      "composite_score": 0.456,
+      "composite_score": 0.25,
       "composite_confidence": 73.2,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "ABCAPITAL.NS",
+      "symbol": "ZYDUSLIFE.NS",
       "signal": "HOLD",
-      "composite_score": 0.442,
-      "composite_confidence": 50.7,
+      "composite_score": 0.236,
+      "composite_confidence": 53.6,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "ACE.NS",
+      "symbol": "KEI.NS",
       "signal": "HOLD",
-      "composite_score": 0.429,
-      "composite_confidence": 49.0,
+      "composite_score": 0.222,
+      "composite_confidence": 73.2,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "MARICO.NS",
+      "symbol": "IFCI.NS",
       "signal": "HOLD",
-      "composite_score": 0.415,
-      "composite_confidence": 58.1,
+      "composite_score": 0.208,
+      "composite_confidence": 73.2,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "MANAPPURAM.NS",
+      "signal": "HOLD",
+      "composite_score": 0.194,
+      "composite_confidence": 54.9,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "CUMMINSIND.NS",
+      "signal": "HOLD",
+      "composite_score": 0.181,
+      "composite_confidence": 61.5,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "COALINDIA.NS",
       "signal": "HOLD",
-      "composite_score": 0.401,
-      "composite_confidence": 59.7,
+      "composite_score": 0.167,
+      "composite_confidence": 56.1,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "GRASIM.NS",
       "signal": "HOLD",
-      "composite_score": 0.388,
+      "composite_score": 0.153,
       "composite_confidence": 73.2,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ASHOKLEY.NS",
       "signal": "HOLD",
-      "composite_score": 0.374,
-      "composite_confidence": 53.1,
+      "composite_score": 0.139,
+      "composite_confidence": 49.0,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "ANURAS.NS",
+      "symbol": "KALYANKJIL.NS",
       "signal": "HOLD",
-      "composite_score": 0.361,
-      "composite_confidence": 54.4,
+      "composite_score": 0.125,
+      "composite_confidence": 68.2,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "MRPL.NS",
+      "signal": "HOLD",
+      "composite_score": 0.111,
+      "composite_confidence": 69.9,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "JSWSTEEL.NS",
       "signal": "HOLD",
-      "composite_score": 0.347,
-      "composite_confidence": 57.2,
+      "composite_score": 0.097,
+      "composite_confidence": 52.4,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "SUNPHARMA.NS",
       "signal": "HOLD",
-      "composite_score": 0.333,
-      "composite_confidence": 73.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "AEGISVOPAK.NS",
-      "signal": "HOLD",
-      "composite_score": 0.32,
-      "composite_confidence": 61.3,
+      "composite_score": 0.083,
+      "composite_confidence": 71.1,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "TECHM.NS",
       "signal": "HOLD",
-      "composite_score": 0.306,
-      "composite_confidence": 54.8,
+      "composite_score": 0.069,
+      "composite_confidence": 57.4,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "NESTLEIND.NS",
       "signal": "HOLD",
-      "composite_score": 0.293,
-      "composite_confidence": 49.8,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "PIDILITIND.NS",
-      "signal": "HOLD",
-      "composite_score": 0.279,
-      "composite_confidence": 50.2,
+      "composite_score": 0.056,
+      "composite_confidence": 50.3,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BANDHANBNK.NS",
       "signal": "HOLD",
-      "composite_score": 0.265,
-      "composite_confidence": 70.8,
+      "composite_score": 0.042,
+      "composite_confidence": 69.0,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "HAL.NS",
       "signal": "HOLD",
-      "composite_score": 0.252,
-      "composite_confidence": 58.9,
+      "composite_score": 0.028,
+      "composite_confidence": 55.3,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "ABDL.NS",
+      "symbol": "POLYCAB.NS",
       "signal": "HOLD",
-      "composite_score": 0.238,
-      "composite_confidence": 58.5,
+      "composite_score": 0.014,
+      "composite_confidence": 59.0,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "TMCV.NS",
+      "signal": "HOLD",
+      "composite_score": 0.0,
+      "composite_confidence": 0.0,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "LENSKART.NS",
+      "signal": "HOLD",
+      "composite_score": 0.0,
+      "composite_confidence": 0.0,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "MEESHO.NS",
+      "signal": "HOLD",
+      "composite_score": 0.0,
+      "composite_confidence": 0.0,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "VAML.NS",
+      "signal": "HOLD",
+      "composite_score": 0.0,
+      "composite_confidence": 0.0,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "KOTAKBANK.NS",
       "signal": "HOLD",
-      "composite_score": 0.224,
-      "composite_confidence": 57.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "EICHERMOT.NS",
-      "signal": "HOLD",
-      "composite_score": 0.211,
-      "composite_confidence": 49.4,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ATUL.NS",
-      "signal": "HOLD",
-      "composite_score": 0.197,
-      "composite_confidence": 73.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "APOLLOHOSP.NS",
-      "signal": "HOLD",
-      "composite_score": 0.184,
-      "composite_confidence": 73.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ICICIBANK.NS",
-      "signal": "HOLD",
-      "composite_score": 0.17,
-      "composite_confidence": 54.4,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "AXISBANK.NS",
-      "signal": "HOLD",
-      "composite_score": 0.156,
-      "composite_confidence": 62.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "TATASTEEL.NS",
-      "signal": "HOLD",
-      "composite_score": 0.143,
-      "composite_confidence": 63.4,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "DRREDDY.NS",
-      "signal": "HOLD",
-      "composite_score": 0.129,
-      "composite_confidence": 56.8,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ASAHIINDIA.NS",
-      "signal": "HOLD",
-      "composite_score": 0.116,
-      "composite_confidence": 50.7,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "SBIN.NS",
-      "signal": "HOLD",
-      "composite_score": 0.102,
-      "composite_confidence": 50.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "AVANTIFEED.NS",
-      "signal": "HOLD",
-      "composite_score": 0.088,
-      "composite_confidence": 73.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ASTERDM.NS",
-      "signal": "HOLD",
-      "composite_score": 0.075,
-      "composite_confidence": 67.9,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "NTPC.NS",
-      "signal": "HOLD",
-      "composite_score": 0.061,
-      "composite_confidence": 56.4,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "360ONE.NS",
-      "signal": "HOLD",
-      "composite_score": 0.048,
-      "composite_confidence": 52.3,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "LT.NS",
-      "signal": "HOLD",
-      "composite_score": 0.034,
-      "composite_confidence": 63.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BIOCON.NS",
-      "signal": "HOLD",
-      "composite_score": 0.02,
-      "composite_confidence": 60.9,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "GAIL.NS",
-      "signal": "HOLD",
-      "composite_score": 0.007,
-      "composite_confidence": 63.8,
+      "composite_score": 0.0,
+      "composite_confidence": 52.8,
       "cs_label": "NEUTRAL"
     },
     {
@@ -897,535 +918,514 @@
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "BAGMANE.NS",
+      "symbol": "PINELABS.NS",
       "signal": "HOLD",
       "composite_score": 0.0,
       "composite_confidence": 0.0,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "BHARATCOAL.NS",
+      "symbol": "EICHERMOT.NS",
       "signal": "HOLD",
-      "composite_score": 0.0,
-      "composite_confidence": 0.0,
+      "composite_score": -0.014,
+      "composite_confidence": 50.7,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "BIRET.NS",
+      "symbol": "COFORGE.NS",
       "signal": "HOLD",
-      "composite_score": -0.007,
-      "composite_confidence": 67.1,
+      "composite_score": -0.028,
+      "composite_confidence": 64.0,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "AIIL.NS",
+      "symbol": "LUPIN.NS",
       "signal": "HOLD",
-      "composite_score": -0.02,
-      "composite_confidence": 52.7,
+      "composite_score": -0.042,
+      "composite_confidence": 68.6,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "APOLLOHOSP.NS",
+      "signal": "HOLD",
+      "composite_score": -0.056,
+      "composite_confidence": 73.2,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "ICICIBANK.NS",
+      "signal": "HOLD",
+      "composite_score": -0.069,
+      "composite_confidence": 56.9,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "AXISBANK.NS",
+      "signal": "HOLD",
+      "composite_score": -0.083,
+      "composite_confidence": 60.7,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "TATASTEEL.NS",
+      "signal": "HOLD",
+      "composite_score": -0.097,
+      "composite_confidence": 60.7,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "DRREDDY.NS",
+      "signal": "HOLD",
+      "composite_score": -0.111,
+      "composite_confidence": 51.9,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "SBIN.NS",
+      "signal": "HOLD",
+      "composite_score": -0.125,
+      "composite_confidence": 54.0,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "INDUSTOWER.NS",
+      "signal": "HOLD",
+      "composite_score": -0.139,
+      "composite_confidence": 48.2,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "NTPC.NS",
+      "signal": "HOLD",
+      "composite_score": -0.153,
+      "composite_confidence": 58.2,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "LT.NS",
+      "signal": "HOLD",
+      "composite_score": -0.167,
+      "composite_confidence": 61.1,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "INDHOTEL.NS",
+      "signal": "HOLD",
+      "composite_score": -0.181,
+      "composite_confidence": 62.4,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "ETERNAL.NS",
+      "signal": "HOLD",
+      "composite_score": -0.194,
+      "composite_confidence": 55.3,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "LODHA.NS",
+      "signal": "HOLD",
+      "composite_score": -0.208,
+      "composite_confidence": 72.4,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "CHOLAFIN.NS",
       "signal": "HOLD",
-      "composite_score": -0.034,
-      "composite_confidence": 65.9,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ASTRAL.NS",
-      "signal": "HOLD",
-      "composite_score": -0.048,
-      "composite_confidence": 54.8,
+      "composite_score": -0.222,
+      "composite_confidence": 63.2,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "HEROMOTOCO.NS",
       "signal": "HOLD",
-      "composite_score": -0.061,
-      "composite_confidence": 61.8,
+      "composite_score": -0.236,
+      "composite_confidence": 59.4,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "POWERGRID.NS",
       "signal": "HOLD",
-      "composite_score": -0.075,
-      "composite_confidence": 51.1,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BEML.NS",
-      "signal": "HOLD",
-      "composite_score": -0.088,
-      "composite_confidence": 67.5,
+      "composite_score": -0.25,
+      "composite_confidence": 49.0,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BEL.NS",
       "signal": "HOLD",
-      "composite_score": -0.102,
-      "composite_confidence": 49.0,
+      "composite_score": -0.264,
+      "composite_confidence": 51.1,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "CRISIL.NS",
+      "symbol": "PERSISTENT.NS",
       "signal": "HOLD",
-      "composite_score": -0.116,
-      "composite_confidence": 53.9,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ANANTRAJ.NS",
-      "signal": "HOLD",
-      "composite_score": -0.129,
-      "composite_confidence": 73.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ALKEM.NS",
-      "signal": "HOLD",
-      "composite_score": -0.143,
-      "composite_confidence": 51.9,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ATGL.NS",
-      "signal": "HOLD",
-      "composite_score": -0.156,
-      "composite_confidence": 51.9,
+      "composite_score": -0.278,
+      "composite_confidence": 62.8,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ASIANPAINT.NS",
       "signal": "HOLD",
-      "composite_score": -0.17,
-      "composite_confidence": 60.1,
+      "composite_score": -0.292,
+      "composite_confidence": 56.9,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "BANKINDIA.NS",
+      "symbol": "YESBANK.NS",
       "signal": "HOLD",
-      "composite_score": -0.184,
-      "composite_confidence": 62.6,
+      "composite_score": -0.306,
+      "composite_confidence": 73.2,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "PNB.NS",
+      "signal": "HOLD",
+      "composite_score": -0.319,
+      "composite_confidence": 57.8,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BAJFINANCE.NS",
       "signal": "HOLD",
-      "composite_score": -0.197,
-      "composite_confidence": 56.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BALKRISIND.NS",
-      "signal": "HOLD",
-      "composite_score": -0.211,
-      "composite_confidence": 65.0,
+      "composite_score": -0.333,
+      "composite_confidence": 51.1,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ULTRACEMCO.NS",
       "signal": "HOLD",
-      "composite_score": -0.224,
-      "composite_confidence": 53.9,
+      "composite_score": -0.347,
+      "composite_confidence": 50.3,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "TATAPOWER.NS",
       "signal": "HOLD",
-      "composite_score": -0.238,
-      "composite_confidence": 59.3,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "CIPLA.NS",
-      "signal": "HOLD",
-      "composite_score": -0.252,
-      "composite_confidence": 65.5,
+      "composite_score": -0.361,
+      "composite_confidence": 55.7,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ONGC.NS",
       "signal": "HOLD",
-      "composite_score": -0.265,
-      "composite_confidence": 60.5,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "AADHARHFC.NS",
-      "signal": "HOLD",
-      "composite_score": -0.279,
-      "composite_confidence": 48.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ABBOTINDIA.NS",
-      "signal": "HOLD",
-      "composite_score": -0.293,
-      "composite_confidence": 55.2,
+      "composite_score": -0.375,
+      "composite_confidence": 60.3,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "SBILIFE.NS",
       "signal": "HOLD",
-      "composite_score": -0.306,
-      "composite_confidence": 52.3,
+      "composite_score": -0.389,
+      "composite_confidence": 55.7,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "AMBER.NS",
+      "symbol": "VBL.NS",
       "signal": "HOLD",
-      "composite_score": -0.32,
-      "composite_confidence": 70.4,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BERGEPAINT.NS",
-      "signal": "HOLD",
-      "composite_score": -0.333,
-      "composite_confidence": 61.3,
+      "composite_score": -0.403,
+      "composite_confidence": 49.9,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "DLF.NS",
       "signal": "HOLD",
-      "composite_score": -0.347,
-      "composite_confidence": 48.6,
+      "composite_score": -0.417,
+      "composite_confidence": 51.5,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "DMART.NS",
       "signal": "HOLD",
-      "composite_score": -0.361,
-      "composite_confidence": 53.1,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "CIEINDIA.NS",
-      "signal": "HOLD",
-      "composite_score": -0.374,
-      "composite_confidence": 51.5,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BAJAJHLDNG.NS",
-      "signal": "HOLD",
-      "composite_score": -0.388,
-      "composite_confidence": 66.3,
+      "composite_score": -0.431,
+      "composite_confidence": 56.1,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "HDFCAMC.NS",
       "signal": "HOLD",
-      "composite_score": -0.401,
-      "composite_confidence": 63.0,
+      "composite_score": -0.444,
+      "composite_confidence": 60.3,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "NAUKRI.NS",
+      "signal": "HOLD",
+      "composite_score": -0.458,
+      "composite_confidence": 52.4,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BHARTIARTL.NS",
       "signal": "HOLD",
-      "composite_score": -0.415,
-      "composite_confidence": 51.1,
+      "composite_score": -0.472,
+      "composite_confidence": 54.4,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "CANFINHOME.NS",
+      "symbol": "LICI.NS",
       "signal": "HOLD",
-      "composite_score": -0.429,
-      "composite_confidence": 51.5,
+      "composite_score": -0.486,
+      "composite_confidence": 59.9,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "MUTHOOTFIN.NS",
+      "signal": "HOLD",
+      "composite_score": -0.5,
+      "composite_confidence": 66.9,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "LICHSGFIN.NS",
+      "signal": "HOLD",
+      "composite_score": -0.514,
+      "composite_confidence": 56.5,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BAJAJFINSV.NS",
       "signal": "HOLD",
-      "composite_score": -0.442,
-      "composite_confidence": 56.4,
+      "composite_score": -0.528,
+      "composite_confidence": 51.5,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "INDIGO.NS",
+      "signal": "HOLD",
+      "composite_score": -0.542,
+      "composite_confidence": 49.4,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "HYUNDAI.NS",
+      "signal": "HOLD",
+      "composite_score": -0.556,
+      "composite_confidence": 73.2,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "CANBK.NS",
       "signal": "HOLD",
-      "composite_score": -0.456,
-      "composite_confidence": 53.5,
+      "composite_score": -0.569,
+      "composite_confidence": 49.4,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "PFC.NS",
       "signal": "HOLD",
-      "composite_score": -0.469,
-      "composite_confidence": 68.7,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "COLPAL.NS",
-      "signal": "HOLD",
-      "composite_score": -0.483,
-      "composite_confidence": 68.3,
+      "composite_score": -0.583,
+      "composite_confidence": 68.2,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "RECLTD.NS",
       "signal": "HOLD",
-      "composite_score": -0.497,
-      "composite_confidence": 52.7,
+      "composite_score": -0.597,
+      "composite_confidence": 48.6,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "TATACONSUM.NS",
+      "symbol": "DIXON.NS",
       "signal": "HOLD",
-      "composite_score": -0.51,
-      "composite_confidence": 62.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BLUESTARCO.NS",
-      "signal": "HOLD",
-      "composite_score": -0.524,
-      "composite_confidence": 65.9,
+      "composite_score": -0.611,
+      "composite_confidence": 69.4,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BPCL.NS",
       "signal": "HOLD",
-      "composite_score": -0.537,
-      "composite_confidence": 60.5,
+      "composite_score": -0.625,
+      "composite_confidence": 58.2,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "RELIANCE.NS",
       "signal": "HOLD",
-      "composite_score": -0.551,
-      "composite_confidence": 64.6,
+      "composite_score": -0.639,
+      "composite_confidence": 61.9,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "BANKBARODA.NS",
       "signal": "HOLD",
-      "composite_score": -0.565,
-      "composite_confidence": 60.9,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BRITANNIA.NS",
-      "signal": "HOLD",
-      "composite_score": -0.578,
-      "composite_confidence": 55.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "AFFLE.NS",
-      "signal": "HOLD",
-      "composite_score": -0.592,
-      "composite_confidence": 73.2,
+      "composite_score": -0.653,
+      "composite_confidence": 58.6,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "HCLTECH.NS",
       "signal": "HOLD",
-      "composite_score": -0.605,
-      "composite_confidence": 72.0,
+      "composite_score": -0.667,
+      "composite_confidence": 71.9,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "M&M.NS",
       "signal": "HOLD",
-      "composite_score": -0.619,
-      "composite_confidence": 64.2,
+      "composite_score": -0.681,
+      "composite_confidence": 62.8,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "HINDUNILVR.NS",
       "signal": "HOLD",
-      "composite_score": -0.633,
-      "composite_confidence": 64.2,
+      "composite_score": -0.694,
+      "composite_confidence": 61.1,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "APOLLOTYRE.NS",
+      "symbol": "CDSL.NS",
       "signal": "HOLD",
-      "composite_score": -0.646,
-      "composite_confidence": 56.0,
+      "composite_score": -0.708,
+      "composite_confidence": 69.4,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "APTUS.NS",
+      "symbol": "MAXHEALTH.NS",
       "signal": "HOLD",
-      "composite_score": -0.66,
-      "composite_confidence": 73.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BSOFT.NS",
-      "signal": "HOLD",
-      "composite_score": -0.673,
-      "composite_confidence": 73.2,
+      "composite_score": -0.722,
+      "composite_confidence": 64.0,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "MARUTI.NS",
       "signal": "HOLD",
-      "composite_score": -0.687,
-      "composite_confidence": 66.3,
+      "composite_score": -0.736,
+      "composite_confidence": 64.4,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "BAJAJHFL.NS",
+      "symbol": "MAZDOCK.NS",
       "signal": "HOLD",
-      "composite_score": -0.701,
-      "composite_confidence": 68.3,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ARE&M.NS",
-      "signal": "HOLD",
-      "composite_score": -0.714,
-      "composite_confidence": 56.8,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BDL.NS",
-      "signal": "HOLD",
-      "composite_score": -0.728,
-      "composite_confidence": 70.0,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "DABUR.NS",
-      "signal": "HOLD",
-      "composite_score": -0.741,
-      "composite_confidence": 68.7,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BHARTIHEXA.NS",
-      "signal": "HOLD",
-      "composite_score": -0.755,
+      "composite_score": -0.75,
       "composite_confidence": 73.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "AAVAS.NS",
-      "signal": "HOLD",
-      "composite_score": -0.769,
-      "composite_confidence": 69.2,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "HDFCLIFE.NS",
       "signal": "HOLD",
-      "composite_score": -0.782,
-      "composite_confidence": 67.5,
+      "composite_score": -0.764,
+      "composite_confidence": 66.1,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "CESC.NS",
+      "symbol": "HINDPETRO.NS",
       "signal": "HOLD",
-      "composite_score": -0.796,
-      "composite_confidence": 69.6,
+      "composite_score": -0.778,
+      "composite_confidence": 49.9,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "HDFCBANK.NS",
       "signal": "HOLD",
-      "composite_score": -0.81,
-      "composite_confidence": 70.8,
+      "composite_score": -0.792,
+      "composite_confidence": 69.9,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "LTM.NS",
+      "signal": "HOLD",
+      "composite_score": -0.806,
+      "composite_confidence": 48.6,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "TMPV.NS",
+      "signal": "HOLD",
+      "composite_score": -0.819,
+      "composite_confidence": 67.4,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "OLAELEC.NS",
+      "signal": "HOLD",
+      "composite_score": -0.833,
+      "composite_confidence": 61.9,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "TCS.NS",
       "signal": "HOLD",
-      "composite_score": -0.823,
-      "composite_confidence": 67.1,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BLS.NS",
-      "signal": "HOLD",
-      "composite_score": -0.837,
-      "composite_confidence": 72.9,
+      "composite_score": -0.847,
+      "composite_confidence": 65.3,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "INFY.NS",
       "signal": "HOLD",
-      "composite_score": -0.85,
-      "composite_confidence": 66.7,
+      "composite_score": -0.861,
+      "composite_confidence": 64.9,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "JIOFIN.NS",
+      "signal": "HOLD",
+      "composite_score": -0.875,
+      "composite_confidence": 63.6,
+      "cs_label": "NEUTRAL"
+    },
+    {
+      "symbol": "WAAREEENER.NS",
+      "signal": "HOLD",
+      "composite_score": -0.889,
+      "composite_confidence": 59.0,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "WIPRO.NS",
       "signal": "HOLD",
-      "composite_score": -0.864,
+      "composite_score": -0.903,
       "composite_confidence": 73.2,
       "cs_label": "NEUTRAL"
     },
     {
-      "symbol": "AWL.NS",
+      "symbol": "SUZLON.NS",
       "signal": "HOLD",
-      "composite_score": -0.878,
-      "composite_confidence": 59.7,
+      "composite_score": -0.917,
+      "composite_confidence": 73.2,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "ITC.NS",
       "signal": "HOLD",
-      "composite_score": -0.891,
-      "composite_confidence": 71.6,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "ACC.NS",
-      "signal": "HOLD",
-      "composite_score": -0.905,
-      "composite_confidence": 63.8,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "AMBUJACEM.NS",
-      "signal": "HOLD",
-      "composite_score": -0.918,
-      "composite_confidence": 60.1,
+      "composite_score": -0.931,
+      "composite_confidence": 71.5,
       "cs_label": "NEUTRAL"
     },
     {
       "symbol": "TRENT.NS",
       "signal": "HOLD",
-      "composite_score": -0.932,
-      "composite_confidence": 73.2,
-      "cs_label": "NEUTRAL"
-    },
-    {
-      "symbol": "BATAINDIA.NS",
-      "signal": "HOLD",
-      "composite_score": -0.946,
-      "composite_confidence": 58.1,
-      "cs_label": "AVOID"
-    },
-    {
-      "symbol": "ABREL.NS",
-      "signal": "HOLD",
-      "composite_score": -0.959,
+      "composite_score": -0.944,
       "composite_confidence": 73.2,
       "cs_label": "AVOID"
     },
     {
-      "symbol": "BRIGADE.NS",
+      "symbol": "SWIGGY.NS",
       "signal": "HOLD",
-      "composite_score": -0.973,
+      "composite_score": -0.958,
       "composite_confidence": 73.2,
       "cs_label": "AVOID"
     },
     {
-      "symbol": "AFCONS.NS",
+      "symbol": "POLICYBZR.NS",
+      "signal": "HOLD",
+      "composite_score": -0.972,
+      "composite_confidence": 73.2,
+      "cs_label": "AVOID"
+    },
+    {
+      "symbol": "VEDL.NS",
       "signal": "HOLD",
       "composite_score": -0.986,
-      "composite_confidence": 73.2,
+      "composite_confidence": 67.8,
       "cs_label": "AVOID"
     },
     {
-      "symbol": "FIRSTCRY.NS",
+      "symbol": "KAYNES.NS",
       "signal": "HOLD",
       "composite_score": -1.0,
-      "composite_confidence": 73.2,
+      "composite_confidence": 70.3,
       "cs_label": "AVOID"
     }
   ]

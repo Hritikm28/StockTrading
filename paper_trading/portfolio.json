@@ -5,7 +5,7 @@
  "holdings": {},
  "pending": [
   {
-   "symbol": "CPPLUS.NS",
+   "symbol": "STLTECH.NS",
    "side": "BUY",
    "decided_on": "2026-11-04",
    "value": 33333.33,
@@ -14,13 +14,40 @@
    "score": 0.986
   },
   {
-   "symbol": "AETHER.NS",
+   "symbol": "CUPID.NS",
    "side": "BUY",
    "decided_on": "2026-11-04",
    "value": 33333.33,
    "reason": "top_rank",
    "rank": 2,
-   "score": 0.973
+   "score": 0.972
+  },
+  {
+   "symbol": "HFCL.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 3,
+   "score": 0.958
+  },
+  {
+   "symbol": "WELCORP.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 4,
+   "score": 0.944
+  },
+  {
+   "symbol": "TDPOWERSYS.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 5,
+   "score": 0.931
   },
   {
    "symbol": "ATHERENERG.NS",
@@ -28,8 +55,8 @@
    "decided_on": "2026-11-04",
    "value": 33333.33,
    "reason": "top_rank",
-   "rank": 3,
-   "score": 0.959
+   "rank": 6,
+   "score": 0.917
   },
   {
    "symbol": "APARINDS.NS",
@@ -37,8 +64,26 @@
    "decided_on": "2026-11-04",
    "value": 33333.33,
    "reason": "top_rank",
-   "rank": 4,
-   "score": 0.946
+   "rank": 7,
+   "score": 0.903
+  },
+  {
+   "symbol": "SYRMA.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 8,
+   "score": 0.889
+  },
+  {
+   "symbol": "LAURUSLABS.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 9,
+   "score": 0.875
   },
   {
    "symbol": "AZAD.NS",
@@ -46,26 +91,35 @@
    "decided_on": "2026-11-04",
    "value": 33333.33,
    "reason": "top_rank",
-   "rank": 5,
-   "score": 0.932
+   "rank": 10,
+   "score": 0.861
   },
   {
-   "symbol": "AEGISLOG.NS",
+   "symbol": "POWERINDIA.NS",
    "side": "BUY",
    "decided_on": "2026-11-04",
    "value": 33333.33,
    "reason": "top_rank",
-   "rank": 6,
-   "score": 0.918
+   "rank": 11,
+   "score": 0.847
   },
   {
-   "symbol": "ACUTAAS.NS",
+   "symbol": "MCX.NS",
    "side": "BUY",
    "decided_on": "2026-11-04",
    "value": 33333.33,
    "reason": "top_rank",
-   "rank": 7,
-   "score": 0.905
+   "rank": 12,
+   "score": 0.833
+  },
+  {
+   "symbol": "CHENNPETRO.NS",
+   "side": "BUY",
+   "decided_on": "2026-11-04",
+   "value": 33333.33,
+   "reason": "top_rank",
+   "rank": 13,
+   "score": 0.819
   },
   {
    "symbol": "BHEL.NS",
@@ -73,71 +127,17 @@
    "decided_on": "2026-11-04",
    "value": 33333.33,
    "reason": "top_rank",
-   "rank": 8,
-   "score": 0.891
-  },
-  {
-   "symbol": "ACMESOLAR.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-04",
-   "value": 33333.33,
-   "reason": "top_rank",
-   "rank": 9,
-   "score": 0.878
-  },
-  {
-   "symbol": "BELRISE.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-04",
-   "value": 33333.33,
-   "reason": "top_rank",
-   "rank": 10,
-   "score": 0.864
-  },
-  {
-   "symbol": "BBOX.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-04",
-   "value": 33333.33,
-   "reason": "top_rank",
-   "rank": 11,
-   "score": 0.85
-  },
-  {
-   "symbol": "BALRAMCHIN.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-04",
-   "value": 33333.33,
-   "reason": "top_rank",
-   "rank": 12,
-   "score": 0.837
-  },
-  {
-   "symbol": "AUROPHARMA.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-04",
-   "value": 33333.33,
-   "reason": "top_rank",
-   "rank": 13,
-   "score": 0.823
-  },
-  {
-   "symbol": "AJANTPHARM.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-04",
-   "value": 33333.33,
-   "reason": "top_rank",
    "rank": 14,
-   "score": 0.81
+   "score": 0.806
   },
   {
-   "symbol": "BHARATFORG.NS",
+   "symbol": "SONACOMS.NS",
    "side": "BUY",
    "decided_on": "2026-11-04",
    "value": 33333.33,
    "reason": "top_rank",
    "rank": 15,
-   "score": 0.796
+   "score": 0.792
   }
  ],
  "last_rebalance": "2026-11",

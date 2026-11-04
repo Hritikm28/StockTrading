@@ -6,12 +6,13 @@ _Generated 2026-11-04 by factor_lab.py. Period 2016-10-28 to 2026-11-04, 501 can
 
 | Variant | CAGR | NIFTY | Excess | Max fall | Sharpe | Turnover/yr | Months beating NIFTY | Chance it's skill |
 |---|---|---|---|---|---|---|---|---|
-| Momentum 12-1 without the trend gate | 25.14% | 10.72% | **+14.42%** | -44.1% | 1.0 | 188% | 54.9% | 91.7% |
-| Risk-adjusted momentum + 52-week high | 16.84% | 10.72% | **+6.12%** | -33.2% | 0.95 | 261% | 52.5% | 55.5% |
-| Momentum 12-1 (live today) | 16.0% | 10.72% | **+5.28%** | -35.3% | 0.81 | 206% | 48.4% | 49.4% |
-| Risk-adjusted momentum (NSE style) | 15.28% | 10.72% | **+4.56%** | -35.2% | 0.84 | 248% | 50.0% | 46.1% |
-| Momentum, steady climbers preferred | 12.94% | 10.72% | **+2.22%** | -34.9% | 0.74 | 236% | 47.5% | 33.1% |
-| Closeness to 52-week high | 12.57% | 10.72% | **+1.85%** | -31.9% | 0.83 | 537% | 44.3% | 28.2% |
+| Momentum 12-1 without the trend gate | 25.14% | 10.72% | **+14.42%** | -44.1% | 1.0 | 188% | 54.9% | 91.1% |
+| Momentum 12-1, half invested when the trend breaks | 20.37% | 10.72% | **+9.64%** | -39.0% | 0.93 | 199% | 53.3% | 74.9% |
+| Risk-adjusted momentum + 52-week high | 16.84% | 10.72% | **+6.12%** | -33.2% | 0.95 | 261% | 52.5% | 53.9% |
+| Momentum 12-1 (live today) | 16.0% | 10.72% | **+5.28%** | -35.3% | 0.81 | 206% | 48.4% | 47.8% |
+| Risk-adjusted momentum (NSE style) | 15.28% | 10.72% | **+4.56%** | -35.2% | 0.84 | 248% | 50.0% | 44.6% |
+| Momentum, steady climbers preferred | 12.94% | 10.72% | **+2.22%** | -34.9% | 0.74 | 236% | 47.5% | 31.8% |
+| Closeness to 52-week high | 12.57% | 10.72% | **+1.85%** | -31.9% | 0.83 | 537% | 44.3% | 27.0% |
 
 _"Chance it's skill" is the deflated Sharpe ratio of the monthly gap to NIFTY: the probability the edge is real after charging for every variant in this table. 95%+ is convincing; under 50% means luck explains it as well as skill. It does not charge for ideas tried before this lab existed, so read it as an upper bound too._
 
@@ -25,14 +26,16 @@ _"Chance it's skill" is the deflated Sharpe ratio of the monthly gap to NIFTY: t
 | Closeness to 52-week high | -18.6 / -5.2 | 32.5 / 28.6 | -14.7 / 3.2 | -9.1 / 12.0 | 52.7 / 14.9 | 48.3 / 24.1 | -5.0 / 4.3 | 55.0 / 20.0 | 31.2 / 8.8 | -7.3 / 10.5 | -3.5 / -8.3 |
 | Risk-adjusted momentum + 52-week high | -19.6 / -5.2 | 45.9 / 28.6 | -1.6 / 3.2 | -4.5 / 12.0 | 31.4 / 14.9 | 76.5 / 24.1 | 4.0 / 4.3 | 56.0 / 20.0 | 31.1 / 8.8 | -7.1 / 10.5 | -5.9 / -8.3 |
 | Momentum 12-1 without the trend gate | -13.2 / -5.2 | 67.1 / 28.6 | 5.2 / 3.2 | 1.3 / 12.0 | 22.8 / 14.9 | 74.7 / 24.1 | 6.3 / 4.3 | 34.7 / 20.0 | 50.6 / 8.8 | -1.8 / 10.5 | 34.6 / -8.3 |
+| Momentum 12-1, half invested when the trend breaks | -18.6 / -5.2 | 62.6 / 28.6 | -1.2 / 3.2 | -6.4 / 12.0 | 27.0 / 14.9 | 77.9 / 24.1 | 3.5 / 4.3 | 31.9 / 20.0 | 51.0 / 8.8 | -2.0 / 10.5 | 14.6 / -8.3 |
 
 ## The trend gate on NIFTY itself (no survivorship bias)
 
-Holding NIFTY only while it is above its 200-day average (selling 2% below, 0.1% cost per switch), versus simply holding it. No stock list is involved, so this isolates what the gate adds or costs.
+Holding NIFTY fully while it is above its 200-day average and cutting back when it falls 2% below (0.1% cost per switch), versus simply holding it. No stock list is involved, so this isolates what the gate adds or costs.
 
 | | Yearly return | Worst fall |
 |---|---|---|
-| NIFTY with the gate | 6.61% | -20.5% |
+| Gate: sell everything | 6.61% | -20.5% |
+| Gate: sell half | 8.66% | -27.3% |
 | NIFTY held throughout | 10.41% | -38.4% |
 
 The gate switched 2.5 times a year.

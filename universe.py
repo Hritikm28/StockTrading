@@ -136,6 +136,21 @@ def _median_traded_value(symbol: str) -> Optional[float]:
         return None
 
 
+def get_candidates() -> List[str]:
+    """Every NIFTY 500 constituent as ['SYMBOL.NS', ...].
+
+    quick_update_data keeps price data for all of these, not just the
+    traded universe: get_universe can only rank stocks it has data for,
+    and when only the universe was downloaded, the data-less names it
+    appended alphabetically to fill a cold start became permanent — by
+    Nov 2026, 100 of the 150 universe stocks started with A, B or C.
+    """
+    n500 = fetch_nifty500_list()
+    if n500 is None or n500.empty:
+        return list(FALLBACK_UNIVERSE)
+    return [f"{s}.NS" for s in n500['Symbol'].tolist()]
+
+
 def get_universe(max_size: int = None,
                  min_traded_value: float = None,
                  verbose: bool = False) -> List[str]:

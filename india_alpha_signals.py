@@ -1730,6 +1730,53 @@ class ShareholdingDeltaAlpha:
 
 
 # ==============================================================================
+# RISK-ADJUSTED MOMENTUM ALPHA  (NIFTY200 Momentum 30 style, cross-sectional)
+# ==============================================================================
+class RiskAdjMomentumAlpha:
+    """
+    Risk-adjusted momentum: 6- and 12-month returns (to one month ago), each
+    divided by the stock's 1-year volatility, standardised across the
+    universe and averaged — the ranking behind NSE's NIFTY200 Momentum 30.
+
+    Plain momentum rewards a stock that jumped 60% on one burst of news as
+    much as one that climbed 60% steadily; dividing by volatility prefers the
+    steady climber, which is less prone to the sharp reversals that make
+    momentum crash. Definitions live in factors.py and are shared with the
+    research lab, so the backtested and live versions are identical.
+    """
+
+    _key: Optional[Tuple] = None
+    _scores: Dict[str, float] = {}
+
+    @classmethod
+    def _build(cls, as_of_date: date, data_dir: str) -> Dict[str, float]:
+        from factors import riskadj_scores, rank_to_score
+        closes = {}
+        cutoff = pd.Timestamp(as_of_date)
+        for f in Path(data_dir).glob("*.parquet"):
+            if f.stem in ('NIFTY50', 'NIFTYBANK', 'INDIAVIX'):
+                continue
+            try:
+                df = pd.read_parquet(f, columns=['Close'])
+                df.index = pd.to_datetime(df.index)
+                c = df[df.index <= cutoff].sort_index()['Close'].dropna()
+                closes[f.stem] = c.to_numpy()[-300:]
+            except Exception:
+                continue
+        return rank_to_score(riskadj_scores(closes))
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date,
+                   data_dir: str = "data/stocks") -> Tuple[float, float]:
+        key = (as_of_date, data_dir)
+        if cls._key != key:
+            cls._scores = cls._build(as_of_date, data_dir)
+            cls._key = key
+        s = cls._scores.get(symbol.replace('.NS', '').upper())
+        return (0.0, 0.0) if s is None else (float(s), 70.0)
+
+
+# ==============================================================================
 # QUALITY ALPHA  (profitability + low leverage, cross-sectional)
 # ==============================================================================
 class QualityAlpha:
@@ -1837,6 +1884,7 @@ class IndiaAlphaAggregator:
         'sast':         0.06,   # SAST stake changes (new)
         'shp_delta':    0.05,   # quarterly promoter stake delta (new)
         'quality':      0.06,   # ROE + low debt (incubating)
+        'mom_riskadj':  0.17,   # NSE-style risk-adjusted momentum (incubating)
     }
 
     @classmethod
@@ -1887,6 +1935,8 @@ class IndiaAlphaAggregator:
             'shp_delta':    lambda: ShareholdingDeltaAlpha.get_signal(
                                 symbol, as_of_date),
             'quality':      lambda: QualityAlpha.get_signal(symbol, as_of_date),
+            'mom_riskadj':  lambda: RiskAdjMomentumAlpha.get_signal(
+                                symbol, as_of_date, data_dir),
         }
 
         # Tier system (signal_decay_detector): live alphas = core +

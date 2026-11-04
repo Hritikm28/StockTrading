@@ -538,6 +538,7 @@ class MultiAlphaEngine:
             'pead':         0.12,  # Earnings follow-through (dark: no data)
             'mean_rev':     0.04,  # Less useful in strong trends
             'quality':      0.08,
+            'mom_riskadj':  0.20,
             'bulk_deal':    0.05,
             'insider':      0.03,
             'delivery_pct': 0.13,  # institutional accumulation — live + edge
@@ -553,6 +554,7 @@ class MultiAlphaEngine:
             'pead':         0.06,
             'mean_rev':     0.18,  # Bear market bounces
             'quality':      0.08,
+            'mom_riskadj':  0.20,
             'bulk_deal':    0.07,
             'insider':      0.04,
             'delivery_pct': 0.13,  # distribution pattern — live + edge
@@ -568,6 +570,7 @@ class MultiAlphaEngine:
             'pead':         0.13,  # dark: no data feed currently
             'mean_rev':     0.12,  # mean reversion useful but shadow (neg edge)
             'quality':      0.08,
+            'mom_riskadj':  0.20,
             'bulk_deal':    0.07,
             'insider':      0.04,
             'delivery_pct': 0.16,  # live + best measured 5d edge → top weight
@@ -582,6 +585,7 @@ class MultiAlphaEngine:
             'fii_dii':      0.22,  # FII flows dominate (dark: no data)
             'mean_rev':     0.22,  # Deep oversold bounces
             'quality':      0.08,
+            'mom_riskadj':  0.20,
             'pead':         0.04,
             'bulk_deal':    0.07,
             'insider':      0.04,
@@ -709,6 +713,7 @@ class MultiAlphaEngine:
             'sast':         'sast',
             'shp_delta':    'shp_delta',
             'quality':      'quality',
+            'mom_riskadj':  'mom_riskadj',
         }
         conf_mults = _confidence_multipliers()
         for alpha_key, weight_key in alpha_name_map.items():

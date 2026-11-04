@@ -1,0 +1,83 @@
+name: Factor Lab
+
+# Ten-year replay of the portfolio rules for every ranking variant in
+# factor_lab.py. Monthly, on demand, and whenever the lab or the shared
+# factor definitions change. The report is printed to the job log on any
+# branch and committed (research/) only from master.
+on:
+  schedule:
+    - cron: '17 3 1 * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'factor_lab.py'
+      - 'factors.py'
+      - '.github/workflows/factor_lab.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: factor-lab
+  cancel-in-progress: false
+
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Compute week key
+        id: wk
+        run: echo "wk=$(date -u +%G%V)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Restore ten-year price panel
+        uses: actions/cache@v4
+        with:
+          path: data/lab
+          key: labpanel-v1-${{ steps.wk.outputs.wk }}
+          restore-keys: |
+            labpanel-v1-
+
+      - name: Install dependencies
+        run: pip install -r requirements_engine.txt
+
+      - name: Run the lab
+        run: python factor_lab.py
+
+      - name: Show report
+        run: cat research/factor_lab_report.md
+
+      - name: Commit report
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config pull.rebase false
+          git add research/
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "research: factor lab $(date -u +'%Y-%m-%d')"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin master
+            git merge -X ours origin/master --no-edit || true
+            if git push origin HEAD:master; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "ERROR: could not push after 5 attempts" >&2
+          exit 1

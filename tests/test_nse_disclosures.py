@@ -146,3 +146,14 @@ def test_collect_dedups_and_writes_both_copies(tmp_path, monkeypatch):
     calls.clear()
     h = nd.collect(get, date(2026, 11, 4))
     assert calls == [nd.RSS_URL] and len(h) == 2     # nothing re-fetched
+
+
+def test_refiled_duplicates_count_once():
+    one = {'category': 'Promoter', 'value': 1e7, 'txn': 'Buy',
+           'mode': 'Market Purchase', 'date': '2026-10-19'}
+    single = rows_for(('DUPCO', '2026-10-20', one))
+    triple = rows_for(('DUPCO', '2026-10-20', one), ('DUPCO', '2026-10-20', one),
+                      ('DUPCO', '2026-10-20', one))
+    assert len(triple) == 3
+    as_of = date(2026, 10, 25)
+    assert nd.insider_scores(triple, as_of) == nd.insider_scores(single, as_of)

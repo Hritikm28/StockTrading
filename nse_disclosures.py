@@ -177,7 +177,14 @@ def collect(get: Callable = None, today: Optional[date] = None) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # Signals
 # ---------------------------------------------------------------------------
+# Companies often file the same disclosure more than once (separate XBRL
+# files with identical contents); count each trade once.
+SAME_TRADE = ['symbol', 'trade_date', 'category', 'txn', 'mode', 'value_inr',
+              'shares']
+
+
 def _recent(df: pd.DataFrame, as_of: date, days: int) -> pd.DataFrame:
+    df = df.drop_duplicates(SAME_TRADE)
     d = pd.to_datetime(df['trade_date'], errors='coerce')
     filed = pd.to_datetime(df['filed'], errors='coerce')
     known = filed <= pd.Timestamp(as_of)         # only filings public by then

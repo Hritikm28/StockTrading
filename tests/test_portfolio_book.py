@@ -94,7 +94,8 @@ def test_monthly_rebalance_keeps_buffer_and_sells_dropouts(market, tmp_path):
     assert 'S01.NS' in held and 'S00.NS' not in held
 
 
-def test_trend_exit_sells_everything_and_cancels_buys(market, tmp_path):
+def test_all_out_mode_sells_everything(market, tmp_path, monkeypatch):
+    monkeypatch.setattr(pb, 'LOW_EXPOSURE', 0.0)
     step(market, tmp_path, d('2026-11-03'))
     step(market, tmp_path, d('2026-11-04'))
     r = step(market, tmp_path, d('2026-11-05'), gate=False, vs200=-3.0)
@@ -105,7 +106,9 @@ def test_trend_exit_sells_everything_and_cancels_buys(market, tmp_path):
     assert r['status'] == 'CASH' and r['n_holdings'] == 0
 
 
-def test_inside_exit_band_holds_but_never_buys(market, tmp_path):
+def test_all_out_mode_inside_band_holds_but_never_buys(market, tmp_path,
+                                                       monkeypatch):
+    monkeypatch.setattr(pb, 'LOW_EXPOSURE', 0.0)
     r = step(market, tmp_path, d('2026-11-03'), gate=False, vs200=-1.0)
     assert r['action'] == 'CASH' and r['orders'] == []
     step(market, tmp_path, d('2026-11-04'))
@@ -153,3 +156,44 @@ def test_unfillable_orders_expire(market, tmp_path):
                 market, tmp_path / "book.json")
     book = pb.load_book(d('2026-11-03'), tmp_path / "book.json")
     assert 'GHOST.NS' not in {o['symbol'] for o in book['pending']}
+
+
+def test_trend_break_cuts_every_holding_to_half_then_restores(market, tmp_path):
+    step(market, tmp_path, d('2026-11-03'))
+    full = step(market, tmp_path, d('2026-11-04'))
+    shares = {h['symbol']: h for h in full['holdings']}
+    r = step(market, tmp_path, d('2026-11-05'), gate=False, vs200=-3.0)
+    assert r['action'] == 'TREND_CUT' and r['exposure_pct'] == 50
+    assert len(r['orders']) == pb.TARGET_HOLDINGS
+    assert all(o['side'] == 'SELL' and o['fraction'] == 0.5 for o in r['orders'])
+    r = step(market, tmp_path, d('2026-11-06'), gate=False, vs200=-3.0)
+    assert r['n_holdings'] == pb.TARGET_HOLDINGS          # still holds all 15
+    assert 45 < r['cash_pct'] < 55                        # about half in cash
+    r = step(market, tmp_path, d('2026-11-09'), gate=False, vs200=-1.0)
+    assert r['orders'] == [] and r['exposure_pct'] == 50  # inside band: wait
+    r = step(market, tmp_path, d('2026-11-10'), vs200=1.0)
+    assert r['action'] == 'TREND_RESTORED' and r['exposure_pct'] == 100
+    assert all(o['side'] == 'BUY' and o['topup'] for o in r['orders'])
+    r = step(market, tmp_path, d('2026-11-11'), vs200=1.0)
+    assert r['cash_pct'] < 2 and r['n_holdings'] == pb.TARGET_HOLDINGS
+
+
+def test_half_mode_enters_at_half_size_while_trend_is_down(market, tmp_path):
+    r = step(market, tmp_path, d('2026-11-03'), gate=False, vs200=-1.0)
+    assert r['action'] == 'BUY' and r['exposure_pct'] == 50
+    assert len(r['orders']) == pb.TARGET_HOLDINGS
+    per = pb.START_CAPITAL / pb.TARGET_HOLDINGS
+    assert all(o['value'] == pytest.approx(per / 2, rel=1e-3) for o in r['orders'])
+    r = step(market, tmp_path, d('2026-11-04'), gate=False, vs200=-1.0)
+    assert 45 < r['cash_pct'] < 55
+
+
+def test_partial_sell_keeps_cost_basis_proportional(market, tmp_path):
+    step(market, tmp_path, d('2026-11-03'))
+    step(market, tmp_path, d('2026-11-04'))
+    before = pb.load_book(d('2026-11-04'), tmp_path / "book.json")['holdings']['S00.NS']
+    step(market, tmp_path, d('2026-11-05'), gate=False, vs200=-3.0)
+    step(market, tmp_path, d('2026-11-06'), gate=False, vs200=-3.0)
+    after = pb.load_book(d('2026-11-06'), tmp_path / "book.json")['holdings']['S00.NS']
+    assert after['shares'] == pytest.approx(before['shares'] / 2)
+    assert after['cost_basis'] == pytest.approx(before['cost_basis'] / 2)

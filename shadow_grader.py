@@ -25,7 +25,7 @@ where data/stocks holds prices.
 Writes paper_trading/results/shadow_report.json and shadow_report.md
 
 Usage:
-    python shadow_grader.py [--since 2026-07-01] [--hold 20] [--top 5]
+    python shadow_grader.py [--since 2026-07-01] [--hold 20] [--top 15]
 """
 
 import argparse
@@ -260,7 +260,7 @@ def _pct(x) -> Optional[float]:
 # ---------------------------------------------------------------------------
 # Report
 # ---------------------------------------------------------------------------
-def build(since: str = "2026-07-01", hold: int = 20, top: int = 5) -> Dict:
+def build(since: str = "2026-07-01", hold: int = 20, top: int = 15) -> Dict:
     since_ts = pd.Timestamp(since)
     scores, gates = load_rankings(since_ts)
     report = {'generated': date.today().isoformat(), 'since': since,
@@ -449,7 +449,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[1])
     ap.add_argument('--since', default='2026-07-01')
     ap.add_argument('--hold', type=int, default=20)
-    ap.add_argument('--top', type=int, default=5)
+    ap.add_argument('--top', type=int, default=15)   # portfolio_book size
     args = ap.parse_args(argv)
     report = build(args.since, args.hold, args.top)
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)

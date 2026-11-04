@@ -12,10 +12,10 @@ What it does:
   3. Runs India-specific alpha signals (FII/DII, bulk deals, PEAD, etc.)
   4. Combines via regime-adaptive multi-alpha engine
   5. Cross-sectionally ranks the universe
-  6. Applies portfolio risk gates (correlation, heat, sector)
-  7. Outputs today's TOP BUY/SELL signals with stop-loss + targets
-  8. Saves to paper_trading/records/signals_YYYY-MM-DD.csv
-  9. Tracks prediction outcomes for model improvement
+  6. Updates the paper portfolio (portfolio_book.py): fills yesterday's
+     orders, marks NAV, decides orders for the next open
+  7. Saves today's BUY orders to paper_trading/records/signals_YYYY-MM-DD.csv
+  8. Tracks prediction outcomes for model improvement
 
 Usage:
     python daily_runner.py                      # Full universe (Nifty 500 subset)
@@ -86,19 +86,11 @@ class RunnerConfig:
     except Exception:
         DEFAULT_UNIVERSE = NIFTY_50 + NIFTY_NEXT_50_ADDITIONS
 
-    # Risk
-    # [2026-07-02] 10 -> 5. Costs were eating the edge: ~8-10 signals/day on
-    # 5-day holds churns ~40% of capital weekly at 0.40% a round trip, versus
-    # a measured alpha edge of IC ~0.02. Half the positions + 4x the hold
-    # (below) cuts cost drag ~5x for the same signal quality.
-    MAX_POSITIONS = 5
-    MAX_PORTFOLIO_HEAT_PCT = 30.0
-    MAX_SINGLE_POSITION_PCT = 2.4
-    MAX_CORRELATION = 0.70
-    MAX_SECTOR_WEIGHT_PCT = 30.0
-    KELLY_FRACTION = 0.25
+    # Position count, sizing, rebalancing and the trend exit live in
+    # portfolio_book.py (15 names, monthly replacements, rank buffer).
 
-    # Signal quality gates
+    # Signal quality gates (label the engine's per-stock BUY/HOLD view; the
+    # portfolio book selects by rank and does not use them)
     # [2026-06-19] Confidence floor 60 -> 65 and score 0.25 -> 0.30. The graded
     # track record (169 trades) showed composite_score has ~zero rank-correlation
     # with the 5d outcome (rho +0.02), while composite_confidence is monotonically
@@ -106,10 +98,6 @@ class RunnerConfig:
     # low-confidence. So we lean on the confidence gate and tighten the score bar.
     MIN_SIGNAL_CONFIDENCE = 65.0  # % — only show signals above this
     MIN_COMPOSITE_SCORE = 0.30    # absolute alpha score required
-
-    # Stop-loss / target (ATR multiples)
-    ATR_STOP_MULT = 2.0
-    ATR_TARGET_MULT = 3.0
 
     # Output
     RECORDS_DIR = ROOT / "paper_trading" / "records"
@@ -273,234 +261,6 @@ class MLSignalGenerator:
 
 
 # ==============================================================================
-# PORTFOLIO RISK GATE
-# ==============================================================================
-class PortfolioRiskGate:
-    """
-    Applies all risk constraints before finalising signals.
-    Enforces: correlation, sector, heat, position count, Kelly sizing.
-    """
-
-    def __init__(self, config: RunnerConfig):
-        self.config = config
-
-    def _get_returns(self, symbol: str, lookback: int = 60) -> pd.Series:
-        nse_sym = symbol.replace('.NS', '').upper()
-        fpath = self.config.DATA_DIR / f"{nse_sym}.parquet"
-        if fpath.exists():
-            try:
-                df = pd.read_parquet(fpath)
-                df.index = pd.to_datetime(df.index)
-                df = df.sort_index()
-                return df['Close'].pct_change().dropna().iloc[-lookback:]
-            except Exception:
-                pass
-        return pd.Series(dtype=float)
-
-    def _fetch_yf(self, symbol: str, days: int = 30) -> pd.DataFrame:
-        """Fetch recent OHLCV from yfinance as fallback."""
-        try:
-            import yfinance as yf
-            from datetime import timedelta
-            end   = date.today()
-            start = end - timedelta(days=days)
-            df = yf.download(symbol, start=start, end=end,
-                             progress=False, auto_adjust=False)
-            if isinstance(df.columns, pd.MultiIndex):
-                df.columns = df.columns.get_level_values(0)
-            return df if not df.empty else pd.DataFrame()
-        except Exception:
-            return pd.DataFrame()
-
-    def _get_atr(self, symbol: str) -> float:
-        nse_sym = symbol.replace('.NS', '').upper()
-        fpath = self.config.DATA_DIR / f"{nse_sym}.parquet"
-        # Try local parquet first
-        if fpath.exists():
-            try:
-                df = pd.read_parquet(fpath)
-                df = df.sort_index()
-                val = float((df['High'] - df['Low']).rolling(14).mean().iloc[-1])
-                if not np.isnan(val) and val > 0:
-                    return val
-            except Exception:
-                pass
-        # Fallback: yfinance
-        try:
-            df = self._fetch_yf(symbol, days=60)
-            if not df.empty:
-                val = float((df['High'] - df['Low']).rolling(14).mean().iloc[-1])
-                if not np.isnan(val) and val > 0:
-                    return val
-        except Exception:
-            pass
-        return 0.0
-
-    def _get_current_price(self, symbol: str) -> float:
-        nse_sym = symbol.replace('.NS', '').upper()
-        fpath = self.config.DATA_DIR / f"{nse_sym}.parquet"
-        # Try local parquet first
-        if fpath.exists():
-            try:
-                df = pd.read_parquet(fpath)
-                val = float(df['Close'].iloc[-1])
-                if not np.isnan(val) and val > 0:
-                    return val
-            except Exception:
-                pass
-        # Fallback: yfinance
-        try:
-            df = self._fetch_yf(symbol, days=5)
-            if not df.empty:
-                val = float(df['Close'].iloc[-1])
-                if not np.isnan(val) and val > 0:
-                    return val
-        except Exception:
-            pass
-        return 0.0
-
-    def filter_and_size(
-        self,
-        ranked_df: pd.DataFrame,
-        total_capital: float,
-        current_positions: list,
-        sector_map: dict,
-    ) -> list:
-        """
-        Filter and size the top signals from ranked_df.
-
-        Returns list of trade dicts:
-          symbol, signal, confidence, composite_score,
-          current_price, stop_loss, target, position_size_inr,
-          position_pct, risk_reward, reject_reason
-        """
-        from PortfolioRiskLimits import PortfolioRiskLimits
-
-        approved = []
-        rejected = []
-        current_heat = sum(p.get('position_pct', 0) for p in current_positions)
-        current_syms = [p['symbol'] for p in current_positions]
-        returns_cache = {}
-
-        for _, row in ranked_df.iterrows():
-            # [2026-06-19] LONG-ONLY: the system is structurally long-only (200-DMA
-            # gate, circuit breaker, "cash is the alternative"). SELL/short signals
-            # were graded with no short sign-flip (a SELL's "return" was just the
-            # stock's forward return), so they were both mis-measured and losing
-            # (-1.85% avg while NIFTY rose). We no longer approve shorts.
-            if row['signal'] != 'BUY':
-                continue
-            if row['composite_confidence'] < self.config.MIN_SIGNAL_CONFIDENCE:
-                rejected.append({'symbol': row['symbol'], 'reason': 'low_confidence'})
-                continue
-
-            symbol = row['symbol']
-            nse_sym = symbol.replace('.NS', '').upper()
-
-            # ── Position count gate ──────────────────────────────────────────
-            if len(approved) + len(current_positions) >= self.config.MAX_POSITIONS:
-                rejected.append({'symbol': symbol, 'reason': 'max_positions'})
-                continue
-
-            # ── Correlation gate ─────────────────────────────────────────────
-            if current_syms:
-                # Build returns dict lazily
-                for s in current_syms + [symbol]:
-                    if s not in returns_cache:
-                        returns_cache[s] = self._get_returns(s)
-                allowed, corr_val, corr_sym = PortfolioRiskLimits.check_correlation(
-                    new_symbol=symbol,
-                    current_symbols=current_syms,
-                    returns_data=returns_cache,
-                    lookback=60
-                )
-                if not allowed:
-                    rejected.append({'symbol': symbol, 'reason': f'corr_{corr_val:.2f}_{corr_sym}'})
-                    continue
-
-            # ── Sector concentration gate ────────────────────────────────────
-            if symbol in sector_map and not PortfolioRiskLimits.check_sector_concentration(
-                current_positions=[{'symbol': s, 'kelly_pct': p.get('position_pct', 0)}
-                                    for s, p in zip(current_syms, current_positions)],
-                new_symbol=nse_sym,
-                new_kelly_pct=self.config.MAX_SINGLE_POSITION_PCT,
-                sector_map={s.replace('.NS', '').upper(): v for s, v in sector_map.items()}
-            ):
-                rejected.append({'symbol': symbol, 'reason': 'sector_concentration'})
-                continue
-
-            # ── Portfolio heat gate ──────────────────────────────────────────
-            kelly_pct = self.config.MAX_SINGLE_POSITION_PCT  # simplified
-            scaled = PortfolioRiskLimits.check_portfolio_heat(
-                current_positions=[{'kelly_pct': p.get('position_pct', 0)} for p in current_positions]
-                                   + [{'kelly_pct': t.get('position_pct', 0)} for t in approved],
-                new_position_kelly=kelly_pct
-            )
-            if scaled <= 0:
-                rejected.append({'symbol': symbol, 'reason': 'portfolio_heat'})
-                continue
-
-            # ── Price, stop-loss, target ─────────────────────────────────────
-            current_price = self._get_current_price(symbol)
-            atr = self._get_atr(symbol)
-
-            if not current_price or current_price <= 0 or np.isnan(current_price):
-                rejected.append({'symbol': symbol, 'reason': 'no_price'})
-                continue
-
-            atr_pct = atr / current_price if current_price > 0 else 0.02
-            atr_pct = max(atr_pct, 0.005)  # Floor at 0.5%
-
-            if row['signal'] == 'BUY':
-                stop_loss = current_price * (1 - atr_pct * self.config.ATR_STOP_MULT)
-                target = current_price * (1 + atr_pct * self.config.ATR_TARGET_MULT)
-            else:
-                stop_loss = current_price * (1 + atr_pct * self.config.ATR_STOP_MULT)
-                target = current_price * (1 - atr_pct * self.config.ATR_TARGET_MULT)
-
-            risk_per_trade = abs(current_price - stop_loss) / current_price
-            reward_per_trade = abs(target - current_price) / current_price
-            rr_ratio = reward_per_trade / risk_per_trade if risk_per_trade > 0 else 0
-
-            # ── Position sizing (Kelly-scaled by confidence, vol-adjusted) ───
-            conf_pct = row['composite_confidence'] / 100.0
-            kelly_sized_pct = (self.config.MAX_SINGLE_POSITION_PCT *
-                               self.config.KELLY_FRACTION *
-                               conf_pct * 4)  # scale back to ~2-3% range
-            # Risk parity: a 4%-ATR stock gets half the size of a 2%-ATR
-            # stock so each position risks roughly equal capital.
-            vol_adj = float(np.clip(0.02 / max(atr_pct, 0.005), 0.5, 1.5))
-            kelly_sized_pct = min(kelly_sized_pct * vol_adj,
-                                  self.config.MAX_SINGLE_POSITION_PCT)
-            position_size_inr = total_capital * kelly_sized_pct / 100.0
-
-            approved.append({
-                'symbol': symbol,
-                'signal': row['signal'],
-                'confidence': round(row['composite_confidence'], 1),
-                'composite_score': round(row['composite_score'], 3),
-                'current_price': round(current_price, 2),
-                'stop_loss': round(stop_loss, 2),
-                'target': round(target, 2),
-                'risk_reward': round(rr_ratio, 2),
-                'position_size_inr': round(position_size_inr, 0),
-                'position_pct': round(kelly_sized_pct, 2),
-                # Recommended holding window. [2026-07-02] 5 -> 20 days: with
-                # IC ~0.02 edges, 0.40% round-trip costs dominate at 5d holds
-                # (track record: -10% in 20 days, most of it cost churn).
-                # Momentum/PEAD-class edges persist for weeks — hold longer,
-                # pay the toll a quarter as often.
-                'hold_days': 20,
-                'regime': row.get('regime', 'UNKNOWN'),
-                'vix': row.get('vix', 0),
-                'alpha_breakdown': row.get('alpha_components', {}),
-            })
-            current_syms.append(symbol)
-
-        return approved, rejected
-
-
-# ==============================================================================
 # MAIN DAILY RUNNER
 # ==============================================================================
 class DailyRunner:
@@ -511,15 +271,27 @@ class DailyRunner:
         self.config.REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
         self.ml_generator = MLSignalGenerator(self.config)
-        self.risk_gate = PortfolioRiskGate(self.config)
+        self._sectors = None
 
-    def _get_sector_map(self) -> dict:
-        """Load sector map from sector_mapping.py."""
-        try:
-            from sector_mapping import SECTOR_MAP
-            return SECTOR_MAP
-        except Exception:
-            return {}
+    def _sector_of(self, symbol: str):
+        """Sector for the portfolio's per-sector cap: the hand-made map
+        first, then yfinance's sector from the quality cache for the ~40%
+        of the universe the map does not cover. None means uncapped."""
+        if self._sectors is None:
+            self._sectors = {}
+            try:
+                from quality_data import load as load_quality
+                for sym, rec in load_quality().items():
+                    if rec.get('sector'):
+                        self._sectors[sym] = rec['sector']
+            except Exception:
+                pass
+            try:
+                from sector_mapping import STOCK_SECTOR_MAP
+                self._sectors.update(STOCK_SECTOR_MAP)
+            except Exception:
+                pass
+        return self._sectors.get(symbol)
 
     def run(
         self,
@@ -528,7 +300,6 @@ class DailyRunner:
         total_capital: float = 1_000_000,
         quick_mode: bool = False,
         top_n: int = 10,
-        current_positions: list = None,
     ) -> dict:
         """
         Main daily run.
@@ -539,14 +310,12 @@ class DailyRunner:
             total_capital:     Portfolio capital (INR)
             quick_mode:        Skip ML training, use India alphas only
             top_n:             Number of top signals to show
-            current_positions: Existing open positions for risk checks
 
         Returns:
             Dict with signals, portfolio summary, regime info
         """
         as_of_date = as_of_date or date.today()
         symbols = symbols or self.config.DEFAULT_UNIVERSE
-        current_positions = current_positions or []
 
         print("\n" + "=" * 70)
         print(f"  DAILY TRADING RUNNER  —  {as_of_date}  —  Capital: ₹{total_capital:,.0f}")
@@ -626,26 +395,65 @@ class DailyRunner:
                 print(f"      [BREAKER] {n_gated} BUY signal(s) downgraded "
                       f"to HOLD (portfolio circuit breaker tripped)")
 
-        # ── STEP 3: Risk gate + Position sizing ─────────────────────────────
-        print(f"\n[3/4] Applying risk gates...")
-        sector_map = self._get_sector_map()
-        approved, rejected = self.risk_gate.filter_and_size(
-            ranked_df=ranked_df,
-            total_capital=total_capital,
-            current_positions=current_positions,
-            sector_map=sector_map,
-        )
-        print(f"      Approved: {len(approved)} signals | Rejected: {len(rejected)}")
+        # ── STEP 3: Paper portfolio (fills, NAV, today's orders) ────────────
+        print(f"\n[3/4] Updating the paper portfolio...")
+        from portfolio_book import run_book
+        meta = ranked_df.iloc[0] if len(ranked_df) else {}
+        book = run_book(
+            ranked_df, as_of_date,
+            gate_open=bool(meta.get('trend_gate_open', True)),
+            nifty_vs_200dma=meta.get('nifty_vs_200dma'),
+            breaker_tripped=breaker_tripped,
+            sector_of=self._sector_of,
+            data_dir=self.config.DATA_DIR)
+        approved = self._buy_orders(book, ranked_df, as_of_date)
+        n_sell = sum(1 for o in book['orders'] if o['side'] == 'SELL')
+        print(f"      {book['action']}: {len(approved)} buy / {n_sell} sell "
+              f"order(s) for the next open | {book['n_holdings']} held | "
+              f"NAV ₹{book['nav']:,.0f}")
 
         # ── STEP 4: Display + Save ───────────────────────────────────────────
         print(f"\n[4/4] Saving results...")
-        result = self._format_and_save(approved, rejected, ranked_df, as_of_date, total_capital)
+        result = self._format_and_save(approved, [], ranked_df, as_of_date,
+                                       total_capital, book)
 
-        self._print_final_report(approved, as_of_date, result['regime'])
+        self._print_final_report(approved, as_of_date, result['regime'], book)
 
         return result
 
-    def _format_and_save(self, approved, rejected, ranked_df, as_of_date, total_capital) -> dict:
+    def _buy_orders(self, book: dict, ranked_df: pd.DataFrame,
+                    as_of_date: date) -> list:
+        """Today's BUY orders in the approved-signal format that
+        publish_signals / paper_trade_tracker / email_summary read."""
+        rows = {r['symbol']: r for _, r in ranked_df.iterrows()}
+        out = []
+        for o in book['orders']:
+            if o['side'] != 'BUY':
+                continue
+            r = rows.get(o['symbol'], {})
+            price = None
+            f = self.config.DATA_DIR / f"{o['symbol'].replace('.NS', '')}.parquet"
+            try:
+                price = float(pd.read_parquet(f)['Close'].iloc[-1])
+            except Exception:
+                pass
+            out.append({
+                'symbol': o['symbol'], 'signal': 'BUY',
+                'confidence': round(float(r.get('composite_confidence', 0)), 1),
+                'composite_score': o['score'], 'rank': o['rank'],
+                'current_price': round(price, 2) if price else None,
+                'position_size_inr': o['value'],
+                'position_pct': round(o['value'] / book['nav'] * 100, 2)
+                                if book['nav'] else 0.0,
+                # held until it drops out of the top 30 at a monthly review
+                'hold_days': 20,
+                'regime': r.get('regime', 'UNKNOWN'), 'vix': r.get('vix', 0),
+                'alpha_breakdown': r.get('alpha_components', {}),
+            })
+        return out
+
+    def _format_and_save(self, approved, rejected, ranked_df, as_of_date,
+                         total_capital, book=None) -> dict:
         """Save results to CSV + JSON."""
         today_str = as_of_date.strftime('%Y-%m-%d')
 
@@ -700,6 +508,7 @@ class DailyRunner:
             'total_capital': total_capital,
             'approved_signals': approved,
             'rejected_count': len(rejected),
+            'portfolio': book or {},
             'full_ranking': ranked_df[['symbol', 'signal', 'composite_score',
                                         'composite_confidence', 'cs_label']].to_dict('records'),
         }
@@ -722,48 +531,30 @@ class DailyRunner:
 
         return result
 
-    def _print_final_report(self, approved, as_of_date, regime):
+    def _print_final_report(self, approved, as_of_date, regime, book):
         """Print clean final report."""
         print("\n" + "=" * 70)
-        print(f"  TODAY'S SIGNALS — {as_of_date}  [{regime} MARKET]")
+        print(f"  PORTFOLIO — {as_of_date}  [{regime} MARKET]  {book['action']}")
         print("=" * 70)
+        print(f"  NAV ₹{book['nav']:,.0f} | since {book['inception']}: "
+              f"{book['return_pct']:+.2f}% vs NIFTY "
+              f"{(book['nifty_return_pct'] or 0):+.2f}% | "
+              f"{book['n_holdings']}/{book['target_holdings']} held, "
+              f"{book['cash_pct']:.0f}% cash")
 
-        if not approved:
-            print("  ⚠️  No signals passed all filters today.")
-            print("      This is correct — quality over quantity.")
-            print("      Tomorrow may have better opportunities.")
-            return
-
-        buy_signals = [s for s in approved if s['signal'] == 'BUY']
-        sell_signals = [s for s in approved if s['signal'] == 'SELL']
-
-        if buy_signals:
-            print(f"\n  BUY SIGNALS ({len(buy_signals)}):")
-            print(f"  {'Symbol':<15} {'Price':>8} {'Stop':>8} {'Target':>8} {'R:R':>5} {'Size':>10} {'Conf':>5}")
-            print("  " + "-" * 65)
-            for s in buy_signals:
-                print(f"  {s['symbol']:<15} "
-                      f"₹{s['current_price']:>7,.1f} "
-                      f"₹{s['stop_loss']:>7,.1f} "
-                      f"₹{s['target']:>7,.1f} "
-                      f"{s['risk_reward']:>4.1f}x "
-                      f"₹{s['position_size_inr']:>9,.0f} "
-                      f"{s['confidence']:>4.0f}%")
-
-        if sell_signals:
-            print(f"\n  SELL/AVOID SIGNALS ({len(sell_signals)}):")
-            for s in sell_signals:
-                print(f"  {s['symbol']:<15} "
-                      f"₹{s['current_price']:>7,.1f} "
-                      f"Conf: {s['confidence']:.0f}%")
-
-        # Risk summary
-        total_deployed = sum(s['position_size_inr'] for s in approved)
-        total_heat = sum(s['position_pct'] for s in approved)
-        print(f"\n  PORTFOLIO HEAT: {total_heat:.1f}% / 30% max")
-        print(f"  CAPITAL DEPLOYED: ₹{total_deployed:,.0f}")
-        print(f"  POSITIONS TO ADD: {len(approved)}")
-        print("\n  IMPORTANT: Use stop-losses. Review at market open.")
+        sells = [o for o in book['orders'] if o['side'] == 'SELL']
+        if approved:
+            print(f"\n  BUY at next open ({len(approved)}):")
+            for s in approved:
+                print(f"  {s['symbol']:<15} rank {s['rank']:>3}  "
+                      f"score {s['composite_score']:+.2f}  "
+                      f"₹{s['position_size_inr']:>10,.0f}")
+        if sells:
+            print(f"\n  SELL at next open ({len(sells)}):")
+            for o in sells:
+                print(f"  {o['symbol']:<15} ({o['reason']})")
+        if not approved and not sells:
+            print("\n  No orders today.")
         print("=" * 70)
 
 

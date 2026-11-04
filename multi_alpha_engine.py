@@ -524,15 +524,20 @@ class MultiAlphaEngine:
     # bulk of the weight to the data-having, positive-edge alphas (delivery_pct,
     # sector_mom) while keeping momentum and the validated-but-dark alphas in the
     # map so they resume weight automatically when their data returns.
-    # ml_score stays SMALL: walk-forward 2020-2026 (walk_forward_report.md) shows
-    # the pooled model has no standalone edge (near-random AUC most years).
+    # [2026-11-04] ml_score 0: walk-forward 2020-2026 (walk_forward_report.md)
+    # showed the pooled model has no standalone edge, and four months of
+    # shadow grading showed the composite ranks no better than momentum
+    # alone. Only CORE/promoted alphas carry weight (signal_decay_detector);
+    # these numbers matter only once an alpha earns promotion. `quality` is
+    # the new incubating fundamentals alpha.
     REGIME_WEIGHTS = {
         'BULL': {
-            'ml_score':     0.08,
+            'ml_score':     0.0,
             'momentum':     0.20,  # 12-1 momentum shines in bull markets
             'fii_dii':      0.12,  # Flow momentum confirms trend (dark: no data)
             'pead':         0.12,  # Earnings follow-through (dark: no data)
             'mean_rev':     0.04,  # Less useful in strong trends
+            'quality':      0.08,
             'bulk_deal':    0.05,
             'insider':      0.03,
             'delivery_pct': 0.13,  # institutional accumulation — live + edge
@@ -542,11 +547,12 @@ class MultiAlphaEngine:
             'hi52':         0.06,
         },
         'BEAR': {
-            'ml_score':     0.06,
+            'ml_score':     0.0,
             'momentum':     0.04,  # Momentum destroys capital in bear markets
             'fii_dii':      0.15,  # FII selling is the bear driver (dark: no data)
             'pead':         0.06,
             'mean_rev':     0.18,  # Bear market bounces
+            'quality':      0.08,
             'bulk_deal':    0.07,
             'insider':      0.04,
             'delivery_pct': 0.13,  # distribution pattern — live + edge
@@ -556,11 +562,12 @@ class MultiAlphaEngine:
             'hi52':         0.02,
         },
         'SIDEWAYS': {
-            'ml_score':     0.06,
+            'ml_score':     0.0,
             'momentum':     0.10,
             'fii_dii':      0.10,  # dark: no data feed currently
             'pead':         0.13,  # dark: no data feed currently
             'mean_rev':     0.12,  # mean reversion useful but shadow (neg edge)
+            'quality':      0.08,
             'bulk_deal':    0.07,
             'insider':      0.04,
             'delivery_pct': 0.16,  # live + best measured 5d edge → top weight
@@ -570,10 +577,11 @@ class MultiAlphaEngine:
             'hi52':         0.05,
         },
         'CRISIS': {
-            'ml_score':     0.04,  # ML unreliable in extreme events
+            'ml_score':     0.0,
             'momentum':     0.04,
             'fii_dii':      0.22,  # FII flows dominate (dark: no data)
             'mean_rev':     0.22,  # Deep oversold bounces
+            'quality':      0.08,
             'pead':         0.04,
             'bulk_deal':    0.07,
             'insider':      0.04,
@@ -700,6 +708,7 @@ class MultiAlphaEngine:
             'pledge':       'pledge',
             'sast':         'sast',
             'shp_delta':    'shp_delta',
+            'quality':      'quality',
         }
         conf_mults = _confidence_multipliers()
         for alpha_key, weight_key in alpha_name_map.items():

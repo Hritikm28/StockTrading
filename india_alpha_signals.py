@@ -67,9 +67,27 @@ def _nse_session() -> requests.Session:
     return _NSE_SESSION
 
 
+_GET_FAILS: Dict[str, int] = {}
+_GET_BREAKER_LIMIT = 3
+
+
 def _safe_get(url: str, timeout: int = 10, headers: dict = None) -> Optional[requests.Response]:
     """Robust HTTP GET with retries; NSE API calls go through the
-    cookie-warmed session, everything else through plain requests."""
+    cookie-warmed session, everything else through plain requests.
+
+    A URL path that fails _GET_BREAKER_LIMIT calls in a row is skipped for
+    the rest of the run: several alphas call this once per stock, and ~5s
+    of retries per call per stock would push the daily run past its time
+    limit whenever a source is down."""
+    endpoint = url.split('?', 1)[0]
+    if _GET_FAILS.get(endpoint, 0) >= _GET_BREAKER_LIMIT:
+        return None
+    resp = _get_with_retries(url, timeout, headers)
+    _GET_FAILS[endpoint] = 0 if resp is not None else _GET_FAILS.get(endpoint, 0) + 1
+    return resp
+
+
+def _get_with_retries(url: str, timeout: int, headers: Optional[dict]) -> Optional[requests.Response]:
     _headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
         'Accept': 'application/json,text/html,*/*'

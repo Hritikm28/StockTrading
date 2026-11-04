@@ -1,11 +1,13 @@
 {
   "promoted": {
     "sector_mom": {
-      "active": true,
+      "active": false,
       "promoted_on": "2026-06-19",
       "win_rate": 60.5,
       "n_trades": 38,
-      "wilson_lower": 47.5
+      "wilson_lower": 47.5,
+      "demoted_on": "2026-11-04",
+      "demoted_why": "shadow 20d IC -0.107 over four months (shadow_report 2026-11-02)"
     }
   }
 }

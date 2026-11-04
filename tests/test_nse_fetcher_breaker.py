@@ -88,3 +88,24 @@ def test_yfinance_options_skipped_after_empty_streak(monkeypatch, fetcher):
     for i in range(fetcher.YF_OPTIONS_LIMIT + 10):
         fetcher.get_option_chain(f'S{i}')
     assert len(yf_calls) == fetcher.YF_OPTIONS_LIMIT
+
+
+def test_safe_get_stops_calling_a_dead_source(monkeypatch):
+    import india_alpha_signals as ias
+    import time
+    monkeypatch.setattr(time, 'sleep', lambda s: None)
+    monkeypatch.setattr(ias, '_GET_FAILS', {})
+    calls = []
+
+    def dead(url, headers=None, timeout=None):
+        calls.append(url)
+        raise ConnectionError("down")
+    monkeypatch.setattr(ias.requests, 'get', dead)
+    url = 'https://nsearchives.nseindia.com/content/equities/bulk.csv'
+    for _ in range(ias._GET_BREAKER_LIMIT):
+        assert ias._safe_get(url) is None
+    made = len(calls)
+    assert ias._safe_get(url + '?d=2') is None    # same path: skipped
+    assert len(calls) == made
+    ias._safe_get('https://nsearchives.nseindia.com/other.csv')
+    assert len(calls) > made                      # other sources unaffected

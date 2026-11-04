@@ -5,11 +5,11 @@ Monitors whether each alpha signal is still generating alpha, and manages
 which alphas are allowed real weight in the composite (the "tier" system).
 
 Tiers:
-  CORE       — walk-forward-validated alphas (momentum, pead, fii_dii).
-               Always live unless the kill-switch disables them.
-  PROMOTED   — incubating alphas that EARNED weight with live evidence:
-               >= PROMOTE_MIN_TRADES graded trades at >= PROMOTE_WIN_RATE
-               win rate with a Wilson lower bound above PROMOTE_LOWER_BOUND.
+  CORE       — momentum, the one alpha validated by both the 10-year
+               walk-forward and the shadow grade. Always live.
+  PROMOTED   — incubating alphas that EARNED weight in the shadow grade
+               (shadow_grader.py): 20-day rank IC >= PROMOTE_MIN_IC with
+               t >= PROMOTE_MIN_T over >= PROMOTE_MIN_DAYS graded days.
   INCUBATING — everything else. Scored and graded every day (shadow mode)
                but contributes ZERO weight to the composite until promoted.
 
@@ -27,7 +27,7 @@ Logic:
   - Loads performance.csv from paper_trade_tracker
   - For each alpha component, groups trades and measures 5d win rate
   - Wilson 95% upper bound < KILL_THRESHOLD with enough trades → DISABLED
-  - Wilson 95% lower bound > PROMOTE_LOWER_BOUND with enough trades → PROMOTED
+  - Shadow-graded rank IC clears the promotion bar → PROMOTED
   - Writes disabled_signals.json + alpha_tiers.json used by the engine
 
 Usage:
@@ -89,10 +89,20 @@ RET_COL_FALLBACK  = 'ret_1d'
 # evidence (dark feeds). They stay in ALL_SIGNALS and are shadow-graded, so
 # once their data flows they can EARN promotion through the incubator like
 # sector_mom did — but faith alone no longer grants composite weight.
-CORE_ALPHAS         = {'momentum', 'delivery_pct', 'sector_mom'}
-PROMOTE_MIN_TRADES  = 30     # evidence needed before an alpha earns weight
-PROMOTE_WIN_RATE    = 52.0   # observed win rate required
-PROMOTE_LOWER_BOUND = 45.0   # Wilson 95% lower bound must clear this
+# [2026-11-04] Momentum only. Four months of shadow grading (shadow_grader.py)
+# showed the full composite ranked no better than momentum alone (20d rank IC
+# +0.065 vs +0.066): delivery_pct ~0, sector_mom NEGATIVE (-0.107) four
+# months running. Both drop to the incubator. Promotion is now judged by the
+# shadow grade — every stock, every day, against real prices — instead of the
+# win rate of a handful of traded signals: an alpha needs a 20-day rank IC
+# of at least PROMOTE_MIN_IC with t >= PROMOTE_MIN_T over PROMOTE_MIN_DAYS
+# graded days, and loses promotion if its IC turns negative.
+CORE_ALPHAS         = {'momentum'}
+SHADOW_REPORT       = Path("paper_trading/results/shadow_report.json")
+PROMOTE_MIN_IC      = 0.03
+PROMOTE_MIN_T       = 2.0
+PROMOTE_MIN_DAYS    = 120    # about six months of daily rankings
+DEMOTE_MIN_DAYS     = 60
 
 
 # ---------------------------------------------------------------------------
@@ -114,6 +124,7 @@ ALL_SIGNALS = [
     'pledge',
     'sast',
     'shp_delta',
+    'quality',
 ]
 
 
@@ -374,44 +385,54 @@ def save_tiers(state: Dict):
         print(f"   Warning: could not save alpha tiers: {e}")
 
 
-def update_tiers(winrates: Dict, disabled: Dict) -> Dict:
+def load_shadow_ic(path: Path = SHADOW_REPORT) -> Dict:
+    """alpha -> 20-day rank-IC entry from the latest shadow grade."""
+    try:
+        rank_ic = json.loads(path.read_text()).get('rank_ic', {})
+    except Exception:
+        return {}
+    return {k: v.get('20d', {}) for k, v in rank_ic.items() if k != 'composite'}
+
+
+def update_tiers(disabled: Dict, shadow_ic: Optional[Dict] = None) -> Dict:
     """
-    Promote incubating alphas that earned weight with live evidence;
-    demote promoted alphas the kill-switch has disabled.
+    Promote incubating alphas whose shadow-graded rank IC proves an edge;
+    demote promoted alphas whose IC turned negative or that the kill-switch
+    disabled.
     """
     today = date.today()
     tiers = load_tiers()
     promoted = tiers.setdefault('promoted', {})
+    shadow_ic = load_shadow_ic() if shadow_ic is None else shadow_ic
 
-    for sig_name, stats in winrates.items():
-        if sig_name == '_overall' or sig_name in CORE_ALPHAS:
+    for sig_name in sorted(set(promoted) | set(shadow_ic)):
+        if sig_name in CORE_ALPHAS:
             continue
-        wr = stats['win_rate']
-        n  = stats['n_trades']
+        g = shadow_ic.get(sig_name, {})
+        ic, t, n = g.get('ic'), g.get('t_stat'), g.get('n_dates', 0) or 0
         is_promoted = promoted.get(sig_name, {}).get('active', False)
         is_disabled = disabled.get(sig_name, {}).get('disabled', False)
 
-        if is_promoted and is_disabled:
-            promoted[sig_name]['active']     = False
-            promoted[sig_name]['demoted_on'] = str(today)
-            print(f"   [DOWN] DEMOTED to incubator: {sig_name} "
-                  f"(kill-switch fired, wr {wr:.1f}%, n={n})")
+        if is_promoted:
+            why = None
+            if is_disabled:
+                why = 'kill-switch fired'
+            elif ic is not None and ic < 0 and n >= DEMOTE_MIN_DAYS:
+                why = f'shadow 20d IC {ic:+.3f} over {n} days'
+            if why:
+                promoted[sig_name].update(active=False, demoted_on=str(today),
+                                          demoted_why=why)
+                print(f"   [DOWN] DEMOTED to incubator: {sig_name} ({why})")
             continue
 
-        if (not is_promoted and not is_disabled
-                and n >= PROMOTE_MIN_TRADES
-                and wr >= PROMOTE_WIN_RATE
-                and _wilson_lower(wr, n) > PROMOTE_LOWER_BOUND):
-            promoted[sig_name] = {
-                'active':      True,
-                'promoted_on': str(today),
-                'win_rate':    wr,
-                'n_trades':    n,
-                'wilson_lower': round(_wilson_lower(wr, n), 1),
-            }
+        if (not is_disabled and ic is not None and t is not None
+                and ic >= PROMOTE_MIN_IC and t >= PROMOTE_MIN_T
+                and n >= PROMOTE_MIN_DAYS):
+            promoted[sig_name] = {'active': True, 'promoted_on': str(today),
+                                  'shadow_ic_20d': ic, 't_stat': t,
+                                  'n_dates': n}
             print(f"   [UP]  PROMOTED to live: {sig_name} "
-                  f"(wr {wr:.1f}%, n={n}, "
-                  f"95% lower bound {_wilson_lower(wr, n):.1f}%)")
+                  f"(shadow 20d IC {ic:+.3f}, t={t}, {n} days)")
 
     save_tiers(tiers)
     return tiers
@@ -420,9 +441,14 @@ def update_tiers(winrates: Dict, disabled: Dict) -> Dict:
 def get_live_alphas() -> set:
     """
     The set of alpha names allowed REAL weight in the composite:
-    core alphas + actively promoted alphas, minus anything the
-    kill-switch has disabled. Everything else runs in shadow mode
-    (scored + graded daily, zero composite weight).
+    core alphas + actively promoted alphas not disabled by the kill-switch.
+    Everything else runs in shadow mode (scored + graded daily, zero
+    composite weight).
+
+    The core alpha is exempt from the kill-switch: it is the strategy, and
+    switching it off on a month of 5-day trade outcomes would leave the
+    engine with nothing to rank by. The shadow grade and the portfolio
+    record judge it instead.
 
     Called by india_alpha_signals.py / multi_alpha_engine.py.
     """
@@ -430,7 +456,7 @@ def get_live_alphas() -> set:
     tiers    = load_tiers()
     promoted = {k for k, v in tiers.get('promoted', {}).items()
                 if v.get('active')}
-    return (CORE_ALPHAS | promoted) - disabled
+    return CORE_ALPHAS | (promoted - disabled)
 
 
 # ---------------------------------------------------------------------------
@@ -505,9 +531,8 @@ def print_decay_report(winrates: Dict, disabled: Dict):
     print(f"    Kill:    Wilson 95% upper bound < {KILL_THRESHOLD}% "
           f"with >= {MIN_TRADES_TO_KILL} trades")
     print(f"    Restore: >= {RESTORE_THRESHOLD}% win rate over {LOOKBACK_DAYS} days")
-    print(f"    Promote: >= {PROMOTE_WIN_RATE}% win rate, "
-          f">= {PROMOTE_MIN_TRADES} trades, "
-          f"Wilson 95% lower bound > {PROMOTE_LOWER_BOUND}%")
+    print(f"    Promote: shadow 20d rank IC >= {PROMOTE_MIN_IC}, "
+          f"t >= {PROMOTE_MIN_T}, >= {PROMOTE_MIN_DAYS} graded days")
     print("=" * 65 + "\n")
 
 
@@ -538,7 +563,7 @@ def run_detector(report_only: bool = False, reset: bool = False):
         new_disabled = detect_decay(winrates, disabled)
         save_disabled(new_disabled)
         disabled = new_disabled
-        update_tiers(winrates, disabled)
+        update_tiers(disabled)
 
     print_decay_report(winrates, disabled)
 

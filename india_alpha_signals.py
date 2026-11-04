@@ -67,9 +67,27 @@ def _nse_session() -> requests.Session:
     return _NSE_SESSION
 
 
+_GET_FAILS: Dict[str, int] = {}
+_GET_BREAKER_LIMIT = 3
+
+
 def _safe_get(url: str, timeout: int = 10, headers: dict = None) -> Optional[requests.Response]:
     """Robust HTTP GET with retries; NSE API calls go through the
-    cookie-warmed session, everything else through plain requests."""
+    cookie-warmed session, everything else through plain requests.
+
+    A URL path that fails _GET_BREAKER_LIMIT calls in a row is skipped for
+    the rest of the run: several alphas call this once per stock, and ~5s
+    of retries per call per stock would push the daily run past its time
+    limit whenever a source is down."""
+    endpoint = url.split('?', 1)[0]
+    if _GET_FAILS.get(endpoint, 0) >= _GET_BREAKER_LIMIT:
+        return None
+    resp = _get_with_retries(url, timeout, headers)
+    _GET_FAILS[endpoint] = 0 if resp is not None else _GET_FAILS.get(endpoint, 0) + 1
+    return resp
+
+
+def _get_with_retries(url: str, timeout: int, headers: Optional[dict]) -> Optional[requests.Response]:
     _headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
         'Accept': 'application/json,text/html,*/*'
@@ -519,6 +537,32 @@ class PEADAlpha:
 
     _earnings_dir = Path("data/earnings_calendar")
 
+    @staticmethod
+    def _surprise_pct(row: pd.Series) -> Optional[float]:
+        """EPS surprise in % for one earnings row.
+
+        earnings_calendar.py caches yfinance's earnings_dates frame as-is,
+        whose columns are 'EPS Estimate' / 'Reported EPS' / 'Surprise(%)'.
+        This alpha used to look only for 'surprise_pct'-style names, so it
+        never found a surprise and scored 0 on every stock for months.
+        Reported vs estimate is computed directly (no unit ambiguity); the
+        other columns are fallbacks for older caches.
+        """
+        rep, est = row.get('Reported EPS'), row.get('EPS Estimate')
+        if (rep is not None and est is not None and not pd.isna(rep)
+                and not pd.isna(est) and est != 0):
+            return (float(rep) - float(est)) / abs(float(est)) * 100
+        for col in ['Surprise(%)', 'surprise_pct', 'eps_surprise_pct',
+                    'EPS_Surprise_Pct', 'Surprise_Pct', 'beat_pct']:
+            v = row.get(col)
+            if v is not None and not pd.isna(v):
+                return float(v)
+        for col in ['beat_estimates', 'beat', 'Beat']:
+            v = row.get(col)
+            if v is not None and not pd.isna(v):
+                return 8.0 if v else -8.0
+        return None
+
     @classmethod
     def _load_earnings(cls, symbol: str) -> Optional[pd.DataFrame]:
         """Load cached earnings data for symbol."""
@@ -554,24 +598,13 @@ class PEADAlpha:
         if recent.empty:
             return 0.0, 0.0
 
-        # Take most recent earnings event
-        last = recent.iloc[-1]
-        days_since = (as_of_date - recent.index[-1].date()).days
-
-        # Look for surprise column (various names)
-        surprise = None
-        for col in ['surprise_pct', 'eps_surprise_pct', 'EPS_Surprise_Pct',
-                    'Surprise_Pct', 'beat_pct']:
-            if col in last.index and not pd.isna(last[col]):
-                surprise = float(last[col])
+        # Most recent earnings event whose surprise can be measured
+        surprise, days_since = None, None
+        for when, row in recent.iloc[::-1].iterrows():
+            surprise = cls._surprise_pct(row)
+            if surprise is not None:
+                days_since = (as_of_date - when.date()).days
                 break
-
-        if surprise is None:
-            # Try to infer from beat_estimates boolean
-            for col in ['beat_estimates', 'beat', 'Beat']:
-                if col in last.index and not pd.isna(last[col]):
-                    surprise = 8.0 if last[col] else -8.0
-                    break
 
         if surprise is None:
             return 0.0, 0.0
@@ -1697,6 +1730,70 @@ class ShareholdingDeltaAlpha:
 
 
 # ==============================================================================
+# QUALITY ALPHA  (profitability + low leverage, cross-sectional)
+# ==============================================================================
+class QualityAlpha:
+    """
+    Quality: profitable, lightly indebted companies.
+
+    Score = average of two percentile ranks across the cached universe,
+    mapped to [-1, 1]:
+      - return on equity (return on assets for stocks Yahoo has no ROE for,
+        ranked among themselves)
+      - debt-to-equity, lower is better; skipped for financials, whose
+        leverage is their business model
+
+    Data: data/alpha_cache/quality.json from quality_data.py (monthly yfinance
+    snapshots). Snapshot data is only valid going forward, so this alpha
+    starts in the incubator and is judged by the shadow grade.
+    Edge: quality tilts (e.g. NIFTY200 Quality 30) have a long record of
+    smaller drawdowns, and screening momentum for quality avoids junk rallies.
+    """
+
+    MIN_UNIVERSE = 20
+    FINANCIALS = {'Financial Services', 'Finance', 'Bank', 'Banks', 'NBFC',
+                  'Insurance'}
+    _scores: Optional[Dict[str, Tuple[float, float]]] = None
+
+    @staticmethod
+    def _pct_rank(values: Dict[str, float]) -> Dict[str, float]:
+        if not values:
+            return {}
+        s = pd.Series(values, dtype=float)
+        return ((s.rank() - 0.5) / len(s)).to_dict()
+
+    @classmethod
+    def build(cls, data: Dict[str, Dict]) -> Dict[str, Tuple[float, float]]:
+        recs = {k: v for k, v in data.items() if not v.get('missing')}
+        if len(recs) < cls.MIN_UNIVERSE:
+            return {}
+        roe = {k: v['roe'] for k, v in recs.items() if v.get('roe') is not None}
+        roa = {k: v['roa'] for k, v in recs.items()
+               if v.get('roe') is None and v.get('roa') is not None}
+        de = {k: -v['de'] for k, v in recs.items()
+              if v.get('de') is not None and v.get('sector') not in cls.FINANCIALS}
+        prof = {**cls._pct_rank(roe), **cls._pct_rank(roa)}
+        lev = cls._pct_rank(de)
+        out = {}
+        for sym in recs:
+            parts = [r[sym] for r in (prof, lev) if sym in r]
+            if parts:
+                out[sym] = (float(np.clip((np.mean(parts) - 0.5) * 2, -1, 1)),
+                            60.0 if len(parts) == 2 else 45.0)
+        return out
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date) -> Tuple[float, float]:
+        if cls._scores is None:
+            try:
+                from quality_data import load
+                cls._scores = cls.build(load())
+            except Exception:
+                cls._scores = {}
+        return cls._scores.get(symbol, (0.0, 0.0))
+
+
+# ==============================================================================
 # MASTER ALPHA AGGREGATOR  (UPDATED with 3 new signals)
 # ==============================================================================
 class IndiaAlphaAggregator:
@@ -1739,6 +1836,7 @@ class IndiaAlphaAggregator:
         'pledge':       0.05,   # promoter pledge risk (new)
         'sast':         0.06,   # SAST stake changes (new)
         'shp_delta':    0.05,   # quarterly promoter stake delta (new)
+        'quality':      0.06,   # ROE + low debt (incubating)
     }
 
     @classmethod
@@ -1788,6 +1886,7 @@ class IndiaAlphaAggregator:
             'sast':         lambda: SASTAlpha.get_signal(symbol, as_of_date),
             'shp_delta':    lambda: ShareholdingDeltaAlpha.get_signal(
                                 symbol, as_of_date),
+            'quality':      lambda: QualityAlpha.get_signal(symbol, as_of_date),
         }
 
         # Tier system (signal_decay_detector): live alphas = core +

@@ -149,33 +149,51 @@ class TestAlphaTiers:
         assert sdd.CORE_ALPHAS <= live
         assert 'mean_rev' not in live        # incubating until promoted
 
-    def test_promotion_requires_evidence(self):
+    PROVEN = {'quality': {'ic': 0.05, 't_stat': 2.4, 'n_dates': 130}}
+
+    def test_promotion_requires_shadow_proof(self):
         import signal_decay_detector as sdd
-        # Strong but thin evidence: must NOT promote
-        sdd.update_tiers({'option_chain': {'win_rate': 70.0, 'n_trades': 10}},
-                         {})
-        assert 'option_chain' not in sdd.get_live_alphas()
-        # Solid evidence: promote
-        sdd.update_tiers({'option_chain': {'win_rate': 60.0, 'n_trades': 40}},
-                         {})
-        assert 'option_chain' in sdd.get_live_alphas()
+        # Strong IC but too few graded days: must NOT promote
+        sdd.update_tiers({}, {'quality': {'ic': 0.08, 't_stat': 2.5,
+                                          'n_dates': 40}})
+        assert 'quality' not in sdd.get_live_alphas()
+        # Enough days but could be luck: must NOT promote
+        sdd.update_tiers({}, {'quality': {'ic': 0.05, 't_stat': 1.2,
+                                          'n_dates': 130}})
+        assert 'quality' not in sdd.get_live_alphas()
+        sdd.update_tiers({}, self.PROVEN)
+        assert 'quality' in sdd.get_live_alphas()
+
+    def test_promotion_read_from_shadow_report(self):
+        import signal_decay_detector as sdd
+        Path("paper_trading/results").mkdir(parents=True, exist_ok=True)
+        Path("paper_trading/results/shadow_report.json").write_text(json.dumps(
+            {'rank_ic': {'composite': {'20d': {'ic': 0.9}},
+                         'quality': {'20d': self.PROVEN['quality']}}}))
+        sdd.update_tiers({})
+        assert 'quality' in sdd.get_live_alphas()
+        assert 'composite' not in sdd.load_tiers()['promoted']
+
+    def test_negative_shadow_ic_demotes(self):
+        import signal_decay_detector as sdd
+        sdd.update_tiers({}, self.PROVEN)
+        sdd.update_tiers({}, {'quality': {'ic': -0.02, 't_stat': -0.5,
+                                          'n_dates': 90}})
+        assert 'quality' not in sdd.get_live_alphas()
 
     def test_kill_switch_demotes_promoted_alpha(self):
         import signal_decay_detector as sdd
-        sdd.update_tiers({'option_chain': {'win_rate': 60.0, 'n_trades': 40}},
-                         {})
-        assert 'option_chain' in sdd.get_live_alphas()
-        sdd.update_tiers(
-            {'option_chain': {'win_rate': 20.0, 'n_trades': 40}},
-            {'option_chain': {'disabled': True}})
-        assert 'option_chain' not in sdd.get_live_alphas()
+        sdd.update_tiers({}, self.PROVEN)
+        assert 'quality' in sdd.get_live_alphas()
+        sdd.update_tiers({'quality': {'disabled': True}}, self.PROVEN)
+        assert 'quality' not in sdd.get_live_alphas()
 
-    def test_disabled_core_alpha_not_live(self):
+    def test_core_alpha_survives_kill_switch(self):
         import signal_decay_detector as sdd
         Path("paper_trading").mkdir(parents=True, exist_ok=True)
         with open("paper_trading/disabled_signals.json", 'w') as f:
             json.dump({'momentum': {'disabled': True}}, f)
-        assert 'momentum' not in sdd.get_live_alphas()
+        assert 'momentum' in sdd.get_live_alphas()
 
 
 # ---------------------------------------------------------------------------

@@ -94,6 +94,9 @@ jobs:
       - name: Update earnings calendar (feeds PEAD alpha)
         run: python earnings_calendar.py --update || true
 
+      - name: Update quality fundamentals (feeds quality alpha)
+        run: python quality_data.py --update || true
+
       - name: Grade past predictions + auto-correct weights
         run: python paper_trade_tracker.py --today || true
 
@@ -159,6 +162,7 @@ jobs:
           git add paper_trading/alpha_confidence.json 2>/dev/null || true
           git add paper_trading/results/shadow_report.json 2>/dev/null || true
           git add paper_trading/results/shadow_report.md 2>/dev/null || true
+          git add paper_trading/portfolio.json 2>/dev/null || true
           # Alpha data cache (FII/DII flow history etc.) — commit to git, not
           # just actions/cache: the rolling 5d flow signal needs accumulated
           # history and cache eviction was silently zeroing the alpha.

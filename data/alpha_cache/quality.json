@@ -477,31 +477,31 @@
  },
  "BAJAJFINSV.NS": {
   "de": 281.687,
-  "fetched": "2026-11-04",
-  "pm": 0.065409996,
-  "roa": 0.04915,
+  "fetched": "2026-11-05",
+  "pm": 0.065359995,
+  "roa": 0.04921,
   "roe": 0.15215999,
   "sector": "Financial Services"
  },
  "BAJAJHFL.NS": {
   "de": 492.126,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.63273996,
   "roa": 0.02165,
   "roe": 0.12416001,
   "sector": "Financial Services"
  },
  "BAJAJHLDNG.NS": {
-  "de": 0.012,
-  "fetched": "2026-11-04",
-  "pm": 7.34641,
-  "roa": null,
-  "roe": 0.11598,
+  "de": null,
+  "fetched": "2026-11-05",
+  "pm": 9.48607,
+  "roa": 0.00574,
+  "roe": 0.11582,
   "sector": "Financial Services"
  },
  "BAJFINANCE.NS": {
   "de": 342.416,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.4375,
   "roa": 0.038399998,
   "roe": 0.19026,
@@ -509,23 +509,23 @@
  },
  "BALKRISIND.NS": {
   "de": 37.524,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.12203,
   "roa": null,
   "roe": null,
   "sector": "Consumer Cyclical"
  },
  "BALRAMCHIN.NS": {
-  "de": 76.606,
-  "fetched": "2026-11-04",
-  "pm": 0.05829,
-  "roa": null,
-  "roe": null,
+  "de": 32.522,
+  "fetched": "2026-11-05",
+  "pm": 0.06351,
+  "roa": 0.0631,
+  "roe": 0.09678,
   "sector": "Consumer Defensive"
  },
  "BANDHANBNK.NS": {
   "de": null,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.17087,
   "roa": 0.00912,
   "roe": 0.07258,
@@ -533,7 +533,7 @@
  },
  "BANKBARODA.NS": {
   "de": null,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.28409,
   "roa": 0.009649999,
   "roe": 0.11885,
@@ -541,31 +541,31 @@
  },
  "BANKINDIA.NS": {
   "de": null,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.35739,
   "roa": 0.0105,
   "roe": 0.1407,
   "sector": "Financial Services"
  },
  "BATAINDIA.NS": {
-  "de": 86.9,
-  "fetched": "2026-11-04",
-  "pm": 0.041149996,
-  "roa": null,
-  "roe": null,
+  "de": 111.626,
+  "fetched": "2026-11-05",
+  "pm": 0.04166,
+  "roa": 0.056900002,
+  "roe": 0.10877,
   "sector": "Consumer Cyclical"
  },
  "BAYERCROP.NS": {
-  "de": 2.758,
-  "fetched": "2026-11-04",
-  "pm": 0.13084,
-  "roa": null,
-  "roe": null,
+  "de": 2.211,
+  "fetched": "2026-11-05",
+  "pm": 0.13904001,
+  "roa": 0.09997,
+  "roe": 0.23641,
   "sector": "Basic Materials"
  },
  "BBOX.NS": {
   "de": 89.594,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.033970002,
   "roa": null,
   "roe": null,
@@ -573,7 +573,7 @@
  },
  "BBTC.NS": {
   "de": 16.57,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.063829996,
   "roa": null,
   "roe": null,
@@ -581,7 +581,7 @@
  },
  "BDL.NS": {
   "de": 0.007,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.18827,
   "roa": null,
   "roe": null,
@@ -589,7 +589,7 @@
  },
  "BEL.NS": {
   "de": 0.324,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.21150999,
   "roa": 0.11229999,
   "roe": 0.26748,
@@ -597,7 +597,7 @@
  },
  "BELRISE.NS": {
   "de": 29.1,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.05175,
   "roa": null,
   "roe": null,
@@ -605,7 +605,7 @@
  },
  "BEML.NS": {
   "de": 10.529,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.03934,
   "roa": null,
   "roe": null,
@@ -613,7 +613,7 @@
  },
  "BERGEPAINT.NS": {
   "de": 9.165,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.099209994,
   "roa": null,
   "roe": null,
@@ -621,7 +621,7 @@
  },
  "BHARATCOAL.NS": {
   "de": 42.549,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.0040700003,
   "roa": -0.05099,
   "roe": 0.0104600005,
@@ -629,7 +629,7 @@
  },
  "BHARATFORG.NS": {
   "de": 76.475,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.040260002,
   "roa": null,
   "roe": null,
@@ -637,7 +637,7 @@
  },
  "BHARTIARTL.NS": {
   "de": 100.415,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.1314,
   "roa": 0.08163,
   "roe": 0.20151,
@@ -645,7 +645,7 @@
  },
  "BHARTIHEXA.NS": {
   "de": 85.654,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.18999,
   "roa": null,
   "roe": null,
@@ -653,7 +653,7 @@
  },
  "BHEL.NS": {
   "de": 22.496,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.07619,
   "roa": 0.02576,
   "roe": 0.11255,
@@ -661,27 +661,27 @@
  },
  "BIKAJI.NS": {
   "de": 17.531,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.08406,
   "roa": null,
   "roe": null,
   "sector": "Consumer Defensive"
  },
  "BIOCON.NS": {
-  "de": 42.145,
-  "fetched": "2026-11-04",
-  "pm": 0.0286,
-  "roa": null,
-  "roe": null,
+  "de": 42.248,
+  "fetched": "2026-11-05",
+  "pm": 0.02609,
+  "roa": 0.014680001,
+  "roe": 0.00969,
   "sector": "Healthcare"
  },
  "BIRET.NS": {
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "missing": true
  },
  "BLS.NS": {
   "de": 15.468,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.22207001,
   "roa": null,
   "roe": null,
@@ -689,7 +689,7 @@
  },
  "BLUEDART.NS": {
   "de": 64.266,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.04516,
   "roa": null,
   "roe": null,
@@ -697,7 +697,7 @@
  },
  "BLUEJET.NS": {
   "de": 3.102,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.26523,
   "roa": null,
   "roe": null,
@@ -705,7 +705,7 @@
  },
  "BLUESTARCO.NS": {
   "de": 22.339,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.04014,
   "roa": 0.05327,
   "roe": 0.16178,
@@ -713,7 +713,7 @@
  },
  "BOSCHLTD.NS": {
   "de": 0.8,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.11328,
   "roa": null,
   "roe": null,
@@ -721,7 +721,7 @@
  },
  "BPCL.NS": {
   "de": 62.165,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.02937,
   "roa": 0.05278,
   "roe": 0.16174999,
@@ -729,7 +729,7 @@
  },
  "BRIGADE.NS": {
   "de": 82.897,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.13584,
   "roa": 0.02997,
   "roe": 0.11078,
@@ -737,7 +737,7 @@
  },
  "BRITANNIA.NS": {
   "de": 26.875,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.13376,
   "roa": null,
   "roe": null,
@@ -745,7 +745,7 @@
  },
  "BSE.NS": {
   "de": 0.0,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.48918,
   "roa": null,
   "roe": null,
@@ -753,7 +753,7 @@
  },
  "BSOFT.NS": {
   "de": 3.903,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.11225,
   "roa": 0.10312,
   "roe": 0.15286,
@@ -761,7 +761,7 @@
  },
  "CAMS.NS": {
   "de": 4.104,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.32071,
   "roa": 0.21777001,
   "roe": 0.382,
@@ -769,7 +769,7 @@
  },
  "CANBK.NS": {
   "de": null,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.46546,
   "roa": 0.0095999995,
   "roe": 0.1512,
@@ -777,7 +777,7 @@
  },
  "CANFINHOME.NS": {
   "de": 608.658,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.67094004,
   "roa": 0.02633,
   "roe": 0.19409999,
@@ -785,7 +785,7 @@
  },
  "CANHLIFE.NS": {
   "de": 15.256,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.0107,
   "roa": 0.00207,
   "roe": 0.08396,
@@ -793,7 +793,7 @@
  },
  "CAPLIPOINT.NS": {
   "de": 0.127,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.29089,
   "roa": null,
   "roe": null,
@@ -801,7 +801,7 @@
  },
  "CARBORUNIV.NS": {
   "de": 11.672,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.02622,
   "roa": 0.04729,
   "roe": 0.0317,
@@ -809,7 +809,7 @@
  },
  "CARTRADE.NS": {
   "de": 4.615,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.27953,
   "roa": 0.051620003,
   "roe": 0.09747,
@@ -817,7 +817,7 @@
  },
  "CASTROLIND.NS": {
   "de": 2.784,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.15324001,
   "roa": null,
   "roe": null,
@@ -825,7 +825,7 @@
  },
  "CCL.NS": {
   "de": 46.024,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.09834,
   "roa": 0.079229996,
   "roe": 0.19443001,
@@ -833,7 +833,7 @@
  },
  "CDSL.NS": {
   "de": 0.083,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.37217999,
   "roa": 0.16436,
   "roe": 0.26432,
@@ -841,7 +841,7 @@
  },
  "CEATLTD.NS": {
   "de": 81.807,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.029560002,
   "roa": 0.055219997,
   "roe": 0.10792,
@@ -849,7 +849,7 @@
  },
  "CEMPRO.NS": {
   "de": 37.711,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.058920003,
   "roa": null,
   "roe": null,
@@ -857,7 +857,7 @@
  },
  "CENTRALBK.NS": {
   "de": null,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.2847,
   "roa": 0.00874,
   "roe": 0.1201,
@@ -865,7 +865,7 @@
  },
  "CESC.NS": {
   "de": 164.311,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.08243,
   "roa": null,
   "roe": null,
@@ -873,7 +873,7 @@
  },
  "CGCL.NS": {
   "de": 383.398,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.36359,
   "roa": 0.04065,
   "roe": 0.17907,
@@ -881,23 +881,23 @@
  },
  "CGPOWER.NS": {
   "de": 1.885,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.1004,
   "roa": 0.07636,
   "roe": 0.16371,
   "sector": "Industrials"
  },
  "CHAMBLFERT.NS": {
-  "de": 10.274,
-  "fetched": "2026-11-04",
-  "pm": 0.09581,
-  "roa": null,
-  "roe": null,
+  "de": 15.629,
+  "fetched": "2026-11-05",
+  "pm": 0.09231,
+  "roa": 0.09678,
+  "roe": 0.18064,
   "sector": "Basic Materials"
  },
  "CHENNPETRO.NS": {
   "de": 16.197,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.07089,
   "roa": 0.26554,
   "roe": 0.50865,
@@ -905,7 +905,7 @@
  },
  "CHOICEIN.NS": {
   "de": 61.692,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.19699,
   "roa": 0.07535,
   "roe": 0.15795,
@@ -913,7 +913,7 @@
  },
  "CHOLAFIN.NS": {
   "de": 671.801,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.41018,
   "roa": 0.025559999,
   "roe": 0.20577,
@@ -921,7 +921,7 @@
  },
  "CHOLAHLDNG.NS": {
   "de": 623.156,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.11882,
   "roa": null,
   "roe": null,
@@ -929,7 +929,7 @@
  },
  "CIEINDIA.NS": {
   "de": 6.63,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.09094,
   "roa": null,
   "roe": null,
@@ -937,7 +937,7 @@
  },
  "CIPLA.NS": {
   "de": 1.969,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.10351,
   "roa": 0.05456,
   "roe": 0.08327,
@@ -945,7 +945,7 @@
  },
  "CLEAN.NS": {
   "de": 0.128,
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-05",
   "pm": 0.22326,
   "roa": 0.09783,
   "roe": 0.14706999,

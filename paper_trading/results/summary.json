@@ -1,17 +1,17 @@
 {
-  "generated": "2026-11-04",
+  "generated": "2026-11-05",
   "total_signals": 184,
   "cost_model_pct": 0.4,
   "benchmark": "NIFTY50",
   "metrics": {
     "1d": {
-      "n_trades": 169,
-      "win_rate": 32.5,
-      "avg_ret": -0.54,
-      "median_ret": -0.44,
+      "n_trades": 182,
+      "win_rate": 31.3,
+      "avg_ret": -0.72,
+      "median_ret": -0.51,
       "avg_win": 0.87,
-      "avg_loss": -1.22,
-      "sharpe": -5.64,
+      "avg_loss": -1.45,
+      "sharpe": -6.23,
       "best": 3.27,
       "worst": -11.59,
       "avg_nifty": -0.17,
@@ -58,6 +58,11 @@
           "win_rate": 100.0,
           "avg_ret": 0.95
         },
+        "APARINDS.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -3.73
+        },
         "APOLLOHOSP.NS": {
           "n": 1,
           "win_rate": 0.0,
@@ -73,10 +78,20 @@
           "win_rate": 100.0,
           "avg_ret": 3.27
         },
+        "ATHERENERG.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -2.57
+        },
         "ATUL.NS": {
           "n": 1,
           "win_rate": 0.0,
           "avg_ret": -0.41
+        },
+        "AZAD.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -2.9
         },
         "BAJAJ-AUTO.NS": {
           "n": 1,
@@ -102,6 +117,11 @@
           "n": 3,
           "win_rate": 66.7,
           "avg_ret": 0.49
+        },
+        "BHEL.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -2.71
         },
         "BIKAJI.NS": {
           "n": 1,
@@ -133,6 +153,11 @@
           "win_rate": 0.0,
           "avg_ret": -1.07
         },
+        "CHENNPETRO.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -11.19
+        },
         "CHOLAFIN.NS": {
           "n": 2,
           "win_rate": 0.0,
@@ -152,6 +177,11 @@
           "n": 4,
           "win_rate": 50.0,
           "avg_ret": -0.43
+        },
+        "CUPID.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -0.33
         },
         "DABUR.NS": {
           "n": 3,
@@ -228,6 +258,11 @@
           "win_rate": 66.7,
           "avg_ret": 0.19
         },
+        "LAURUSLABS.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 0.36
+        },
         "LT.NS": {
           "n": 1,
           "win_rate": 100.0,
@@ -247,6 +282,11 @@
           "n": 1,
           "win_rate": 0.0,
           "avg_ret": -0.25
+        },
+        "MCX.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -0.22
         },
         "NESTLEIND.NS": {
           "n": 1,
@@ -273,6 +313,11 @@
           "win_rate": 0.0,
           "avg_ret": -1.23
         },
+        "POWERINDIA.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -3.34
+        },
         "RELIANCE.NS": {
           "n": 2,
           "win_rate": 0.0,
@@ -293,10 +338,20 @@
           "win_rate": 0.0,
           "avg_ret": -1.58
         },
+        "SONACOMS.NS": {
+          "n": 1,
+          "win_rate": 100.0,
+          "avg_ret": 1.29
+        },
         "SUNPHARMA.NS": {
           "n": 12,
           "win_rate": 25.0,
           "avg_ret": -0.83
+        },
+        "SYRMA.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -2.66
         },
         "TATACONSUM.NS": {
           "n": 1,
@@ -318,6 +373,11 @@
           "win_rate": 100.0,
           "avg_ret": 0.19
         },
+        "TDPOWERSYS.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -9.0
+        },
         "TECHM.NS": {
           "n": 2,
           "win_rate": 0.0,
@@ -332,6 +392,11 @@
           "n": 1,
           "win_rate": 0.0,
           "avg_ret": -0.06
+        },
+        "WELCORP.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -3.5
         }
       }
     },
@@ -1331,11 +1396,11 @@
   },
   "track_record": {
     "inception": "2026-05-25",
-    "last_graded": "2026-06-17",
-    "days_live": 20,
-    "total_trades": 169,
-    "cum_net_pct": -10.27,
+    "last_graded": "2026-11-04",
+    "days_live": 21,
+    "total_trades": 182,
+    "cum_net_pct": -13.07,
     "cum_nifty_pct": -2.75,
-    "cum_excess_pct": -7.52
+    "cum_excess_pct": -10.32
   }
 }

@@ -12,7 +12,7 @@ Usage:
 
 import time
 import warnings
-from datetime import date, timedelta
+from datetime import date, datetime, time as dtime, timedelta, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -38,9 +38,38 @@ except Exception as _e:
         "HINDUNILVR.NS", "ITC.NS", "SBIN.NS", "BHARTIARTL.NS", "LT.NS",
     ]
 
-# Also update index data
-INDICES = ["^NSEI", "^NSEBANK", "INDIAVIX.NS"]
-INDEX_MAP = {"^NSEI": "NIFTY50", "^NSEBANK": "NIFTYBANK", "INDIAVIX.NS": "INDIAVIX"}
+# Also update index data (Yahoo has India VIX as ^INDIAVIX, not INDIAVIX.NS)
+INDICES = ["^NSEI", "^NSEBANK", "^INDIAVIX"]
+INDEX_MAP = {"^NSEI": "NIFTY50", "^NSEBANK": "NIFTYBANK", "^INDIAVIX": "INDIAVIX"}
+
+IST = timezone(timedelta(hours=5, minutes=30))
+CLOSE_FINAL_IST = dtime(16, 0)     # official closes are settled by ~15:45 IST
+
+
+def latest_session(now: datetime = None) -> date:
+    """The most recent weekday session whose close is final.
+
+    Data that reaches this date is current; anything older is fetched.
+    (The old rule treated "yesterday" as current, so a run after the close
+    never fetched that day's index bar: NIFTY was always a day behind.)
+    NSE holidays aren't known here; on one, the fetch just finds nothing.
+    """
+    now = (now or datetime.now(timezone.utc)).astimezone(IST)
+    d = now.date()
+    if now.time() < CLOSE_FINAL_IST:
+        d -= timedelta(days=1)
+    while d.weekday() >= 5:
+        d -= timedelta(days=1)
+    return d
+
+
+def final_bars(df: pd.DataFrame, upto: date) -> pd.DataFrame:
+    """Drop bars after `upto`: during market hours Yahoo returns today's
+    unfinished bar, which would otherwise be stored as if it were final."""
+    idx = pd.to_datetime(df.index)
+    if getattr(idx, 'tz', None) is not None:
+        idx = idx.tz_localize(None)
+    return df[idx.normalize() <= pd.Timestamp(upto)]
 
 
 def _get_last_date(symbol: str) -> date:
@@ -72,8 +101,9 @@ def _update_symbol(symbol: str) -> bool:
 
     last_date = _get_last_date(symbol)
     today     = date.today()
+    expected  = latest_session()
 
-    if last_date >= today - timedelta(days=1):
+    if last_date >= expected:
         return True  # Already fresh
 
     start = last_date - timedelta(days=5)  # Small overlap for safety
@@ -95,6 +125,7 @@ def _update_symbol(symbol: str) -> bool:
             new_df.columns = new_df.columns.get_level_values(0)
 
         new_df.index = pd.to_datetime(new_df.index)
+        new_df = final_bars(new_df, expected)
 
         # Merge with existing
         if fpath.exists():
@@ -357,10 +388,11 @@ def run_update(verbose: bool = True):
       2. Fill gaps with yfinance (historical data, available next morning)
     """
     today = date.today()
+    expected = latest_session()
 
     if verbose:
         print(f"Updating market data for {len(UNIVERSE)} stocks...")
-        print(f"Target date: {today}")
+        print(f"Target date: {today}  (latest closed session: {expected})")
 
     # Step 1: Try bhav copy for same-day prices (works after 6 PM)
     bhav_updated = update_from_bhav(verbose=verbose)
@@ -379,7 +411,7 @@ def run_update(verbose: bool = True):
         earliest = today  # earliest last-date in batch -> drives deep cold-start fetch
         for sym in batch:
             last = _get_last_date(sym)
-            if last < today - timedelta(days=1):
+            if last < expected:
                 need_update.append(sym)
                 if last < earliest:
                     earliest = last
@@ -429,6 +461,7 @@ def run_update(verbose: bool = True):
                         sym_df.index = pd.to_datetime(sym_df.index)
                         sym_df = sym_df.dropna(how='all')
                         sym_df = sym_df.dropna(subset=['Close'])  # Drop incomplete days
+                        sym_df = final_bars(sym_df, expected)
 
                         if fpath.exists():
                             existing = pd.read_parquet(fpath)
@@ -494,7 +527,7 @@ def run_update(verbose: bool = True):
         if dates:
             freshest = max(dates)
             print(f"  Freshest data across key stocks: {freshest}")
-            if freshest < today - timedelta(days=1):
+            if freshest < expected:
                 print(f"  NOTE: Data is {(today - freshest).days} day(s) old.")
                 print(f"  If before 6 PM IST: this is normal (bhav not published yet).")
                 print(f"  If after 6 PM IST: bhav copy may not be accessible today.")

@@ -112,6 +112,14 @@ class Prices:
         df = df[df.index <= pd.Timestamp(as_of)]
         return float(df['Close'].iloc[-1]) if len(df) else None
 
+    def close_exact(self, symbol: str, day: str) -> Optional[float]:
+        """Close on exactly `day` (ISO date), or None if that bar is missing."""
+        df = self.frame(symbol)
+        ts = pd.Timestamp(day)
+        if df is None or ts not in df.index:
+            return None
+        return float(df.loc[ts, 'Close'])
+
     def next_open(self, symbol: str, after: str,
                   upto: date) -> Optional[Tuple[str, float]]:
         """(date, open) of the first session after `after`, if <= `upto`."""
@@ -207,6 +215,13 @@ def mark_nav(book: Dict, as_of: date, px: Prices) -> float:
              'nifty': px.close_on(NIFTY, as_of)}
     book['nav'] = sorted([p for p in book['nav'] if p['date'] != point['date']]
                          + [point], key=lambda p: p['date'])
+    # A benchmark point stored while NIFTY's bar was missing holds the
+    # previous close (it showed NIFTY +0.00% on 2026-11-05); re-read every
+    # point from the price file once that day's real close has arrived.
+    for p in book['nav']:
+        c = px.close_exact(NIFTY, p['date'])
+        if c is not None:
+            p['nifty'] = c
     return nav
 
 

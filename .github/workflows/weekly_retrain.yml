@@ -46,7 +46,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/stocks
-          key: stockdata-v3-${{ steps.date.outputs.ymd }}
+          key: stockdata-v3-${{ github.run_id }}
           restore-keys: |
             stockdata-v3-
 

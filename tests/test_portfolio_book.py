@@ -216,3 +216,20 @@ def test_universe_ranks_the_whole_list_once_data_exists(tmp_path, monkeypatch):
     assert u.get_candidates() == [f"{s}.NS" for s in syms]
     top = u.get_universe(max_size=3, min_traded_value=0)
     assert top == ['JCO.NS', 'ICO.NS', 'HCO.NS']
+
+
+def test_stale_benchmark_point_is_corrected_when_the_bar_arrives(market,
+                                                                 tmp_path):
+    """On 2026-11-05 NIFTY's bar was missing, so that day stored the
+    previous close and the email showed NIFTY +0.00%."""
+    f = market / "NIFTY50.parquet"
+    full = pd.read_parquet(f)
+    full.loc[pd.Timestamp('2026-11-05'), 'Close'] = 150.0
+    full[full.index != pd.Timestamp('2026-11-05')].to_parquet(f)
+    step(market, tmp_path, d('2026-11-04'))
+    r = step(market, tmp_path, d('2026-11-05'))
+    assert r['nifty_return_pct'] == 0.0                   # stale: no bar yet
+    full.to_parquet(f)                                    # the bar arrives
+    r = step(market, tmp_path, d('2026-11-06'))
+    book = pb.load_book(d('2026-11-06'), tmp_path / "book.json")
+    assert [p['nifty'] for p in book['nav']][:2] == [140.0, 150.0]

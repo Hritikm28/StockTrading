@@ -1,22 +1,22 @@
 {
-  "generated": "2026-11-05",
+  "generated": "2026-11-06",
   "total_signals": 184,
   "cost_model_pct": 0.4,
   "benchmark": "NIFTY50",
   "metrics": {
     "1d": {
-      "n_trades": 182,
-      "win_rate": 31.3,
-      "avg_ret": -0.72,
-      "median_ret": -0.51,
+      "n_trades": 184,
+      "win_rate": 31.0,
+      "avg_ret": -0.75,
+      "median_ret": -0.52,
       "avg_win": 0.87,
-      "avg_loss": -1.45,
-      "sharpe": -6.23,
+      "avg_loss": -1.48,
+      "sharpe": -6.42,
       "best": 3.27,
       "worst": -11.59,
-      "avg_nifty": -0.17,
-      "avg_excess": -0.37,
-      "beat_nifty_rate": 34.3,
+      "avg_nifty": -0.1,
+      "avg_excess": -0.65,
+      "beat_nifty_rate": 32.1,
       "by_symbol": {
         "AARTIIND.NS": {
           "n": 4,
@@ -228,6 +228,11 @@
           "win_rate": 0.0,
           "avg_ret": -5.32
         },
+        "HFCL.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -2.11
+        },
         "HINDALCO.NS": {
           "n": 4,
           "win_rate": 0.0,
@@ -342,6 +347,11 @@
           "n": 1,
           "win_rate": 100.0,
           "avg_ret": 1.29
+        },
+        "STLTECH.NS": {
+          "n": 1,
+          "win_rate": 0.0,
+          "avg_ret": -4.48
         },
         "SUNPHARMA.NS": {
           "n": 12,
@@ -1398,9 +1408,9 @@
     "inception": "2026-05-25",
     "last_graded": "2026-11-04",
     "days_live": 21,
-    "total_trades": 182,
-    "cum_net_pct": -13.07,
-    "cum_nifty_pct": -2.75,
-    "cum_excess_pct": -10.32
+    "total_trades": 184,
+    "cum_net_pct": -13.09,
+    "cum_nifty_pct": -2.12,
+    "cum_excess_pct": -10.97
   }
 }

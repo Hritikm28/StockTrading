@@ -950,5 +950,477 @@
   "roa": 0.09783,
   "roe": 0.14706999,
   "sector": "Basic Materials"
+ },
+ "CLEANMAX.NS": {
+  "de": 231.875,
+  "fetched": "2026-11-06",
+  "pm": 0.06695,
+  "roa": null,
+  "roe": null,
+  "sector": "Utilities"
+ },
+ "CMPDI.NS": {
+  "de": 0.049,
+  "fetched": "2026-11-06",
+  "pm": 0.27637,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "COALINDIA.NS": {
+  "de": 12.018,
+  "fetched": "2026-11-06",
+  "pm": 0.18625,
+  "roa": 0.072620004,
+  "roe": 0.28326,
+  "sector": "Energy"
+ },
+ "COCHINSHIP.NS": {
+  "de": 28.466,
+  "fetched": "2026-11-06",
+  "pm": 0.13479,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "COFORGE.NS": {
+  "de": 26.74,
+  "fetched": "2026-11-06",
+  "pm": 0.09661999,
+  "roa": 0.08287,
+  "roe": 0.13347,
+  "sector": "Technology"
+ },
+ "COHANCE.NS": {
+  "de": 9.928,
+  "fetched": "2026-11-06",
+  "pm": 0.04961,
+  "roa": null,
+  "roe": null,
+  "sector": "Healthcare"
+ },
+ "COLPAL.NS": {
+  "de": 3.012,
+  "fetched": "2026-11-06",
+  "pm": 0.2131,
+  "roa": 0.32412997,
+  "roe": 0.85115,
+  "sector": "Consumer Defensive"
+ },
+ "CONCOR.NS": {
+  "de": 8.261,
+  "fetched": "2026-11-06",
+  "pm": 0.13354,
+  "roa": 0.05444,
+  "roe": 0.092580006,
+  "sector": "Industrials"
+ },
+ "CONCORDBIO.NS": {
+  "de": 0.084,
+  "fetched": "2026-11-06",
+  "pm": 0.24132,
+  "roa": 0.09794,
+  "roe": 0.14332,
+  "sector": "Healthcare"
+ },
+ "COROMANDEL.NS": {
+  "de": 11.469,
+  "fetched": "2026-11-06",
+  "pm": 0.05619,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "CPPLUS.NS": {
+  "de": 9.604,
+  "fetched": "2026-11-06",
+  "pm": 0.09774,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "CRAFTSMAN.NS": {
+  "de": 70.635,
+  "fetched": "2026-11-06",
+  "pm": 0.054580003,
+  "roa": 0.059959996,
+  "roe": 0.12347,
+  "sector": "Consumer Cyclical"
+ },
+ "CREDITACC.NS": {
+  "de": 282.89,
+  "fetched": "2026-11-06",
+  "pm": 0.44195,
+  "roa": 0.05108,
+  "roe": 0.1973,
+  "sector": "Financial Services"
+ },
+ "CRISIL.NS": {
+  "de": 10.23,
+  "fetched": "2026-11-06",
+  "pm": 0.20784001,
+  "roa": null,
+  "roe": null,
+  "sector": "Financial Services"
+ },
+ "CROMPTON.NS": {
+  "de": 5.783,
+  "fetched": "2026-11-06",
+  "pm": -0.02025,
+  "roa": 0.07455,
+  "roe": -0.04422,
+  "sector": "Consumer Cyclical"
+ },
+ "CUB.NS": {
+  "de": null,
+  "fetched": "2026-11-06",
+  "pm": 0.37759998,
+  "roa": 0.015859999,
+  "roe": 0.14113,
+  "sector": "Financial Services"
+ },
+ "CUMMINSIND.NS": {
+  "de": 0.449,
+  "fetched": "2026-11-06",
+  "pm": 0.17603001,
+  "roa": 0.13654,
+  "roe": 0.27812,
+  "sector": "Industrials"
+ },
+ "CUPID.NS": {
+  "de": 12.506,
+  "fetched": "2026-11-06",
+  "pm": 0.30351,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Defensive"
+ },
+ "CYIENT.NS": {
+  "de": 49.22,
+  "fetched": "2026-11-06",
+  "pm": 0.04602,
+  "roa": 0.049099997,
+  "roe": 0.0694,
+  "sector": "Industrials"
+ },
+ "DABUR.NS": {
+  "de": 12.177,
+  "fetched": "2026-11-06",
+  "pm": 0.14543,
+  "roa": 0.076799996,
+  "roe": 0.17232001,
+  "sector": "Consumer Defensive"
+ },
+ "DALBHARAT.NS": {
+  "de": 57.098,
+  "fetched": "2026-11-06",
+  "pm": 0.03229,
+  "roa": 0.02493,
+  "roe": 0.02836,
+  "sector": "Basic Materials"
+ },
+ "DATAPATTNS.NS": {
+  "de": 0.304,
+  "fetched": "2026-11-06",
+  "pm": 0.28459,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "DEEPAKFERT.NS": {
+  "de": 75.969,
+  "fetched": "2026-11-06",
+  "pm": 0.08131,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "DEEPAKNTR.NS": {
+  "de": 27.026,
+  "fetched": "2026-11-06",
+  "pm": 0.10896,
+  "roa": 0.107030004,
+  "roe": 0.17601,
+  "sector": "Basic Materials"
+ },
+ "DELHIVERY.NS": {
+  "de": 14.921,
+  "fetched": "2026-11-06",
+  "pm": 0.01584,
+  "roa": 0.00077,
+  "roe": 0.01908,
+  "sector": "Industrials"
+ },
+ "DEVYANI.NS": {
+  "de": 181.871,
+  "fetched": "2026-11-06",
+  "pm": -0.00101,
+  "roa": 0.024519999,
+  "roe": -0.0014599999,
+  "sector": "Consumer Cyclical"
+ },
+ "DIVISLAB.NS": {
+  "de": 0.042,
+  "fetched": "2026-11-06",
+  "pm": 0.26046,
+  "roa": null,
+  "roe": null,
+  "sector": "Healthcare"
+ },
+ "DIXON.NS": {
+  "de": 18.377,
+  "fetched": "2026-11-06",
+  "pm": 0.026500002,
+  "roa": 0.03765,
+  "roe": 0.30622,
+  "sector": "Technology"
+ },
+ "DLF.NS": {
+  "de": 0.69,
+  "fetched": "2026-11-06",
+  "pm": 0.71639997,
+  "roa": 0.00708,
+  "roe": 0.10311,
+  "sector": "Real Estate"
+ },
+ "DMART.NS": {
+  "de": 16.338,
+  "fetched": "2026-11-06",
+  "pm": 0.041989997,
+  "roa": 0.09245,
+  "roe": 0.12720999,
+  "sector": "Consumer Defensive"
+ },
+ "DOMS.NS": {
+  "de": 18.987,
+  "fetched": "2026-11-06",
+  "pm": 0.07752,
+  "roa": 0.09616,
+  "roe": 0.1593,
+  "sector": "Industrials"
+ },
+ "DRREDDY.NS": {
+  "de": 18.565,
+  "fetched": "2026-11-06",
+  "pm": 0.08485,
+  "roa": 0.03366,
+  "roe": 0.07342,
+  "sector": "Healthcare"
+ },
+ "DUMMYHEG.NS": {
+  "fetched": "2026-11-06",
+  "missing": true
+ },
+ "ECLERX.NS": {
+  "de": 17.502,
+  "fetched": "2026-11-06",
+  "pm": 0.16068001,
+  "roa": 0.15205,
+  "roe": 0.26197,
+  "sector": "Technology"
+ },
+ "EICHERMOT.NS": {
+  "de": 2.048,
+  "fetched": "2026-11-06",
+  "pm": 0.23211999,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Cyclical"
+ },
+ "EIDPARRY.NS": {
+  "de": 23.647,
+  "fetched": "2026-11-06",
+  "pm": 0.01197,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "EIHOTEL.NS": {
+  "de": 4.666,
+  "fetched": "2026-11-06",
+  "pm": 0.23142,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Cyclical"
+ },
+ "ELECON.NS": {
+  "de": 14.401,
+  "fetched": "2026-11-06",
+  "pm": 0.0996,
+  "roa": 0.07851,
+  "roe": 0.10295,
+  "sector": "Industrials"
+ },
+ "ELGIEQUIP.NS": {
+  "de": 23.885,
+  "fetched": "2026-11-06",
+  "pm": 0.10803001,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "EMAMILTD.NS": {
+  "de": 7.895,
+  "fetched": "2026-11-06",
+  "pm": 0.17708999,
+  "roa": 0.13015,
+  "roe": 0.25528,
+  "sector": "Consumer Defensive"
+ },
+ "EMBASSY.NS": {
+  "fetched": "2026-11-06",
+  "missing": true
+ },
+ "EMCURE.NS": {
+  "de": 32.875,
+  "fetched": "2026-11-06",
+  "pm": 0.106850006,
+  "roa": 0.10217,
+  "roe": 0.21365999,
+  "sector": "Healthcare"
+ },
+ "EMMVEE.NS": {
+  "de": 25.243,
+  "fetched": "2026-11-06",
+  "pm": 0.23549,
+  "roa": 0.19572,
+  "roe": 0.53055,
+  "sector": "Technology"
+ },
+ "ENDURANCE.NS": {
+  "de": 18.799,
+  "fetched": "2026-11-06",
+  "pm": 0.060549997,
+  "roa": 0.06959,
+  "roe": 0.15086001,
+  "sector": "Consumer Cyclical"
+ },
+ "ENGINERSIN.NS": {
+  "de": 0.468,
+  "fetched": "2026-11-06",
+  "pm": 0.23542,
+  "roa": 0.08442,
+  "roe": 0.29681,
+  "sector": "Industrials"
+ },
+ "ENRIN.NS": {
+  "de": 4.483,
+  "fetched": "2026-11-06",
+  "pm": 0.15769,
+  "roa": null,
+  "roe": null,
+  "sector": "Utilities"
+ },
+ "ESCORTS.NS": {
+  "de": 1.204,
+  "fetched": "2026-11-06",
+  "pm": 0.103549995,
+  "roa": 0.04716,
+  "roe": 0.107259996,
+  "sector": "Industrials"
+ },
+ "ETERNAL.NS": {
+  "de": 18.412,
+  "fetched": "2026-11-06",
+  "pm": 0.00632,
+  "roa": 0.00189,
+  "roe": 0.01588,
+  "sector": "Consumer Cyclical"
+ },
+ "EXIDEIND.NS": {
+  "de": 11.652,
+  "fetched": "2026-11-06",
+  "pm": 0.05297,
+  "roa": 0.04487,
+  "roe": 0.07337,
+  "sector": "Consumer Cyclical"
+ },
+ "FACT.NS": {
+  "de": 295.147,
+  "fetched": "2026-11-06",
+  "pm": -0.01783,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "FEDERALBNK.NS": {
+  "de": null,
+  "fetched": "2026-11-06",
+  "pm": 0.31422,
+  "roa": 0.01329,
+  "roe": 0.13272001,
+  "sector": "Financial Services"
+ },
+ "FINCABLES.NS": {
+  "de": 0.314,
+  "fetched": "2026-11-06",
+  "pm": 0.11532,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "FIRSTCRY.NS": {
+  "de": 29.762,
+  "fetched": "2026-11-06",
+  "pm": -0.01422,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Cyclical"
+ },
+ "FIVESTAR.NS": {
+  "de": 100.85,
+  "fetched": "2026-11-06",
+  "pm": 0.47182,
+  "roa": 0.07067,
+  "roe": 0.15187,
+  "sector": "Financial Services"
+ },
+ "FLUOROCHEM.NS": {
+  "de": 26.223,
+  "fetched": "2026-11-06",
+  "pm": 0.1188,
+  "roa": 0.05491,
+  "roe": 0.08299,
+  "sector": "Basic Materials"
+ },
+ "FORCEMOT.NS": {
+  "de": null,
+  "fetched": "2026-11-06",
+  "pm": 0.118990004,
+  "roa": 0.12476,
+  "roe": 0.29333,
+  "sector": "Consumer Cyclical"
+ },
+ "FORTIS.NS": {
+  "de": 29.404,
+  "fetched": "2026-11-06",
+  "pm": 0.104779996,
+  "roa": 0.06737,
+  "roe": 0.103819996,
+  "sector": "Healthcare"
+ },
+ "FRACTAL.NS": {
+  "de": 3.819,
+  "fetched": "2026-11-06",
+  "pm": 0.10411,
+  "roa": 0.07744,
+  "roe": 0.1359,
+  "sector": "Technology"
+ },
+ "FSL.NS": {
+  "de": 59.879,
+  "fetched": "2026-11-06",
+  "pm": 0.06848,
+  "roa": 0.089549996,
+  "roe": 0.15663,
+  "sector": "Technology"
+ },
+ "GABRIEL.NS": {
+  "de": 59.067,
+  "fetched": "2026-11-06",
+  "pm": 0.0525,
+  "roa": 0.06176,
+  "roe": 0.15182,
+  "sector": "Consumer Cyclical"
  }
 }

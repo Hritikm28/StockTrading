@@ -14,12 +14,12 @@
     }
   ],
   "metrics": {
-    "win_rate": 15.4,
-    "n_window": 13,
-    "excess_cum": -3.11,
+    "win_rate": 13.3,
+    "n_window": 15,
+    "excess_cum": -3.79,
     "n_excess_days": 1
   },
-  "checked_on": "2026-11-05",
+  "checked_on": "2026-11-06",
   "tripped_on": "2026-06-12",
   "reason": "win rate 30.0% over last 20 trades < 40.0%; -7.72% cumulative excess vs NIFTY over last 10 signal days < -2.0%"
 }

@@ -62,7 +62,10 @@ jobs:
           # v2: deeper 800-day bootstrap (momentum needs 252 trading days).
           # Bumping the prefix forces a one-time deep re-seed, ignoring the
           # shallow v1 cache.
-          key: stockdata-v3-${{ steps.date.outputs.ymd }}
+          # One key per run, restoring the newest: a per-day key was saved
+          # only by the day's first run, so every later run that day (manual
+          # re-runs, then the nightly one) threw its downloads away.
+          key: stockdata-v3-${{ github.run_id }}
           restore-keys: |
             stockdata-v3-
 
@@ -70,7 +73,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/earnings_calendar
-          key: earningsdata-v1-${{ steps.date.outputs.ymd }}
+          key: earningsdata-v1-${{ github.run_id }}
           restore-keys: |
             earningsdata-v1-
 
@@ -78,7 +81,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/alpha_cache
-          key: alphacache-v1-${{ steps.date.outputs.ymd }}
+          key: alphacache-v1-${{ github.run_id }}
           restore-keys: |
             alphacache-v1-
 

@@ -8,9 +8,11 @@ the orders for the next open, and how it is doing against NIFTY.
 """
 import json
 from datetime import date
+
+from market_calendar import latest_session
 from pathlib import Path
 
-today = date.today().strftime('%Y-%m-%d')
+today = latest_session().strftime('%Y-%m-%d')   # same session as daily_runner
 sig_dir = Path('signals')
 
 # Today's run report (written by daily_runner, published by publish_signals)
@@ -129,8 +131,10 @@ def portfolio_section():
     perf = (f"Since {book['inception']}: portfolio {_pct(book.get('return_pct'))}"
             f" vs NIFTY {_pct(book.get('nifty_return_pct'))}"
             f" (value ₹{book['nav']:,.0f}, costs included)")
-    buy_rows = [(f"<b>{o['symbol']}</b>", o.get('rank', ''),
-                 _fmt(o.get('score')), f"₹{o['value']:,.0f}") for o in buys]
+    buy_rows = [(f"<b>{o['symbol']}</b>",
+                 'add' if o.get('topup') else o.get('rank', ''),
+                 '' if o.get('topup') else _fmt(o.get('score')),
+                 f"₹{o['value']:,.0f}") for o in buys]
     sell_rows = [(f"<b>{o['symbol']}</b>",
                   ("half — " if o.get('fraction', 1) < 1 else "")
                   + REASONS.get(o.get('reason'), o.get('reason', '')))

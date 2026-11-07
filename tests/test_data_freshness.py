@@ -52,3 +52,49 @@ def test_unfinished_bar_is_dropped():
     assert list(kept.index.strftime('%Y-%m-%d')) == ['2026-11-04', '2026-11-05']
     tz = df.tz_localize('Asia/Kolkata')
     assert len(q.final_bars(tz, date(2026, 11, 5))) == 2
+
+
+INDEX_CSV = """Index Name,Index Date,Open Index Value,High Index Value,Low Index Value,Closing Index Value,Points Change,Change(%),Volume,Turnover (Rs. Cr.),P/E,P/B,Div Yield
+Nifty 50,06-11-2026,24538.20,24690.10,24480.55,24650.35,113.75,0.46,412345678,35000.12,22.1,3.6,1.2
+Nifty Bank,06-11-2026,52000.00,52500.00,51900.00,52400.00,400.00,0.77,100000,9000.00,15.0,2.2,0.8
+India VIX,06-11-2026,15.58,17.10,14.90,16.83,1.25,8.02,-,-,-,-,-
+Nifty Next 50,06-11-2026,70000,70500,69900,70400,400,0.57,1,1,1,1,1
+"""
+
+
+def test_parse_index_close_reads_the_three_indices():
+    bars = q.parse_index_close(INDEX_CSV)
+    assert set(bars) == {'NIFTY50', 'NIFTYBANK', 'INDIAVIX'}
+    assert bars['NIFTY50']['Close'] == 24650.35
+    assert bars['NIFTY50']['Open'] == 24538.20
+    assert bars['INDIAVIX']['Close'] == 16.83 and bars['INDIAVIX']['Volume'] == 0
+
+
+class _Resp:
+    def __init__(self, status, text=''):
+        self.status_code, self.text = status, text
+
+
+def test_nse_index_closes_fill_only_missing_sessions(tmp_path, monkeypatch):
+    monkeypatch.setattr(q, 'DATA_DIR', tmp_path)
+    days = pd.bdate_range('2026-10-26', '2026-11-05')
+    for name in ('NIFTY50', 'NIFTYBANK', 'INDIAVIX'):
+        pd.DataFrame({'Open': 1.0, 'High': 1.0, 'Low': 1.0, 'Close': 1.0,
+                      'Adj Close': 1.0, 'Volume': 0.0},
+                     index=days).to_parquet(tmp_path / f"{name}.parquet")
+    asked = []
+
+    def get(url):
+        asked.append(url)
+        return _Resp(200, INDEX_CSV) if '06112026' in url else _Resp(404)
+
+    assert q.update_indices_from_nse(date(2026, 11, 6), get=get,
+                                     verbose=False) == 3
+    assert all('06112026' in u for u in asked)      # no refetch of held days
+    n = pd.read_parquet(tmp_path / "NIFTY50.parquet")
+    assert n.index[-1] == pd.Timestamp('2026-11-06')
+    assert n['Close'].iloc[-1] == 24650.35 and n['Close'].iloc[-2] == 1.0
+    asked.clear()
+    assert q.update_indices_from_nse(date(2026, 11, 6), get=get,
+                                     verbose=False) == 0
+    assert asked == []

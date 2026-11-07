@@ -36,6 +36,8 @@ if sys.platform == 'win32':
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 import argparse
+
+from market_calendar import latest_session
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -431,6 +433,10 @@ class DailyRunner:
             if o['side'] != 'BUY':
                 continue
             r = rows.get(o['symbol'], {})
+            # Top-ups (trend restored) carry no rank or score of their own;
+            # on 2026-11-06 reading o['score'] crashed the whole run.
+            score = o.get('score', r.get('composite_score'))
+            rank = o.get('rank', r.get('rank'))
             price = None
             f = self.config.DATA_DIR / f"{o['symbol'].replace('.NS', '')}.parquet"
             try:
@@ -440,7 +446,10 @@ class DailyRunner:
             out.append({
                 'symbol': o['symbol'], 'signal': 'BUY',
                 'confidence': round(float(r.get('composite_confidence', 0)), 1),
-                'composite_score': o['score'], 'rank': o['rank'],
+                'composite_score': (round(float(score), 3)
+                                    if score is not None else None),
+                'rank': int(rank) if rank is not None else None,
+                'topup': bool(o.get('topup')),
                 'current_price': round(price, 2) if price else None,
                 'position_size_inr': o['value'],
                 'position_pct': round(o['value'] / book['nav'] * 100, 2)
@@ -546,8 +555,9 @@ class DailyRunner:
         if approved:
             print(f"\n  BUY at next open ({len(approved)}):")
             for s in approved:
-                print(f"  {s['symbol']:<15} rank {s['rank']:>3}  "
-                      f"score {s['composite_score']:+.2f}  "
+                what = ('top-up' if s.get('topup')
+                        else f"rank {s['rank'] if s['rank'] is not None else '-':>3}")
+                print(f"  {s['symbol']:<15} {what:<9} "
                       f"₹{s['position_size_inr']:>10,.0f}")
         if sells:
             print(f"\n  SELL at next open ({len(sells)}):")
@@ -573,7 +583,10 @@ def main():
                         help='Run for a specific date (YYYY-MM-DD), default=today')
     args = parser.parse_args()
 
-    run_date = date.fromisoformat(args.date) if args.date else date.today()
+    # The session the data belongs to, not the runner's calendar date: the
+    # nightly job starts after midnight IST and can be queued into Saturday.
+    run_date = (date.fromisoformat(args.date) if args.date
+                else latest_session())
     config = RunnerConfig()
     runner = DailyRunner(config)
 

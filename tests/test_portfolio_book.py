@@ -233,3 +233,29 @@ def test_stale_benchmark_point_is_corrected_when_the_bar_arrives(market,
     r = step(market, tmp_path, d('2026-11-06'))
     book = pb.load_book(d('2026-11-06'), tmp_path / "book.json")
     assert [p['nifty'] for p in book['nav']][:2] == [140.0, 150.0]
+
+
+def test_rerun_on_a_trend_switch_day_keeps_its_orders(market, tmp_path):
+    """2026-11-06 switched back to full size, then had to be re-run: the
+    re-run must issue the same top-ups, not find the switch already done."""
+    step(market, tmp_path, d('2026-11-03'), gate=False, vs200=-1.0)
+    step(market, tmp_path, d('2026-11-04'), gate=False, vs200=-1.0)
+    first = step(market, tmp_path, d('2026-11-05'), vs200=1.0)
+    again = step(market, tmp_path, d('2026-11-05'), vs200=1.0)
+    assert first['action'] == again['action'] == 'TREND_RESTORED'
+    assert again['orders'] == first['orders']
+    book = pb.load_book(d('2026-11-05'), tmp_path / "book.json")
+    assert len(book['pending']) == pb.TARGET_HOLDINGS
+    assert book['exposure'] == 1.0
+    r = step(market, tmp_path, d('2026-11-06'), vs200=1.0)
+    assert r['cash_pct'] < 2
+
+
+def test_rerun_on_a_review_day_keeps_its_orders(market, tmp_path):
+    step(market, tmp_path, d('2026-11-03'))
+    step(market, tmp_path, d('2026-11-04'))
+    order = [s for s in SYMS if s != 'S00.NS'] + ['S00.NS']
+    first = step(market, tmp_path, d('2026-12-01'), order=order)
+    again = step(market, tmp_path, d('2026-12-01'), order=order)
+    assert first['action'] == again['action'] == 'REBALANCE'
+    assert again['orders'] == first['orders']

@@ -392,5 +392,10 @@
    "reason": "top_rank"
   }
  ],
- "exposure": 1.0
+ "exposure": 1.0,
+ "day_open": {
+  "date": "2026-11-06",
+  "exposure": 0.5,
+  "last_rebalance": "2026-11"
+ }
 }

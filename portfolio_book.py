@@ -225,6 +225,9 @@ def mark_nav(book: Dict, as_of: date, px: Prices) -> float:
     return nav
 
 
+DAY_STATE = ('exposure', 'last_rebalance')   # what decide() changes
+
+
 def decide(book: Dict, ranked: pd.DataFrame, as_of: date, nav: float,
            gate_open: bool, nifty_vs_200dma: Optional[float],
            breaker_tripped: bool,
@@ -233,6 +236,19 @@ def decide(book: Dict, ranked: pd.DataFrame, as_of: date, nav: float,
     """Today's orders, filled at the next open. Returns (action, orders)."""
     today = as_of.isoformat()
     book['pending'] = [o for o in book['pending'] if o['decided_on'] != today]
+    # A re-run of the same day must decide from that day's opening state.
+    # Otherwise a trend switch or monthly review it already recorded is
+    # skipped, and its orders (just dropped above) are lost.
+    opening = book.get('day_open')
+    if opening and opening.get('date') == today:
+        for k in DAY_STATE:
+            if opening.get(k) is None:
+                book.pop(k, None)
+            else:
+                book[k] = opening[k]
+    else:
+        book['day_open'] = {'date': today,
+                            **{k: book.get(k) for k in DAY_STATE}}
     unfilled = {o['symbol'] for o in book['pending']}
     held = [s for s in book['holdings'] if s not in unfilled]
     cost = COST_PER_SIDE_PCT / 100

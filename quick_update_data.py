@@ -10,13 +10,18 @@ Usage:
     python quick_update_data.py
 """
 
+import io
 import time
 import warnings
-from datetime import date, datetime, time as dtime, timedelta, timezone
+from datetime import date, timedelta
 from pathlib import Path
+from typing import Callable, Dict, Optional
 
 import pandas as pd
+import requests
 import yfinance as yf
+
+from market_calendar import latest_session
 
 warnings.filterwarnings('ignore')
 
@@ -42,27 +47,6 @@ except Exception as _e:
 INDICES = ["^NSEI", "^NSEBANK", "^INDIAVIX"]
 INDEX_MAP = {"^NSEI": "NIFTY50", "^NSEBANK": "NIFTYBANK", "^INDIAVIX": "INDIAVIX"}
 
-IST = timezone(timedelta(hours=5, minutes=30))
-CLOSE_FINAL_IST = dtime(16, 0)     # official closes are settled by ~15:45 IST
-
-
-def latest_session(now: datetime = None) -> date:
-    """The most recent weekday session whose close is final.
-
-    Data that reaches this date is current; anything older is fetched.
-    (The old rule treated "yesterday" as current, so a run after the close
-    never fetched that day's index bar: NIFTY was always a day behind.)
-    NSE holidays aren't known here; on one, the fetch just finds nothing.
-    """
-    now = (now or datetime.now(timezone.utc)).astimezone(IST)
-    d = now.date()
-    if now.time() < CLOSE_FINAL_IST:
-        d -= timedelta(days=1)
-    while d.weekday() >= 5:
-        d -= timedelta(days=1)
-    return d
-
-
 def final_bars(df: pd.DataFrame, upto: date) -> pd.DataFrame:
     """Drop bars after `upto`: during market hours Yahoo returns today's
     unfinished bar, which would otherwise be stored as if it were final."""
@@ -70,6 +54,111 @@ def final_bars(df: pd.DataFrame, upto: date) -> pd.DataFrame:
     if getattr(idx, 'tz', None) is not None:
         idx = idx.tz_localize(None)
     return df[idx.normalize() <= pd.Timestamp(upto)]
+
+
+# NSE's own daily index closes. Yahoo can post an index's daily bar late:
+# at 02:00 IST on 2026-11-07, NIFTY's 2026-11-06 bar was still missing, so
+# the portfolio was compared with Thursday's NIFTY again.
+NSE_INDEX_FILES = {'nifty 50': 'NIFTY50', 'nifty bank': 'NIFTYBANK',
+                   'india vix': 'INDIAVIX'}
+_INDEX_CLOSE_URLS = [
+    "https://nsearchives.nseindia.com/content/indices/ind_close_all_{d}.csv",
+    "https://archives.nseindia.com/content/indices/ind_close_all_{d}.csv",
+]
+_NSE_HEADERS = {
+    'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                   'AppleWebKit/537.36 (KHTML, like Gecko) '
+                   'Chrome/124.0.0.0 Safari/537.36'),
+    'Referer': 'https://www.nseindia.com/',
+}
+
+
+def _num(v) -> Optional[float]:
+    try:
+        return float(str(v).replace(',', '').strip())
+    except (TypeError, ValueError):
+        return None
+
+
+def parse_index_close(text: str) -> Dict[str, dict]:
+    """{'NIFTY50': {'Open', 'High', 'Low', 'Close', ...}} from NSE's
+    ind_close_all CSV (one row per index for one session)."""
+    df = pd.read_csv(io.StringIO(text))
+    cols = {str(c).strip().lower(): c for c in df.columns}
+
+    def col(word):
+        return next((c for lc, c in cols.items() if word in lc), None)
+
+    name_c, close_c = col('index name'), col('clos')
+    if name_c is None or close_c is None:
+        return {}
+    out = {}
+    for _, r in df.iterrows():
+        key = NSE_INDEX_FILES.get(str(r[name_c]).strip().lower())
+        close = _num(r[close_c])
+        if key is None or close is None or close <= 0:
+            continue
+        bar = {'Close': close, 'Adj Close': close}
+        for k in ('Open', 'High', 'Low'):
+            c = col(k.lower())
+            v = _num(r[c]) if c is not None else None
+            bar[k] = v if v and v > 0 else close
+        vc = col('volume')
+        bar['Volume'] = (_num(r[vc]) or 0.0) if vc is not None else 0.0
+        out[key] = bar
+    return out
+
+
+def update_indices_from_nse(upto: date, sessions: int = 5,
+                            get: Callable = None, verbose: bool = True) -> int:
+    """Add any of the last few sessions' index bars missing from the
+    NIFTY50 / NIFTYBANK / INDIAVIX files. Existing bars are left alone,
+    and a file with no history yet is left to the Yahoo cold start."""
+    get = get or (lambda url: requests.get(url, headers=_NSE_HEADERS,
+                                           timeout=25))
+    frames = {}
+    for name in NSE_INDEX_FILES.values():
+        f = DATA_DIR / f"{name}.parquet"
+        if f.exists():
+            try:
+                frames[name] = pd.read_parquet(f)
+            except Exception:
+                pass
+    added, changed = 0, set()
+    for day in pd.bdate_range(end=pd.Timestamp(upto), periods=sessions):
+        missing = []
+        for name, df in frames.items():
+            idx = pd.to_datetime(df.index)
+            if getattr(idx, 'tz', None) is not None:
+                idx = idx.tz_localize(None)
+            if day not in idx.normalize():
+                missing.append(name)
+        if not missing:
+            continue
+        bars = {}
+        for url in _INDEX_CLOSE_URLS:
+            try:
+                resp = get(url.format(d=day.strftime('%d%m%Y')))
+                if resp.status_code == 200 and 'index' in resp.text[:300].lower():
+                    bars = parse_index_close(resp.text)
+                    break
+            except Exception:
+                continue
+        for name in missing:                # nothing for a holiday
+            if name in bars:
+                row = pd.DataFrame([bars[name]], index=[day])
+                df = pd.concat([frames[name], row])
+                frames[name] = df[~df.index.duplicated(keep='first')].sort_index()
+                changed.add(name)
+                added += 1
+    for name in changed:
+        keep = [c for c in ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume']
+                if c in frames[name].columns]
+        frames[name][keep].to_parquet(DATA_DIR / f"{name}.parquet")
+    if verbose:
+        print(f"  NSE index closes: {added} bar(s) added "
+              f"({', '.join(sorted(changed)) or 'all current'})")
+    return added
 
 
 def _get_last_date(symbol: str) -> date:
@@ -396,6 +485,12 @@ def run_update(verbose: bool = True):
 
     # Step 1: Try bhav copy for same-day prices (works after 6 PM)
     bhav_updated = update_from_bhav(verbose=verbose)
+
+    # Step 1b: index closes straight from NSE (Yahoo's can arrive a day late)
+    try:
+        update_indices_from_nse(expected, verbose=verbose)
+    except Exception as e:
+        print(f"  NSE index closes failed: {e}")
 
     # Step 2: yfinance for any remaining gaps / historical data
     all_syms  = UNIVERSE + INDICES

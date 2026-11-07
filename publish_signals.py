@@ -9,7 +9,9 @@ import shutil
 from pathlib import Path
 from datetime import date
 
-today     = date.today().strftime('%Y-%m-%d')
+from market_calendar import latest_session
+
+today     = latest_session().strftime('%Y-%m-%d')   # same session as daily_runner
 dst       = Path('signals')
 dst.mkdir(exist_ok=True)
 

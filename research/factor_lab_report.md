@@ -1,18 +1,18 @@
 # Factor Lab: ten-year test of the portfolio rules
 
-_Generated 2026-11-04 by factor_lab.py. Period 2016-10-28 to 2026-11-04, 501 candidate stocks (today's NIFTY 500). Same rules as the live paper portfolio: top 15 (max 4 per industry), monthly replacement with a top-30 buffer, trend gate, 0.4% round-trip costs._
+_Generated 2026-11-09 by factor_lab.py. Period 2016-11-02 to 2026-11-09, 3269 stocks from NSE's daily bhav copies, including those that later collapsed or were delisted (no survivorship bias). Same rules as the live paper portfolio: top 15 (max 4 per industry), monthly replacement with a top-30 buffer, trend gate, 0.22% cost per side._
 
-**Read with care (survivorship bias):** the candidate list is today's NIFTY 500, so companies that collapsed and left the index are missing. That flatters every result below. Compare the variants with each other; treat the gap to NIFTY as an upper bound. Price returns only, for the strategy and NIFTY alike.
+Price returns only, for the strategy and NIFTY alike. After-tax figures are estimates: strategy gains taxed at 20% each year, NIFTY held throughout and taxed 12.5% once at the end.
 
-| Variant | CAGR | NIFTY | Excess | Max fall | Sharpe | Turnover/yr | Months beating NIFTY | Chance it's skill |
-|---|---|---|---|---|---|---|---|---|
-| Momentum 12-1 without the trend gate | 25.14% | 10.72% | **+14.42%** | -44.1% | 1.0 | 188% | 54.9% | 91.1% |
-| Momentum 12-1, half invested when the trend breaks | 20.37% | 10.72% | **+9.64%** | -39.0% | 0.93 | 199% | 53.3% | 74.9% |
-| Risk-adjusted momentum + 52-week high | 16.84% | 10.72% | **+6.12%** | -33.2% | 0.95 | 261% | 52.5% | 53.9% |
-| Momentum 12-1 (live today) | 16.0% | 10.72% | **+5.28%** | -35.3% | 0.81 | 206% | 48.4% | 47.8% |
-| Risk-adjusted momentum (NSE style) | 15.28% | 10.72% | **+4.56%** | -35.2% | 0.84 | 248% | 50.0% | 44.6% |
-| Momentum, steady climbers preferred | 12.94% | 10.72% | **+2.22%** | -34.9% | 0.74 | 236% | 47.5% | 31.8% |
-| Closeness to 52-week high | 12.57% | 10.72% | **+1.85%** | -31.9% | 0.83 | 537% | 44.3% | 27.0% |
+| Variant | CAGR | After tax | NIFTY | NIFTY after tax | Excess | Max fall | Sharpe | Turnover/yr | Months beating NIFTY | Chance it's skill |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Residual momentum, skipping watch-list stocks (live from 2026-11-10) | 12.56% | 10.22% | 11.37% | 10.42% | **+1.19%** | -32.0% | 0.73 | 216% | 52.1% | 54.5% |
+| Residual momentum, watch-list stocks allowed | 10.98% | 8.91% | 11.37% | 10.42% | **-0.39%** | -32.1% | 0.65 | 218% | 50.4% | 42.8% |
+| Plain momentum 12-1, skipping watch-list stocks | 10.53% | 8.51% | 11.37% | 10.42% | **-0.84%** | -37.3% | 0.56 | 196% | 51.2% | 45.6% |
+| Plain momentum 12-1 without the trend gate | 10.37% | 8.42% | 11.37% | 10.42% | **-1.0%** | -42.0% | 0.53 | 173% | 52.1% | 48.4% |
+| Plain momentum 12-1 (live until 2026-11-09) | 9.88% | 8.01% | 11.37% | 10.42% | **-1.49%** | -36.2% | 0.54 | 194% | 49.6% | 41.2% |
+
+**Survivorship bias, measured:** plain momentum tested the old way, on today's NIFTY 500 only (501 stocks), returned 20.73% a year (worst fall -38.7%), against 9.88% here. The old test overstated the yearly return by 10.8 points.
 
 _"Chance it's skill" is the deflated Sharpe ratio of the monthly gap to NIFTY: the probability the edge is real after charging for every variant in this table. 95%+ is convincing; under 50% means luck explains it as well as skill. It does not charge for ideas tried before this lab existed, so read it as an upper bound too._
 
@@ -20,13 +20,11 @@ _"Chance it's skill" is the deflated Sharpe ratio of the monthly gap to NIFTY: t
 
 | Variant | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Momentum 12-1 (live today) | -23.2 / -5.2 | 54.2 / 28.6 | -6.2 / 3.2 | -5.3 / 12.0 | 29.7 / 14.9 | 75.7 / 24.1 | -9.6 / 4.3 | 48.1 / 20.0 | 50.3 / 8.8 | -3.7 / 10.5 | -4.8 / -8.3 |
-| Risk-adjusted momentum (NSE style) | -22.9 / -5.2 | 57.4 / 28.6 | -9.4 / 3.2 | -3.8 / 12.0 | 32.9 / 14.9 | 74.6 / 24.1 | -2.5 / 4.3 | 59.7 / 20.0 | 32.0 / 8.8 | -12.0 / 10.5 | -6.6 / -8.3 |
-| Momentum, steady climbers preferred | -23.1 / -5.2 | 50.2 / 28.6 | -9.3 / 3.2 | -5.7 / 12.0 | 37.8 / 14.9 | 73.1 / 24.1 | -7.6 / 4.3 | 31.6 / 20.0 | 32.3 / 8.8 | -6.8 / 10.5 | -4.3 / -8.3 |
-| Closeness to 52-week high | -18.6 / -5.2 | 32.5 / 28.6 | -14.7 / 3.2 | -9.1 / 12.0 | 52.7 / 14.9 | 48.3 / 24.1 | -5.0 / 4.3 | 55.0 / 20.0 | 31.2 / 8.8 | -7.3 / 10.5 | -3.5 / -8.3 |
-| Risk-adjusted momentum + 52-week high | -19.6 / -5.2 | 45.9 / 28.6 | -1.6 / 3.2 | -4.5 / 12.0 | 31.4 / 14.9 | 76.5 / 24.1 | 4.0 / 4.3 | 56.0 / 20.0 | 31.1 / 8.8 | -7.1 / 10.5 | -5.9 / -8.3 |
-| Momentum 12-1 without the trend gate | -13.2 / -5.2 | 67.1 / 28.6 | 5.2 / 3.2 | 1.3 / 12.0 | 22.8 / 14.9 | 74.7 / 24.1 | 6.3 / 4.3 | 34.7 / 20.0 | 50.6 / 8.8 | -1.8 / 10.5 | 34.6 / -8.3 |
-| Momentum 12-1, half invested when the trend breaks | -18.6 / -5.2 | 62.6 / 28.6 | -1.2 / 3.2 | -6.4 / 12.0 | 27.0 / 14.9 | 77.9 / 24.1 | 3.5 / 4.3 | 31.9 / 20.0 | 51.0 / 8.8 | -2.0 / 10.5 | 14.6 / -8.3 |
+| Residual momentum, skipping watch-list stocks (live from 2026-11-10) | -15.3 / -3.9 | 33.2 / 28.6 | -7.3 / 3.2 | -5.7 / 12.0 | 18.0 / 14.9 | 47.4 / 24.1 | -4.1 / 4.3 | 37.2 / 20.0 | 38.2 / 8.8 | -1.2 / 10.5 | 6.2 / -4.2 |
+| Residual momentum, watch-list stocks allowed | -15.3 / -3.9 | 33.2 / 28.6 | -5.2 / 3.2 | -5.8 / 12.0 | 16.8 / 14.9 | 41.6 / 24.1 | -9.7 / 4.3 | 35.7 / 20.0 | 40.5 / 8.8 | -4.6 / 10.5 | 3.9 / -4.2 |
+| Plain momentum 12-1, skipping watch-list stocks | -17.3 / -3.9 | 46.8 / 28.6 | -19.9 / 3.2 | -1.5 / 12.0 | 13.1 / 14.9 | 39.3 / 24.1 | 8.0 / 4.3 | 19.5 / 20.0 | 31.0 / 8.8 | -8.4 / 10.5 | 16.6 / -4.2 |
+| Plain momentum 12-1 (live until 2026-11-09) | -17.3 / -3.9 | 46.8 / 28.6 | -18.2 / 3.2 | -1.1 / 12.0 | 14.1 / 14.9 | 29.3 / 24.1 | 5.4 / 4.3 | 19.6 / 20.0 | 39.4 / 8.8 | -11.7 / 10.5 | 14.3 / -4.2 |
+| Plain momentum 12-1 without the trend gate | -12.2 / -3.9 | 45.6 / 28.6 | -17.8 / 3.2 | 6.8 / 12.0 | 12.4 / 14.9 | 31.4 / 24.1 | -9.1 / 4.3 | 26.2 / 20.0 | 38.9 / 8.8 | -15.3 / 10.5 | 20.2 / -4.2 |
 
 ## The trend gate on NIFTY itself (no survivorship bias)
 
@@ -34,8 +32,8 @@ Holding NIFTY fully while it is above its 200-day average and cutting back when 
 
 | | Yearly return | Worst fall |
 |---|---|---|
-| Gate: sell everything | 6.61% | -20.5% |
-| Gate: sell half | 8.66% | -27.3% |
-| NIFTY held throughout | 10.41% | -38.4% |
+| Gate: sell everything | 6.84% | -20.5% |
+| Gate: sell half | 9.03% | -27.3% |
+| NIFTY held throughout | 10.92% | -38.4% |
 
-The gate switched 2.5 times a year.
+The gate switched 2.6 times a year.

@@ -1,182 +1,36 @@
 {
- "generated": "2026-11-04",
+ "generated": "2026-11-09",
  "period": [
-  "2016-10-28",
-  "2026-11-04"
+  "2016-11-02",
+  "2026-11-09"
  ],
- "n_candidates": 501,
- "n_variants": 7,
+ "n_candidates": 3269,
+ "n_variants": 5,
  "variants": {
-  "mom_12_1": {
-   "cagr_pct": 16.0,
-   "nifty_cagr_pct": 10.72,
-   "excess_cagr_pct": 5.28,
-   "vol_pct": 21.6,
-   "sharpe": 0.81,
-   "max_dd_pct": -35.3,
+  "live": {
+   "cagr_pct": 12.56,
+   "nifty_cagr_pct": 11.37,
+   "excess_cagr_pct": 1.19,
+   "after_tax_cagr_pct": 10.22,
+   "nifty_after_tax_cagr_pct": 10.42,
+   "vol_pct": 19.1,
+   "sharpe": 0.73,
+   "max_dd_pct": -32.0,
    "nifty_max_dd_pct": -38.4,
-   "turnover_pct_yr": 206.0,
-   "beat_nifty_months_pct": 48.4,
-   "t_excess": 0.87,
+   "turnover_pct_yr": 216.0,
+   "beat_nifty_months_pct": 52.1,
+   "t_excess": 0.27,
    "yearly": {
     "2016": [
-     -23.2,
-     -5.2
+     -15.3,
+     -3.9
     ],
     "2017": [
-     54.2,
+     33.2,
      28.6
     ],
     "2018": [
-     -6.2,
-     3.2
-    ],
-    "2019": [
-     -5.3,
-     12.0
-    ],
-    "2020": [
-     29.7,
-     14.9
-    ],
-    "2021": [
-     75.7,
-     24.1
-    ],
-    "2022": [
-     -9.6,
-     4.3
-    ],
-    "2023": [
-     48.1,
-     20.0
-    ],
-    "2024": [
-     50.3,
-     8.8
-    ],
-    "2025": [
-     -3.7,
-     10.5
-    ],
-    "2026": [
-     -4.8,
-     -8.3
-    ]
-   },
-   "label": "Momentum 12-1 (live today)",
-   "invested_pct": 79.6,
-   "rules": {
-    "top_n": 15,
-    "buffer": 30,
-    "cost": 0.002,
-    "exit_band": 0.02,
-    "gate": true,
-    "low_exposure": 0.0,
-    "max_per_sector": 4,
-    "universe_size": 150,
-    "min_traded_value": 50000000.0,
-    "liq_window": 60,
-    "history": 260
-   },
-   "prob_skill_dsr": 47.8
-  },
-  "mom_riskadj": {
-   "cagr_pct": 15.28,
-   "nifty_cagr_pct": 10.72,
-   "excess_cagr_pct": 4.56,
-   "vol_pct": 19.5,
-   "sharpe": 0.84,
-   "max_dd_pct": -35.2,
-   "nifty_max_dd_pct": -38.4,
-   "turnover_pct_yr": 248.0,
-   "beat_nifty_months_pct": 50.0,
-   "t_excess": 0.78,
-   "yearly": {
-    "2016": [
-     -22.9,
-     -5.2
-    ],
-    "2017": [
-     57.4,
-     28.6
-    ],
-    "2018": [
-     -9.4,
-     3.2
-    ],
-    "2019": [
-     -3.8,
-     12.0
-    ],
-    "2020": [
-     32.9,
-     14.9
-    ],
-    "2021": [
-     74.6,
-     24.1
-    ],
-    "2022": [
-     -2.5,
-     4.3
-    ],
-    "2023": [
-     59.7,
-     20.0
-    ],
-    "2024": [
-     32.0,
-     8.8
-    ],
-    "2025": [
-     -12.0,
-     10.5
-    ],
-    "2026": [
-     -6.6,
-     -8.3
-    ]
-   },
-   "label": "Risk-adjusted momentum (NSE style)",
-   "invested_pct": 79.6,
-   "rules": {
-    "top_n": 15,
-    "buffer": 30,
-    "cost": 0.002,
-    "exit_band": 0.02,
-    "gate": true,
-    "low_exposure": 0.0,
-    "max_per_sector": 4,
-    "universe_size": 150,
-    "min_traded_value": 50000000.0,
-    "liq_window": 60,
-    "history": 260
-   },
-   "prob_skill_dsr": 44.6
-  },
-  "mom_steady": {
-   "cagr_pct": 12.94,
-   "nifty_cagr_pct": 10.72,
-   "excess_cagr_pct": 2.22,
-   "vol_pct": 19.5,
-   "sharpe": 0.74,
-   "max_dd_pct": -34.9,
-   "nifty_max_dd_pct": -38.4,
-   "turnover_pct_yr": 236.0,
-   "beat_nifty_months_pct": 47.5,
-   "t_excess": 0.45,
-   "yearly": {
-    "2016": [
-     -23.1,
-     -5.2
-    ],
-    "2017": [
-     50.2,
-     28.6
-    ],
-    "2018": [
-     -9.3,
+     -7.3,
      3.2
     ],
     "2019": [
@@ -184,336 +38,40 @@
      12.0
     ],
     "2020": [
-     37.8,
+     18.0,
      14.9
     ],
     "2021": [
-     73.1,
+     47.4,
      24.1
     ],
     "2022": [
-     -7.6,
+     -4.1,
      4.3
     ],
     "2023": [
-     31.6,
+     37.2,
      20.0
     ],
     "2024": [
-     32.3,
+     38.2,
      8.8
     ],
     "2025": [
-     -6.8,
-     10.5
-    ],
-    "2026": [
-     -4.3,
-     -8.3
-    ]
-   },
-   "label": "Momentum, steady climbers preferred",
-   "invested_pct": 79.6,
-   "rules": {
-    "top_n": 15,
-    "buffer": 30,
-    "cost": 0.002,
-    "exit_band": 0.02,
-    "gate": true,
-    "low_exposure": 0.0,
-    "max_per_sector": 4,
-    "universe_size": 150,
-    "min_traded_value": 50000000.0,
-    "liq_window": 60,
-    "history": 260
-   },
-   "prob_skill_dsr": 31.8
-  },
-  "hi52": {
-   "cagr_pct": 12.57,
-   "nifty_cagr_pct": 10.72,
-   "excess_cagr_pct": 1.85,
-   "vol_pct": 16.2,
-   "sharpe": 0.83,
-   "max_dd_pct": -31.9,
-   "nifty_max_dd_pct": -38.4,
-   "turnover_pct_yr": 537.0,
-   "beat_nifty_months_pct": 44.3,
-   "t_excess": 0.31,
-   "yearly": {
-    "2016": [
-     -18.6,
-     -5.2
-    ],
-    "2017": [
-     32.5,
-     28.6
-    ],
-    "2018": [
-     -14.7,
-     3.2
-    ],
-    "2019": [
-     -9.1,
-     12.0
-    ],
-    "2020": [
-     52.7,
-     14.9
-    ],
-    "2021": [
-     48.3,
-     24.1
-    ],
-    "2022": [
-     -5.0,
-     4.3
-    ],
-    "2023": [
-     55.0,
-     20.0
-    ],
-    "2024": [
-     31.2,
-     8.8
-    ],
-    "2025": [
-     -7.3,
-     10.5
-    ],
-    "2026": [
-     -3.5,
-     -8.3
-    ]
-   },
-   "label": "Closeness to 52-week high",
-   "invested_pct": 79.6,
-   "rules": {
-    "top_n": 15,
-    "buffer": 30,
-    "cost": 0.002,
-    "exit_band": 0.02,
-    "gate": true,
-    "low_exposure": 0.0,
-    "max_per_sector": 4,
-    "universe_size": 150,
-    "min_traded_value": 50000000.0,
-    "liq_window": 60,
-    "history": 260
-   },
-   "prob_skill_dsr": 27.0
-  },
-  "riskadj_hi52": {
-   "cagr_pct": 16.84,
-   "nifty_cagr_pct": 10.72,
-   "excess_cagr_pct": 6.12,
-   "vol_pct": 18.7,
-   "sharpe": 0.95,
-   "max_dd_pct": -33.2,
-   "nifty_max_dd_pct": -38.4,
-   "turnover_pct_yr": 261.0,
-   "beat_nifty_months_pct": 52.5,
-   "t_excess": 1.01,
-   "yearly": {
-    "2016": [
-     -19.6,
-     -5.2
-    ],
-    "2017": [
-     45.9,
-     28.6
-    ],
-    "2018": [
-     -1.6,
-     3.2
-    ],
-    "2019": [
-     -4.5,
-     12.0
-    ],
-    "2020": [
-     31.4,
-     14.9
-    ],
-    "2021": [
-     76.5,
-     24.1
-    ],
-    "2022": [
-     4.0,
-     4.3
-    ],
-    "2023": [
-     56.0,
-     20.0
-    ],
-    "2024": [
-     31.1,
-     8.8
-    ],
-    "2025": [
-     -7.1,
-     10.5
-    ],
-    "2026": [
-     -5.9,
-     -8.3
-    ]
-   },
-   "label": "Risk-adjusted momentum + 52-week high",
-   "invested_pct": 79.6,
-   "rules": {
-    "top_n": 15,
-    "buffer": 30,
-    "cost": 0.002,
-    "exit_band": 0.02,
-    "gate": true,
-    "low_exposure": 0.0,
-    "max_per_sector": 4,
-    "universe_size": 150,
-    "min_traded_value": 50000000.0,
-    "liq_window": 60,
-    "history": 260
-   },
-   "prob_skill_dsr": 53.9
-  },
-  "mom_12_1_nogate": {
-   "cagr_pct": 25.14,
-   "nifty_cagr_pct": 10.72,
-   "excess_cagr_pct": 14.42,
-   "vol_pct": 26.5,
-   "sharpe": 1.0,
-   "max_dd_pct": -44.1,
-   "nifty_max_dd_pct": -38.4,
-   "turnover_pct_yr": 188.0,
-   "beat_nifty_months_pct": 54.9,
-   "t_excess": 2.21,
-   "yearly": {
-    "2016": [
-     -13.2,
-     -5.2
-    ],
-    "2017": [
-     67.1,
-     28.6
-    ],
-    "2018": [
-     5.2,
-     3.2
-    ],
-    "2019": [
-     1.3,
-     12.0
-    ],
-    "2020": [
-     22.8,
-     14.9
-    ],
-    "2021": [
-     74.7,
-     24.1
-    ],
-    "2022": [
-     6.3,
-     4.3
-    ],
-    "2023": [
-     34.7,
-     20.0
-    ],
-    "2024": [
-     50.6,
-     8.8
-    ],
-    "2025": [
-     -1.8,
-     10.5
-    ],
-    "2026": [
-     34.6,
-     -8.3
-    ]
-   },
-   "label": "Momentum 12-1 without the trend gate",
-   "invested_pct": 100.0,
-   "rules": {
-    "top_n": 15,
-    "buffer": 30,
-    "cost": 0.002,
-    "exit_band": 0.02,
-    "gate": false,
-    "low_exposure": 0.0,
-    "max_per_sector": 4,
-    "universe_size": 150,
-    "min_traded_value": 50000000.0,
-    "liq_window": 60,
-    "history": 260
-   },
-   "prob_skill_dsr": 91.1
-  },
-  "mom_12_1_half": {
-   "cagr_pct": 20.37,
-   "nifty_cagr_pct": 10.72,
-   "excess_cagr_pct": 9.64,
-   "vol_pct": 23.4,
-   "sharpe": 0.93,
-   "max_dd_pct": -39.0,
-   "nifty_max_dd_pct": -38.4,
-   "turnover_pct_yr": 199.0,
-   "beat_nifty_months_pct": 53.3,
-   "t_excess": 1.57,
-   "yearly": {
-    "2016": [
-     -18.6,
-     -5.2
-    ],
-    "2017": [
-     62.6,
-     28.6
-    ],
-    "2018": [
      -1.2,
-     3.2
-    ],
-    "2019": [
-     -6.4,
-     12.0
-    ],
-    "2020": [
-     27.0,
-     14.9
-    ],
-    "2021": [
-     77.9,
-     24.1
-    ],
-    "2022": [
-     3.5,
-     4.3
-    ],
-    "2023": [
-     31.9,
-     20.0
-    ],
-    "2024": [
-     51.0,
-     8.8
-    ],
-    "2025": [
-     -2.0,
      10.5
     ],
     "2026": [
-     14.6,
-     -8.3
+     6.2,
+     -4.2
     ]
    },
-   "label": "Momentum 12-1, half invested when the trend breaks",
+   "label": "Residual momentum, skipping watch-list stocks (live from 2026-11-10)",
    "invested_pct": 100.0,
    "rules": {
     "top_n": 15,
     "buffer": 30,
-    "cost": 0.002,
+    "cost": 0.0022,
     "exit_band": 0.02,
     "gate": true,
     "low_exposure": 0.5,
@@ -521,25 +79,339 @@
     "universe_size": 150,
     "min_traded_value": 50000000.0,
     "liq_window": 60,
-    "history": 260
+    "history": 260,
+    "skip_watch": true
    },
-   "prob_skill_dsr": 74.9
+   "prob_skill_dsr": 54.5
+  },
+  "resid": {
+   "cagr_pct": 10.98,
+   "nifty_cagr_pct": 11.37,
+   "excess_cagr_pct": -0.39,
+   "after_tax_cagr_pct": 8.91,
+   "nifty_after_tax_cagr_pct": 10.42,
+   "vol_pct": 19.1,
+   "sharpe": 0.65,
+   "max_dd_pct": -32.1,
+   "nifty_max_dd_pct": -38.4,
+   "turnover_pct_yr": 218.0,
+   "beat_nifty_months_pct": 50.4,
+   "t_excess": -0.03,
+   "yearly": {
+    "2016": [
+     -15.3,
+     -3.9
+    ],
+    "2017": [
+     33.2,
+     28.6
+    ],
+    "2018": [
+     -5.2,
+     3.2
+    ],
+    "2019": [
+     -5.8,
+     12.0
+    ],
+    "2020": [
+     16.8,
+     14.9
+    ],
+    "2021": [
+     41.6,
+     24.1
+    ],
+    "2022": [
+     -9.7,
+     4.3
+    ],
+    "2023": [
+     35.7,
+     20.0
+    ],
+    "2024": [
+     40.5,
+     8.8
+    ],
+    "2025": [
+     -4.6,
+     10.5
+    ],
+    "2026": [
+     3.9,
+     -4.2
+    ]
+   },
+   "label": "Residual momentum, watch-list stocks allowed",
+   "invested_pct": 100.0,
+   "rules": {
+    "top_n": 15,
+    "buffer": 30,
+    "cost": 0.0022,
+    "exit_band": 0.02,
+    "gate": true,
+    "low_exposure": 0.5,
+    "max_per_sector": 4,
+    "universe_size": 150,
+    "min_traded_value": 50000000.0,
+    "liq_window": 60,
+    "history": 260,
+    "skip_watch": false
+   },
+   "prob_skill_dsr": 42.8
+  },
+  "mom_nowatch": {
+   "cagr_pct": 10.53,
+   "nifty_cagr_pct": 11.37,
+   "excess_cagr_pct": -0.84,
+   "after_tax_cagr_pct": 8.51,
+   "nifty_after_tax_cagr_pct": 10.42,
+   "vol_pct": 23.2,
+   "sharpe": 0.56,
+   "max_dd_pct": -37.3,
+   "nifty_max_dd_pct": -38.4,
+   "turnover_pct_yr": 196.0,
+   "beat_nifty_months_pct": 51.2,
+   "t_excess": 0.05,
+   "yearly": {
+    "2016": [
+     -17.3,
+     -3.9
+    ],
+    "2017": [
+     46.8,
+     28.6
+    ],
+    "2018": [
+     -19.9,
+     3.2
+    ],
+    "2019": [
+     -1.5,
+     12.0
+    ],
+    "2020": [
+     13.1,
+     14.9
+    ],
+    "2021": [
+     39.3,
+     24.1
+    ],
+    "2022": [
+     8.0,
+     4.3
+    ],
+    "2023": [
+     19.5,
+     20.0
+    ],
+    "2024": [
+     31.0,
+     8.8
+    ],
+    "2025": [
+     -8.4,
+     10.5
+    ],
+    "2026": [
+     16.6,
+     -4.2
+    ]
+   },
+   "label": "Plain momentum 12-1, skipping watch-list stocks",
+   "invested_pct": 100.0,
+   "rules": {
+    "top_n": 15,
+    "buffer": 30,
+    "cost": 0.0022,
+    "exit_band": 0.02,
+    "gate": true,
+    "low_exposure": 0.5,
+    "max_per_sector": 4,
+    "universe_size": 150,
+    "min_traded_value": 50000000.0,
+    "liq_window": 60,
+    "history": 260,
+    "skip_watch": true
+   },
+   "prob_skill_dsr": 45.6
+  },
+  "mom": {
+   "cagr_pct": 9.88,
+   "nifty_cagr_pct": 11.37,
+   "excess_cagr_pct": -1.49,
+   "after_tax_cagr_pct": 8.01,
+   "nifty_after_tax_cagr_pct": 10.42,
+   "vol_pct": 22.6,
+   "sharpe": 0.54,
+   "max_dd_pct": -36.2,
+   "nifty_max_dd_pct": -38.4,
+   "turnover_pct_yr": 194.0,
+   "beat_nifty_months_pct": 49.6,
+   "t_excess": -0.06,
+   "yearly": {
+    "2016": [
+     -17.3,
+     -3.9
+    ],
+    "2017": [
+     46.8,
+     28.6
+    ],
+    "2018": [
+     -18.2,
+     3.2
+    ],
+    "2019": [
+     -1.1,
+     12.0
+    ],
+    "2020": [
+     14.1,
+     14.9
+    ],
+    "2021": [
+     29.3,
+     24.1
+    ],
+    "2022": [
+     5.4,
+     4.3
+    ],
+    "2023": [
+     19.6,
+     20.0
+    ],
+    "2024": [
+     39.4,
+     8.8
+    ],
+    "2025": [
+     -11.7,
+     10.5
+    ],
+    "2026": [
+     14.3,
+     -4.2
+    ]
+   },
+   "label": "Plain momentum 12-1 (live until 2026-11-09)",
+   "invested_pct": 100.0,
+   "rules": {
+    "top_n": 15,
+    "buffer": 30,
+    "cost": 0.0022,
+    "exit_band": 0.02,
+    "gate": true,
+    "low_exposure": 0.5,
+    "max_per_sector": 4,
+    "universe_size": 150,
+    "min_traded_value": 50000000.0,
+    "liq_window": 60,
+    "history": 260,
+    "skip_watch": false
+   },
+   "prob_skill_dsr": 41.2
+  },
+  "mom_nogate": {
+   "cagr_pct": 10.37,
+   "nifty_cagr_pct": 11.37,
+   "excess_cagr_pct": -1.0,
+   "after_tax_cagr_pct": 8.42,
+   "nifty_after_tax_cagr_pct": 10.42,
+   "vol_pct": 25.1,
+   "sharpe": 0.53,
+   "max_dd_pct": -42.0,
+   "nifty_max_dd_pct": -38.4,
+   "turnover_pct_yr": 173.0,
+   "beat_nifty_months_pct": 52.1,
+   "t_excess": 0.12,
+   "yearly": {
+    "2016": [
+     -12.2,
+     -3.9
+    ],
+    "2017": [
+     45.6,
+     28.6
+    ],
+    "2018": [
+     -17.8,
+     3.2
+    ],
+    "2019": [
+     6.8,
+     12.0
+    ],
+    "2020": [
+     12.4,
+     14.9
+    ],
+    "2021": [
+     31.4,
+     24.1
+    ],
+    "2022": [
+     -9.1,
+     4.3
+    ],
+    "2023": [
+     26.2,
+     20.0
+    ],
+    "2024": [
+     38.9,
+     8.8
+    ],
+    "2025": [
+     -15.3,
+     10.5
+    ],
+    "2026": [
+     20.2,
+     -4.2
+    ]
+   },
+   "label": "Plain momentum 12-1 without the trend gate",
+   "invested_pct": 100.0,
+   "rules": {
+    "top_n": 15,
+    "buffer": 30,
+    "cost": 0.0022,
+    "exit_band": 0.02,
+    "gate": false,
+    "low_exposure": 0.0,
+    "max_per_sector": 4,
+    "universe_size": 150,
+    "min_traded_value": 50000000.0,
+    "liq_window": 60,
+    "history": 260,
+    "skip_watch": false
+   },
+   "prob_skill_dsr": 48.4
   }
+ },
+ "survivorship": {
+  "cagr_pct": 20.73,
+  "max_dd_pct": -38.7,
+  "n_candidates": 501
  },
  "gate_on_nifty": {
   "all_out": {
-   "gated_cagr_pct": 6.61,
-   "buyhold_cagr_pct": 10.41,
+   "gated_cagr_pct": 6.84,
+   "buyhold_cagr_pct": 10.92,
    "gated_max_dd_pct": -20.5,
    "buyhold_max_dd_pct": -38.4,
-   "switches_per_year": 2.5
+   "switches_per_year": 2.6
   },
   "half": {
-   "gated_cagr_pct": 8.66,
-   "buyhold_cagr_pct": 10.41,
+   "gated_cagr_pct": 9.03,
+   "buyhold_cagr_pct": 10.92,
    "gated_max_dd_pct": -27.3,
    "buyhold_max_dd_pct": -38.4,
-   "switches_per_year": 2.5
+   "switches_per_year": 2.6
   }
  }
 }

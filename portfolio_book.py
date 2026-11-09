@@ -27,19 +27,25 @@ turned that tie into -10%. This book trades far less:
     a -20.5% worst fall, selling half 8.7% with -27.3%, never selling 10.4%
     with -38.4%.
   - Decisions are made after the close and filled at the NEXT session's
-    open, paying COST_PER_SIDE_PCT on each side.
+    open, paying real Indian delivery costs (costs.py): about 0.22% to buy
+    and 0.20% + Rs 16 to sell.
 
 State: paper_trading/portfolio.json. Running twice on one date replaces
 that date's decisions and NAV mark instead of doubling them.
 """
 
 import json
+import math
+import os
 from collections import Counter
 from datetime import date
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Tuple
 
 import pandas as pd
+
+from costs import (BUY_RATE, LONG_TERM_DAYS, buy_cost, capital_gains_tax,
+                   sell_cost)
 
 BOOK_FILE         = Path("paper_trading/portfolio.json")
 START_CAPITAL     = 1_000_000.0
@@ -48,9 +54,15 @@ BUFFER_RANK       = 30
 MAX_PER_SECTOR    = 4
 EXIT_BAND_PCT     = 2.0
 LOW_EXPOSURE      = 0.5    # share kept invested while the trend is broken
-COST_PER_SIDE_PCT = 0.20
 ORDER_EXPIRY_DAYS = 7      # unfillable buys are dropped, sells marked out
 NIFTY             = "NIFTY50"
+# The fair yardstick for a momentum book: an index fund that buys the 50
+# strongest NIFTY 500 stocks (NSE's "Nifty500 Momentum 50"). If we can't
+# beat it, buying that fund is the simpler choice.
+MOMFUND           = "NIFTY500MOM50"
+MOMFUND_NAME      = "Nifty500 Momentum 50"
+# Example amount for the "if you copy this" share counts in the emails.
+COPY_CAPITAL      = float(os.environ.get('COPY_CAPITAL') or 100_000)
 
 
 # ---------------------------------------------------------------------------
@@ -143,7 +155,6 @@ class Prices:
 def fill_pending(book: Dict, as_of: date, px: Prices) -> List[Dict]:
     """Fill orders decided before `as_of` at the next session's open.
     Sells go first so their cash funds the buys."""
-    cost = COST_PER_SIDE_PCT / 100
     today = as_of.isoformat()
     due = [o for o in book['pending'] if o['decided_on'] < today]
     keep = [o for o in book['pending'] if o['decided_on'] >= today]
@@ -167,7 +178,8 @@ def fill_pending(book: Dict, as_of: date, px: Prices) -> List[Dict]:
             frac = min(float(o.get('fraction', 1.0)), 1.0)
             shares, basis = h['shares'] * frac, h['cost_basis'] * frac
             gross = shares * price
-            book['cash'] += gross * (1 - cost)
+            proceeds = gross - sell_cost(gross)
+            book['cash'] += proceeds
             if frac >= 1.0:
                 book['holdings'].pop(sym)
             else:
@@ -177,21 +189,25 @@ def fill_pending(book: Dict, as_of: date, px: Prices) -> List[Dict]:
                      'price': round(price, 2), 'shares': shares,
                      'fraction': frac, 'value': round(gross, 2),
                      'reason': o.get('reason'),
-                     'pnl_pct': round((gross * (1 - cost) / basis - 1) * 100, 2)}
+                     'pnl_pct': round((proceeds / basis - 1) * 100, 2),
+                     'gain': round(proceeds - basis, 2),
+                     'held_days': (date.fromisoformat(day)
+                                   - date.fromisoformat(h['entry_date'])).days}
         else:
-            value = min(o['value'], book['cash'] / (1 + cost))
+            value = min(o['value'], book['cash'] / (1 + BUY_RATE))
             if value <= 0 or (h is not None) != bool(o.get('topup')):
                 continue
             shares = value / price
-            book['cash'] -= value * (1 + cost)
+            paid = value + buy_cost(value)
+            book['cash'] -= paid
             if h is not None:
                 h['shares'] += shares
-                h['cost_basis'] += value * (1 + cost)
+                h['cost_basis'] += paid
             else:
                 book['holdings'][sym] = {
                     'shares': shares, 'entry_date': day,
                     'entry_price': round(price, 2),
-                    'cost_basis': value * (1 + cost), 'last_price': price}
+                    'cost_basis': paid, 'last_price': price}
             trade = {'date': day, 'symbol': sym, 'side': 'BUY',
                      'price': round(price, 2), 'shares': shares,
                      'value': round(value, 2), 'reason': o.get('reason')}
@@ -212,17 +228,103 @@ def mark_nav(book: Dict, as_of: date, px: Prices) -> float:
     point = {'date': as_of.isoformat(), 'nav': round(nav, 2),
              'cash': round(book['cash'], 2),
              'n_holdings': len(book['holdings']),
-             'nifty': px.close_on(NIFTY, as_of)}
+             'nifty': px.close_on(NIFTY, as_of),
+             'momfund': px.close_on(MOMFUND, as_of)}
     book['nav'] = sorted([p for p in book['nav'] if p['date'] != point['date']]
                          + [point], key=lambda p: p['date'])
     # A benchmark point stored while NIFTY's bar was missing holds the
     # previous close (it showed NIFTY +0.00% on 2026-11-05); re-read every
     # point from the price file once that day's real close has arrived.
     for p in book['nav']:
-        c = px.close_exact(NIFTY, p['date'])
-        if c is not None:
-            p['nifty'] = c
+        for key, sym in (('nifty', NIFTY), ('momfund', MOMFUND)):
+            c = px.close_exact(sym, p['date'])
+            if c is not None:
+                p[key] = c
     return nav
+
+
+def data_check(book: Dict, as_of: date, px: Prices) -> Dict:
+    """Which prices are behind. The reference is the newest session any of
+    them reached, so an NSE holiday (everything a day old) is not flagged,
+    but NIFTY lagging the stocks by a day (2026-11-05) is."""
+    def last_day(sym):
+        df = px.frame(sym)
+        if df is None or not len(df):
+            return None
+        d = df.index[df.index <= pd.Timestamp(as_of)]
+        return d[-1].date() if len(d) else None
+
+    days = {s: last_day(s) for s in list(book['holdings'])
+            + [o['symbol'] for o in book['pending']]}
+    bench = {'NIFTY 50': last_day(NIFTY), MOMFUND_NAME: last_day(MOMFUND)}
+    known = [d for d in list(days.values()) + list(bench.values()) if d]
+    ref = max(known) if known else None
+    stale = sorted(s.replace('.NS', '') for s, d in days.items()
+                   if ref and (d is None or d < ref))
+    stale_bench = sorted(n for n, d in bench.items() if ref and (d is None or d < ref))
+    return {'prices_as_of': ref.isoformat() if ref else None,
+            'stale_stocks': stale, 'stale_benchmarks': stale_bench,
+            'ok': bool(ref) and not stale and not stale_bench}
+
+
+def tax_estimate(book: Dict, as_of: date) -> Dict:
+    """What you would keep if everything were sold at today's prices:
+    selling costs, then tax on the gains made in this financial year
+    (April to March), split by holding period."""
+    fy_start = date(as_of.year if as_of.month >= 4 else as_of.year - 1, 4, 1)
+    st = lt = 0.0
+    for t in book.get('trades', []):
+        if t['side'] == 'SELL' and 'gain' in t and t['date'] >= fy_start.isoformat():
+            if t.get('held_days', 0) >= LONG_TERM_DAYS:
+                lt += t['gain']
+            else:
+                st += t['gain']
+    proceeds = 0.0
+    for h in book['holdings'].values():
+        gross = h['shares'] * h['last_price']
+        net = gross - sell_cost(gross)
+        proceeds += net
+        held = (as_of - date.fromisoformat(h['entry_date'])).days
+        if held >= LONG_TERM_DAYS:
+            lt += net - h['cost_basis']
+        else:
+            st += net - h['cost_basis']
+    tax = capital_gains_tax(st, lt)
+    value = book['cash'] + proceeds
+    return {'after_costs': round(value, 2), 'tax': round(tax, 2),
+            'after_tax': round(value - tax, 2),
+            'fy_gain': round(st + lt, 2)}
+
+
+def copy_plan(book: Dict, orders: List[Dict], nav: float,
+              capital: float = None) -> Dict:
+    """Whole-share version of the book for someone copying it with
+    `capital` rupees: shares per holding at today's weights, shares for
+    the next open's orders, and the smallest amount that buys at least one
+    share of every holding."""
+    capital = capital or COPY_CAPITAL
+    scale = capital / nav if nav else 0.0
+    rows, spent, need = [], 0.0, 0.0
+    for sym, h in sorted(book['holdings'].items()):
+        value = h['shares'] * h['last_price']
+        n = math.floor(value * scale / h['last_price']) if h['last_price'] else 0
+        rows.append({'symbol': sym, 'price': round(h['last_price'], 2),
+                     'shares': n, 'cost': round(n * h['last_price'], 2)})
+        spent += n * h['last_price']
+        if value > 0:
+            need = max(need, h['last_price'] * nav / value)
+    order_rows = []
+    for o in orders:
+        h = book['holdings'].get(o['symbol'])
+        price = h['last_price'] if h else o.get('price')
+        if o['side'] != 'BUY' or not price:
+            continue
+        n = math.floor(o['value'] * scale / price)
+        order_rows.append({'symbol': o['symbol'], 'price': round(price, 2),
+                           'shares': n, 'cost': round(n * price, 2),
+                           'topup': bool(o.get('topup'))})
+    return {'capital': capital, 'holdings': rows, 'orders': order_rows,
+            'invested': round(spent, 2), 'min_capital': round(need, -3)}
 
 
 DAY_STATE = ('exposure', 'last_rebalance')   # what decide() changes
@@ -232,8 +334,12 @@ def decide(book: Dict, ranked: pd.DataFrame, as_of: date, nav: float,
            gate_open: bool, nifty_vs_200dma: Optional[float],
            breaker_tripped: bool,
            sector_of: Callable[[str], Optional[str]],
-           px: Prices) -> Tuple[str, List[Dict]]:
-    """Today's orders, filled at the next open. Returns (action, orders)."""
+           px: Prices, blocked: Optional[set] = None) -> Tuple[str, List[Dict]]:
+    """Today's orders, filled at the next open. Returns (action, orders).
+
+    `blocked`: symbols on NSE's watch list (trade-for-trade series BE/BZ).
+    They are never bought, and a holding that is on it at the monthly
+    review is replaced, as the bias-free lab tested."""
     today = as_of.isoformat()
     book['pending'] = [o for o in book['pending'] if o['decided_on'] != today]
     # A re-run of the same day must decide from that day's opening state.
@@ -251,7 +357,6 @@ def decide(book: Dict, ranked: pd.DataFrame, as_of: date, nav: float,
                             **{k: book.get(k) for k in DAY_STATE}}
     unfilled = {o['symbol'] for o in book['pending']}
     held = [s for s in book['holdings'] if s not in unfilled]
-    cost = COST_PER_SIDE_PCT / 100
 
     def sell(sym, reason):
         return {'symbol': sym, 'side': 'SELL', 'decided_on': today,
@@ -295,7 +400,8 @@ def decide(book: Dict, ranked: pd.DataFrame, as_of: date, nav: float,
     month = today[:7]
     rebalance = bool(held) and book.get('last_rebalance') != month
 
-    df = ranked[ranked['composite_score'] > 0].sort_values(
+    df = ranked[(ranked['composite_score'] > 0)
+                & ~ranked['symbol'].isin(blocked or ())].sort_values(
         'composite_score', ascending=False)
     rank_of = {s: i + 1 for i, s in enumerate(df['symbol'])}
     info = {r['symbol']: r for _, r in df.iterrows()}
@@ -326,13 +432,14 @@ def decide(book: Dict, ranked: pd.DataFrame, as_of: date, nav: float,
             book['last_rebalance'] = month      # entering from cash
 
     if buys:
-        freed = sum(book['holdings'][o['symbol']]['shares']
-                    * book['holdings'][o['symbol']]['last_price']
-                    for o in orders if o['side'] == 'SELL') * (1 - cost)
+        freed = sum(v - sell_cost(v) for v in (
+            book['holdings'][o['symbol']]['shares']
+            * book['holdings'][o['symbol']]['last_price']
+            for o in orders if o['side'] == 'SELL'))
         budget = book['cash'] + freed - sum(
             o['value'] for o in book['pending'] if o['side'] == 'BUY')
         per = min(exposure * nav / TARGET_HOLDINGS,
-                  budget / (len(buys) * (1 + cost)))
+                  budget / (len(buys) * (1 + BUY_RATE)))
         if per <= 0:
             buys = []
         for sym in buys:
@@ -362,15 +469,18 @@ def _since(series: List[Optional[float]]) -> Optional[float]:
 def run_book(ranked: pd.DataFrame, as_of: date, gate_open: bool,
              nifty_vs_200dma: Optional[float], breaker_tripped: bool,
              sector_of: Callable[[str], Optional[str]],
-             data_dir, path: Path = BOOK_FILE) -> Dict:
+             data_dir, path: Path = BOOK_FILE,
+             blocked: Optional[set] = None) -> Dict:
     """One daily step: fill yesterday's orders, mark, decide, save."""
     px = Prices(data_dir)
     book = load_book(as_of, path)
     fills = fill_pending(book, as_of, px)
     nav = mark_nav(book, as_of, px)
     action, orders = decide(book, ranked, as_of, nav, gate_open,
-                            nifty_vs_200dma, breaker_tripped, sector_of, px)
+                            nifty_vs_200dma, breaker_tripped, sector_of, px,
+                            blocked)
     save_book(book, path)
+    priced = [dict(o, price=px.close_on(o['symbol'], as_of)) for o in orders]
 
     holdings = []
     for sym, h in sorted(book['holdings'].items()):
@@ -379,11 +489,12 @@ def run_book(ranked: pd.DataFrame, as_of: date, gate_open: bool,
             'symbol': sym, 'entry_date': h['entry_date'],
             'entry_price': h['entry_price'],
             'last_price': round(h['last_price'], 2),
-            'pnl_pct': round((value * (1 - COST_PER_SIDE_PCT / 100)
-                              / h['cost_basis'] - 1) * 100, 2),
+            'pnl_pct': round(((value - sell_cost(value)) / h['cost_basis']
+                              - 1) * 100, 2),
             'weight_pct': round(value / nav * 100, 1) if nav else 0.0})
     port = _since([p['nav'] for p in book['nav']])
     bench = _since([p.get('nifty') for p in book['nav']])
+    mom = _since([p.get('momfund') for p in book['nav']])
     return {
         'inception': book['inception'], 'action': action,
         'status': 'INVESTED' if book['holdings'] else 'CASH',
@@ -391,6 +502,12 @@ def run_book(ranked: pd.DataFrame, as_of: date, gate_open: bool,
         'return_pct': port, 'nifty_return_pct': bench,
         'excess_pct': (None if port is None or bench is None
                        else round(port - bench, 2)),
+        'momfund_name': MOMFUND_NAME, 'momfund_return_pct': mom,
+        'data_check': data_check(book, as_of, px),
+        'if_sold_today': tax_estimate(book, as_of),
+        'copy': copy_plan(book, priced, nav),
+        'watch_list_held': sorted(s for s in book['holdings']
+                                  if s in (blocked or ())),
         'cash_pct': round(book['cash'] / nav * 100, 1) if nav else 100.0,
         'n_holdings': len(book['holdings']),
         'target_holdings': TARGET_HOLDINGS,

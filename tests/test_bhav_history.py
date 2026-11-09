@@ -111,3 +111,22 @@ def test_failed_download_is_retried_next_time(tmp_path, monkeypatch):
     bh.update(date(2016, 1, 4), date(2016, 1, 4),
               get=lambda u: calls.append(u) or Resp(503), verbose=False)
     assert calls                                          # tried again
+
+
+def test_todays_watch_list_is_cached_and_falls_back(tmp_path, monkeypatch):
+    monkeypatch.setattr(bh.time, 'sleep', lambda s: None)
+    cache = tmp_path / "watch.json"
+    calls = []
+
+    def get(url):
+        calls.append(url)
+        return Resp(200, zipped(NEW)) if '20261106' in url else Resp(503)
+
+    assert bh.todays_watch_list(date(2026, 11, 6), get, cache) == {'HFCL.NS'}
+    n = len(calls)
+    assert bh.todays_watch_list(date(2026, 11, 6), get, cache) == {'HFCL.NS'}
+    assert len(calls) == n                         # cached, not refetched
+    # next day's file fails: the 6th's list is used
+    assert bh.todays_watch_list(date(2026, 11, 9), get, cache) == {'HFCL.NS'}
+    # over a week later with nothing new: empty
+    assert bh.todays_watch_list(date(2026, 11, 20), get, cache) == set()

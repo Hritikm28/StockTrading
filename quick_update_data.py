@@ -60,7 +60,13 @@ def final_bars(df: pd.DataFrame, upto: date) -> pd.DataFrame:
 # at 02:00 IST on 2026-11-07, NIFTY's 2026-11-06 bar was still missing, so
 # the portfolio was compared with Thursday's NIFTY again.
 NSE_INDEX_FILES = {'nifty 50': 'NIFTY50', 'nifty bank': 'NIFTYBANK',
-                   'india vix': 'INDIAVIX'}
+                   'india vix': 'INDIAVIX',
+                   # the momentum index fund the portfolio is compared with
+                   'nifty500 momentum 50': 'NIFTY500MOM50'}
+# Not on Yahoo: these files are started from NSE, backfilling this many
+# sessions so the comparison covers the portfolio's whole run.
+NSE_ONLY = {'NIFTY500MOM50'}
+NSE_ONLY_BACKFILL = 30
 _INDEX_CLOSE_URLS = [
     "https://nsearchives.nseindia.com/content/indices/ind_close_all_{d}.csv",
     "https://archives.nseindia.com/content/indices/ind_close_all_{d}.csv",
@@ -112,8 +118,9 @@ def parse_index_close(text: str) -> Dict[str, dict]:
 def update_indices_from_nse(upto: date, sessions: int = 5,
                             get: Callable = None, verbose: bool = True) -> int:
     """Add any of the last few sessions' index bars missing from the
-    NIFTY50 / NIFTYBANK / INDIAVIX files. Existing bars are left alone,
-    and a file with no history yet is left to the Yahoo cold start."""
+    index files. Existing bars are left alone. A file with no history yet
+    is left to the Yahoo cold start, except NSE-only indices, which are
+    started here with NSE_ONLY_BACKFILL sessions."""
     get = get or (lambda url: requests.get(url, headers=_NSE_HEADERS,
                                            timeout=25))
     frames = {}
@@ -124,6 +131,12 @@ def update_indices_from_nse(upto: date, sessions: int = 5,
                 frames[name] = pd.read_parquet(f)
             except Exception:
                 pass
+        elif name in NSE_ONLY:
+            frames[name] = pd.DataFrame(
+                columns=['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume'],
+                index=pd.DatetimeIndex([]))
+    if any(not len(df) for df in frames.values()):
+        sessions = max(sessions, NSE_ONLY_BACKFILL)
     added, changed = 0, set()
     for day in pd.bdate_range(end=pd.Timestamp(upto), periods=sessions):
         missing = []
@@ -147,7 +160,7 @@ def update_indices_from_nse(upto: date, sessions: int = 5,
         for name in missing:                # nothing for a holiday
             if name in bars:
                 row = pd.DataFrame([bars[name]], index=[day])
-                df = pd.concat([frames[name], row])
+                df = pd.concat([frames[name], row]) if len(frames[name]) else row
                 frames[name] = df[~df.index.duplicated(keep='first')].sort_index()
                 changed.add(name)
                 added += 1

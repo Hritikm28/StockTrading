@@ -5,16 +5,19 @@ Replaces the "Weekly Correction Report", which graded the old signal-by-
 signal system and a per-stock dampener retired in June 2026. This one
 reports on what actually runs: the 15-stock paper portfolio.
 
-  1. This week and since the start, against NIFTY, in plain words
-  2. Day by day
-  3. Every holding, best to worst
-  4. Trades made this week
-  5. What happens next (pending orders, trend rule, next monthly review)
-  6. Whether the stock picking has shown an edge yet
+  1. This week and since the start, against NIFTY and a momentum index
+     fund, in plain words, and what you'd keep after costs and tax
+  2. A data check, so wrong numbers never pass silently
+  3. Day by day, plus a chart (attached as weekly_chart.png)
+  4. Every holding, best to worst, and results due soon
+  5. Trades made this week
+  6. What happens next (pending orders, trend rule, next monthly review)
+  7. Whole-share copy list for a chosen amount
+  8. Whether the stock picking has shown an edge yet
 
 Reads only committed files (paper_trading/portfolio.json, the latest
-signals/*_summary.json, the shadow report). Writes weekly_email_body.html
-and weekly_email_subject.txt.
+signals/*_summary.json, the shadow report). Writes weekly_email_body.html,
+weekly_email_subject.txt and weekly_chart.png.
 """
 
 import json
@@ -22,12 +25,15 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from portfolio_book import BOOK_FILE, COST_PER_SIDE_PCT, EXIT_BAND_PCT
+from costs import sell_cost
+from portfolio_book import (BOOK_FILE, EXIT_BAND_PCT, MOMFUND_NAME,
+                            copy_plan, tax_estimate)
 
 SHADOW_FILE = Path('paper_trading/results/shadow_report.json')
 SIGNALS_DIR = Path('signals')
 BODY_FILE = Path('weekly_email_body.html')
 SUBJECT_FILE = Path('weekly_email_subject.txt')
+CHART_FILE = Path('weekly_chart.png')
 
 REASONS = {'top_rank': 'new pick',
            'trend_restored': 'buy more (trend back up)',
@@ -91,7 +97,7 @@ def holdings_rows(book: Dict) -> List[Dict]:
     for sym, h in book.get('holdings', {}).items():
         value = h['shares'] * h['last_price']
         out.append({'symbol': sym, 'entry_date': h['entry_date'],
-                    'pnl_pct': round((value * (1 - COST_PER_SIDE_PCT / 100)
+                    'pnl_pct': round(((value - sell_cost(value))
                                       / h['cost_basis'] - 1) * 100, 2),
                     'value': value,
                     'weight_pct': round(value / nav * 100, 1) if nav else None})
@@ -119,6 +125,9 @@ def build(book: Dict, summary: Dict, shadow: Dict) -> Tuple[str, str]:
     port_w, nifty_w = _chg(ref['nav'], last['nav']), _chg(ref.get('nifty'), last.get('nifty'))
     port_all = _chg(nav[0]['nav'], last['nav'])
     nifty_all = _chg(nav[0].get('nifty'), last.get('nifty'))
+    mom_w = _chg(ref.get('momfund'), last.get('momfund'))
+    mom_all = _chg(nav[0].get('momfund'), last.get('momfund'))
+    daily = summary.get('portfolio') or {}
 
     def verdict(p, n):
         if p is None or n is None:
@@ -130,18 +139,44 @@ def build(book: Dict, summary: Dict, shadow: Dict) -> Tuple[str, str]:
             return f"<b style='color:{RED}'>behind NIFTY by {-gap:.2f}%</b>"
         return "<b>level with NIFTY</b>"
 
+    def fund(v):
+        return (f"; the {MOMFUND_NAME} index fund {_pct(v)}"
+                if v is not None else "")
+
     # 1. Headline
+    sold = tax_estimate(book, last_day) if book.get('holdings') else None
+    keep = ""
+    if sold:
+        keep = (f"<br>If you sold everything today: {_inr(sold['after_costs'])} "
+                "after selling costs, "
+                + (f"estimated tax {_inr(sold['tax'])}, so you'd keep "
+                   f"<b>{_inr(sold['after_tax'])}</b>." if sold['tax'] > 0
+                   else "and no tax to pay (no profit this financial year)."))
     html = [f"<h2 style='color:{NAVY};margin-bottom:4px'>Weekly portfolio — "
             f"week to {last_day:%a %d %b %Y}</h2>",
             "<p style='font-size:15px;line-height:1.6'>"
             f"<b>This week:</b> portfolio {_pct(port_w)} vs NIFTY {_pct(nifty_w)}"
-            f" — {verdict(port_w, nifty_w)}<br>"
+            f" — {verdict(port_w, nifty_w)}{fund(mom_w)}<br>"
             f"<b>Since the start ({nav[0]['date']}):</b> portfolio "
             f"{_pct(port_all)} vs NIFTY {_pct(nifty_all)} — "
-            f"{verdict(port_all, nifty_all)}<br>"
+            f"{verdict(port_all, nifty_all)}{fund(mom_all)}<br>"
             f"Value {_inr(last['nav'])} (started at {_inr(nav[0]['nav'])}), "
             f"cash {_inr(last['cash'])}, {last['n_holdings']} stocks held. "
-            "Costs included.</p>"]
+            f"Costs included.{keep}</p>"]
+    if mom_all is None:
+        html.append("<p style='font-size:12px;color:#555;margin:0'>The momentum "
+                    "fund comparison starts once its prices are collected "
+                    "daily.</p>")
+    dc = daily.get('data_check')
+    if dc and dc.get('prices_as_of'):
+        day = date.fromisoformat(dc['prices_as_of']).strftime('%a %d %b')
+        bad = dc.get('stale_benchmarks', []) + dc.get('stale_stocks', [])
+        html.append(
+            f"<p style='font-size:13px;color:{GREEN}'>✅ Data check: every price "
+            f"is up to date (closing prices of {day}).</p>" if dc.get('ok') else
+            f"<p style='font-size:13px;color:{RED}'>⚠️ Data check: these prices "
+            f"are older than {day}: <b>{', '.join(bad)}</b>. Figures that use "
+            "them may be off.</p>")
 
     # 2. Day by day
     rows, prev = [], ref
@@ -150,11 +185,16 @@ def build(book: Dict, summary: Dict, shadow: Dict) -> Tuple[str, str]:
             continue
         rows.append((date.fromisoformat(p['date']).strftime('%a %d %b'),
                      _inr(p['nav']), _pct(_chg(prev['nav'], p['nav'])),
-                     _pct(_chg(prev.get('nifty'), p.get('nifty')))))
+                     _pct(_chg(prev.get('nifty'), p.get('nifty'))),
+                     _pct(_chg(prev.get('momfund'), p.get('momfund')))
+                     if p.get('momfund') and prev.get('momfund') else '—'))
         prev = p
     html += ["<h3 style='margin-bottom:4px'>Day by day</h3>",
              _table([('Day', 'left'), ('Value', 'right'),
-                     ('Portfolio', 'right'), ('NIFTY', 'right')], rows)]
+                     ('Portfolio', 'right'), ('NIFTY', 'right'),
+                     ('Momentum fund', 'right')], rows),
+             "<p style='font-size:12px;color:#555;margin:4px 0'>The chart "
+             "attached to this email shows the whole run.</p>"]
 
     # 3. Holdings, best to worst
     hold = holdings_rows(book)
@@ -171,6 +211,13 @@ def build(book: Dict, summary: Dict, shadow: Dict) -> Tuple[str, str]:
               _inr(r['value']),
               f"{r['weight_pct']:.1f}%" if r['weight_pct'] is not None else '')
              for r in hold]))
+    soon = daily.get('results_soon') or []
+    if soon:
+        html.append("<p style='font-size:13px;color:#8a6d00'>📅 Results coming "
+                    "(where known): " + ", ".join(
+                        f"<b>{_name(r['symbol'])}</b> "
+                        f"{date.fromisoformat(r['date']):%a %d %b}" for r in soon)
+                    + ". Prices often jump or drop on results day.</p>")
 
     # 4. Trades this week
     monday = (last_day - timedelta(days=last_day.weekday())).isoformat()
@@ -219,7 +266,24 @@ def build(book: Dict, summary: Dict, shadow: Dict) -> Tuple[str, str]:
              "<ul style='font-size:14px;line-height:1.6'>"
              + "".join(f"<li>{t}</li>" for t in nxt) + "</ul>"]
 
-    # 6. Edge check
+    # 7. Copy list
+    plan = copy_plan(book, [], last['nav'])
+    if plan['holdings']:
+        rows = [(f"<b>{_name(r['symbol'])}</b>", f"{r['price']:,.2f}",
+                 f"{r['shares']:,}" if r['shares'] else "— (too expensive)",
+                 _inr(r['cost'])) for r in plan['holdings']]
+        html += [f"<h3 style='margin-bottom:4px'>If you copied it with "
+                 f"{_inr(plan['capital'])}</h3>",
+                 "<p style='font-size:13px;margin:4px 0'>Whole shares at "
+                 "Friday's closing prices, same weights as the portfolio:</p>",
+                 _table([('Stock', 'left'), ('Price', 'right'),
+                         ('Shares', 'right'), ('Cost', 'right')], rows),
+                 f"<p style='font-size:12px;color:#555;margin:4px 0'>That "
+                 f"invests about {_inr(plan['invested'])}. To hold at least one "
+                 f"share of every stock you'd need about "
+                 f"{_inr(plan['min_capital'])}.</p>"]
+
+    # 8. Edge check
     if shadow.get('verdict'):
         label = {'EDGE': ('Yes, so far', GREEN), 'NO_EDGE': ('Not yet', RED),
                  'UNPROVEN': ('Too early to tell', '#8a6d00')
@@ -243,6 +307,49 @@ def build(book: Dict, summary: Dict, shadow: Dict) -> Tuple[str, str]:
     return subject, body
 
 
+def make_chart(nav: List[Dict], path: Path = CHART_FILE) -> bool:
+    """Line chart of the portfolio, NIFTY and the momentum fund, each
+    rebased to 100 at the start. Returns False when matplotlib is missing
+    or there is too little history."""
+    try:
+        import matplotlib
+        matplotlib.use('Agg')
+        import matplotlib.pyplot as plt
+    except ImportError:
+        return False
+    nav = sorted(nav, key=lambda p: p['date'])
+    if len(nav) < 2:
+        return False
+    days = [date.fromisoformat(p['date']) for p in nav]
+
+    def rebased(key):
+        base = next((p.get(key) for p in nav if p.get(key)), None)
+        if not base:
+            return None
+        return [p[key] / base * 100 if p.get(key) else None for p in nav]
+
+    fig, ax = plt.subplots(figsize=(8, 3.6), dpi=110)
+    for key, label, color, width in (('nav', 'Our portfolio', NAVY, 2.4),
+                                     ('nifty', 'NIFTY 50', '#888888', 1.6),
+                                     ('momfund', f'{MOMFUND_NAME} fund',
+                                      '#d08a00', 1.6)):
+        ys = rebased(key)
+        if ys and sum(y is not None for y in ys) >= 2:
+            pts = [(d, y) for d, y in zip(days, ys) if y is not None]
+            ax.plot([d for d, _ in pts], [y for _, y in pts], label=label,
+                    color=color, linewidth=width)
+    ax.axhline(100, color='#cccccc', linewidth=0.8, zorder=0)
+    ax.set_title('Growth of ₹100 since the start', fontsize=11, loc='left')
+    ax.legend(frameon=False, fontsize=9, loc='upper left')
+    ax.spines[['top', 'right']].set_visible(False)
+    ax.tick_params(labelsize=8)
+    fig.autofmt_xdate()
+    fig.tight_layout()
+    fig.savefig(path)
+    plt.close(fig)
+    return True
+
+
 def _load(path: Path) -> Dict:
     try:
         return json.loads(path.read_text(encoding='utf-8'))
@@ -256,7 +363,10 @@ def latest_summary(signals_dir: Path = SIGNALS_DIR) -> Dict:
 
 
 def main():
-    subject, body = build(_load(BOOK_FILE), latest_summary(), _load(SHADOW_FILE))
+    book = _load(BOOK_FILE)
+    subject, body = build(book, latest_summary(), _load(SHADOW_FILE))
+    if make_chart(book.get('nav', [])):
+        print(f"Wrote {CHART_FILE}")
     BODY_FILE.write_text(body, encoding='utf-8')
     SUBJECT_FILE.write_text(subject, encoding='utf-8')
     print(f"Wrote {BODY_FILE} and {SUBJECT_FILE}")

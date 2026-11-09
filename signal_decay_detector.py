@@ -97,7 +97,12 @@ RET_COL_FALLBACK  = 'ret_1d'
 # win rate of a handful of traded signals: an alpha needs a 20-day rank IC
 # of at least PROMOTE_MIN_IC with t >= PROMOTE_MIN_T over PROMOTE_MIN_DAYS
 # graded days, and loses promotion if its IC turns negative.
-CORE_ALPHAS         = {'momentum'}
+# 2026-11-10: residual momentum replaced plain momentum as the voting
+# signal. In the bias-free ten-year lab (factor_lab.py, every NSE stock
+# including delisted ones) it returned 12.6% a year with watch-list stocks
+# skipped, against 9.9% for plain momentum and 11.4% for NIFTY. Plain
+# momentum stays graded in the shadow.
+CORE_ALPHAS         = {'resid_mom'}
 SHADOW_REPORT       = Path("paper_trading/results/shadow_report.json")
 PROMOTE_MIN_IC      = 0.03
 PROMOTE_MIN_T       = 2.0
@@ -126,6 +131,7 @@ ALL_SIGNALS = [
     'shp_delta',
     'quality',
     'mom_riskadj',
+    'resid_mom',
 ]
 
 

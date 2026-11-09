@@ -199,3 +199,32 @@ def build_panel(rows: pd.DataFrame, min_value: float = 0.0,
 def watch_list(day_rows: pd.DataFrame) -> List[str]:
     """Symbols in a trade-for-trade series on that day."""
     return sorted(day_rows.loc[day_rows['series'].isin(WATCH_SERIES), 'symbol'])
+
+
+WATCH_CACHE = Path("data/alpha_cache/watchlist.json")
+
+
+def todays_watch_list(day: date, get: Callable = None,
+                      cache: Path = WATCH_CACHE) -> Set[str]:
+    """NSE's watch list (BE/BZ series) on `day`, from that day's bhav copy.
+    Falls back to the newest saved list of the last week if the download
+    fails, and to an empty set after that."""
+    import json
+    saved = {}
+    if cache.exists():
+        try:
+            saved = json.loads(cache.read_text())
+        except Exception:
+            saved = {}
+    key = day.isoformat()
+    if key not in saved:
+        rows = fetch_day(day, get)
+        if rows is not None and len(rows):
+            saved[key] = watch_list(rows)
+            saved = dict(sorted(saved.items())[-30:])
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            cache.write_text(json.dumps(saved, indent=0))
+    for k in sorted(saved, reverse=True):
+        if k <= key and (day - date.fromisoformat(k)).days <= 7:
+            return {f"{s}.NS" for s in saved[k]}
+    return set()

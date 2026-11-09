@@ -401,14 +401,34 @@ class DailyRunner:
         print(f"\n[3/4] Updating the paper portfolio...")
         from portfolio_book import run_book
         meta = ranked_df.iloc[0] if len(ranked_df) else {}
+        # NSE's watch list (trade-for-trade series): never bought, replaced
+        # at the monthly review (bias-free lab, 2026-11-09)
+        try:
+            from bhav_history import todays_watch_list
+            blocked = todays_watch_list(as_of_date)
+            print(f"      NSE watch list: {len(blocked)} stocks")
+        except Exception as e:
+            print(f"      watch list unavailable: {e}")
+            blocked = set()
         book = run_book(
             ranked_df, as_of_date,
             gate_open=bool(meta.get('trend_gate_open', True)),
             nifty_vs_200dma=meta.get('nifty_vs_200dma'),
             breaker_tripped=breaker_tripped,
             sector_of=self._sector_of,
-            data_dir=self.config.DATA_DIR)
+            data_dir=self.config.DATA_DIR,
+            blocked=blocked)
         approved = self._buy_orders(book, ranked_df, as_of_date)
+        # results due soon for what we hold or are buying (a warning only)
+        try:
+            from results_calendar import results_soon
+            book['results_soon'] = results_soon(
+                [h['symbol'] for h in book['holdings']]
+                + [o['symbol'] for o in book['orders'] if o['side'] == 'BUY'],
+                as_of_date)
+        except Exception as e:
+            print(f"      results calendar skipped: {e}")
+            book['results_soon'] = []
         n_sell = sum(1 for o in book['orders'] if o['side'] == 'SELL')
         print(f"      {book['action']}: {len(approved)} buy / {n_sell} sell "
               f"order(s) for the next open | {book['n_holdings']} held | "

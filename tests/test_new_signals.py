@@ -9,6 +9,7 @@ import sys
 from datetime import date
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -131,3 +132,27 @@ def test_quality_cache_refresh_cap_and_retry(tmp_path):
     calls.clear()
     qd.update(syms, fetch, date(2026, 12, 5), path, max_fetches=3, pause=0)
     assert len(calls) == 3                          # monthly refresh, capped
+
+
+def test_residual_momentum_alpha_ranks_own_strength_over_market_beta(tmp_path):
+    from india_alpha_signals import ResidualMomentumAlpha as R
+    rng = np.random.default_rng(7)
+    days = pd.bdate_range('2024-06-03', periods=520)
+    rm = rng.normal(0.0008, 0.01, 520)
+    m = 20000 * np.cumprod(1 + rm)
+    pd.DataFrame({'Close': m}, index=days).to_parquet(tmp_path / "NIFTY50.parquet")
+    noise = lambda: rng.normal(0, 0.006, 520)
+    series = {'BETA': 100 * np.cumprod(1 + 2 * rm + noise()),
+              'OWN': 100 * np.cumprod(1 + rm + 0.0015 + noise()),
+              'FLAT': 100 * np.cumprod(1 + rm + noise())}
+    for k, c in series.items():
+        pd.DataFrame({'Close': c}, index=days).to_parquet(tmp_path / f"{k}.parquet")
+    pd.DataFrame({'Close': np.ones(50)}, index=days[-50:]).to_parquet(
+        tmp_path / "NEW.parquet")                       # too little history
+    R._key = None
+    asof = days[-1].date()
+    own, conf = R.get_signal('OWN.NS', asof, str(tmp_path))
+    beta, _ = R.get_signal('BETA.NS', asof, str(tmp_path))
+    assert conf == 70.0 and own > beta
+    assert R.get_signal('NEW.NS', asof, str(tmp_path)) == (0.0, 0.0)
+    assert 'NIFTY50' not in R._scores

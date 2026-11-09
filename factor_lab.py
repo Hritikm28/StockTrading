@@ -120,17 +120,17 @@ def v_resid(closes, market):
 
 v_resid.needs_market = True
 
-LIVE = Rules(low_exposure=0.5)          # what portfolio_book trades today
+HALF = Rules(low_exposure=0.5)          # half invested when the trend breaks
+LIVE = Rules(low_exposure=0.5, skip_watch=True)   # what portfolio_book trades
 
 VARIANTS = [
-    ('live', 'Momentum 12-1, half invested when the trend breaks (live today)',
-     v_mom, LIVE),
-    ('live_nowatch', 'Live rules, never buying NSE watch-list stocks', v_mom,
-     Rules(low_exposure=0.5, skip_watch=True)),
-    ('resid', 'Residual momentum (less crash-prone), live rules', v_resid, LIVE),
-    ('resid_nowatch', 'Residual momentum, never buying watch-list stocks',
-     v_resid, Rules(low_exposure=0.5, skip_watch=True)),
-    ('live_nogate', 'Momentum 12-1 without the trend gate', v_mom,
+    ('live', 'Residual momentum, skipping watch-list stocks (live from '
+     '2026-11-10)', v_resid, LIVE),
+    ('resid', 'Residual momentum, watch-list stocks allowed', v_resid, HALF),
+    ('mom_nowatch', 'Plain momentum 12-1, skipping watch-list stocks', v_mom,
+     LIVE),
+    ('mom', 'Plain momentum 12-1 (live until 2026-11-09)', v_mom, HALF),
+    ('mom_nogate', 'Plain momentum 12-1 without the trend gate', v_mom,
      Rules(gate=False)),
 ]
 
@@ -529,14 +529,14 @@ def run(panel, nifty, variants=VARIANTS, sectors=None, biased=None) -> Dict:
     bias = None
     if biased is not None:
         bp, bn, bs = biased
-        sim = simulate(bp, bn, v_mom, LIVE, bs)
-        nav = sim['nav'].iloc[LIVE.history:]
+        sim = simulate(bp, bn, v_mom, HALF, bs)     # no watch flags there
+        nav = sim['nav'].iloc[HALF.history:]
         nav = nav[nav.index >= first]
         if len(nav) > 260:
             m = metrics(nav, bn, sim['traded'])
             bias = {'cagr_pct': m['cagr_pct'], 'max_dd_pct': m['max_dd_pct'],
                     'n_candidates': int(bp['Close'].shape[1])}
-            print(f"  live rules on today's NIFTY 500 (biased): CAGR {m['cagr_pct']}%")
+            print(f"  plain momentum on today's NIFTY 500 (biased): CAGR {m['cagr_pct']}%")
     return {'generated': date.today().isoformat(),
             'period': [str(first.date()), str(days[-1].date())],
             'n_candidates': int(panel['Close'].shape[1]),
@@ -575,14 +575,14 @@ def to_markdown(r: Dict) -> str:
             f"{m['beat_nifty_months_pct']}% | "
             f"{'—' if p is None else f'{p}%'} |")
     sb = r.get('survivorship')
-    live = v.get('live')
-    if sb and live:
-        lines += ["", f"**Survivorship bias, measured:** the same live rules "
+    old = v.get('mom')
+    if sb and old:
+        lines += ["", f"**Survivorship bias, measured:** plain momentum "
                   f"tested the old way, on today's NIFTY 500 only "
                   f"({sb['n_candidates']} stocks), returned {sb['cagr_pct']}% "
                   f"a year (worst fall {sb['max_dd_pct']}%), against "
-                  f"{live['cagr_pct']}% here. The old test overstated the "
-                  f"yearly return by {sb['cagr_pct'] - live['cagr_pct']:.1f} "
+                  f"{old['cagr_pct']}% here. The old test overstated the "
+                  f"yearly return by {sb['cagr_pct'] - old['cagr_pct']:.1f} "
                   f"points."]
     lines += ["", "_\"Chance it's skill\" is the deflated Sharpe ratio of the "
               "monthly gap to NIFTY: the probability the edge is real after "

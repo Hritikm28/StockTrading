@@ -1598,6 +1598,62 @@ class RiskAdjMomentumAlpha:
         return (0.0, 0.0) if s is None else (float(s), 70.0)
 
 
+class ResidualMomentumAlpha:
+    """
+    Residual momentum: the part of each stock's last-year return (to one
+    month ago) that NIFTY's move doesn't explain, divided by its own
+    volatility (Blitz, Huij & Martens 2011; factors.residual_mom).
+
+    Plain momentum fills up on high-beta stocks after a fall and crashes
+    when the market snaps back, as it did in the first week of November
+    2026. In the bias-free ten-year lab (every NSE stock, delisted ones
+    included) residual momentum, skipping NSE watch-list stocks, returned
+    12.6% a year against 9.9% for plain momentum and 11.4% for NIFTY, with
+    a smaller worst fall (-32% vs -36%). The live ranking since 2026-11.
+    """
+
+    _key: Optional[Tuple] = None
+    _scores: Dict[str, float] = {}
+    SKIP_FILES = ('NIFTY50', 'NIFTYBANK', 'INDIAVIX', 'NIFTY500MOM50')
+
+    @classmethod
+    def _build(cls, as_of_date: date, data_dir: str) -> Dict[str, float]:
+        from factors import residual_mom, rank_to_score
+        cutoff = pd.Timestamp(as_of_date)
+        try:
+            n = pd.read_parquet(Path(data_dir) / "NIFTY50.parquet", columns=['Close'])
+            n.index = pd.to_datetime(n.index)
+            nifty = n[n.index <= cutoff]['Close'].dropna().rename('m')
+        except Exception:
+            return {}
+        raw = {}
+        for f in Path(data_dir).glob("*.parquet"):
+            if f.stem in cls.SKIP_FILES:
+                continue
+            try:
+                df = pd.read_parquet(f, columns=['Close'])
+                df.index = pd.to_datetime(df.index)
+                c = df[df.index <= cutoff]['Close'].dropna().rename('c')
+                both = pd.concat([c, nifty], axis=1, join='inner').dropna()
+                both = both[~both.index.duplicated(keep='last')].tail(520)
+                v = residual_mom(both['c'].to_numpy(), both['m'].to_numpy())
+                if v is not None:
+                    raw[f.stem] = v
+            except Exception:
+                continue
+        return rank_to_score(raw)
+
+    @classmethod
+    def get_signal(cls, symbol: str, as_of_date: date,
+                   data_dir: str = "data/stocks") -> Tuple[float, float]:
+        key = (as_of_date, data_dir)
+        if cls._key != key:
+            cls._scores = cls._build(as_of_date, data_dir)
+            cls._key = key
+        s = cls._scores.get(symbol.replace('.NS', '').upper())
+        return (0.0, 0.0) if s is None else (float(s), 70.0)
+
+
 # ==============================================================================
 # QUALITY ALPHA  (profitability + low leverage, cross-sectional)
 # ==============================================================================
@@ -1707,6 +1763,7 @@ class IndiaAlphaAggregator:
         'shp_delta':    0.05,   # quarterly promoter stake delta (new)
         'quality':      0.06,   # ROE + low debt (incubating)
         'mom_riskadj':  0.17,   # NSE-style risk-adjusted momentum (incubating)
+        'resid_mom':    0.20,   # residual momentum (the live ranking)
     }
 
     @classmethod
@@ -1758,6 +1815,8 @@ class IndiaAlphaAggregator:
                                 symbol, as_of_date),
             'quality':      lambda: QualityAlpha.get_signal(symbol, as_of_date),
             'mom_riskadj':  lambda: RiskAdjMomentumAlpha.get_signal(
+                                symbol, as_of_date, data_dir),
+            'resid_mom':    lambda: ResidualMomentumAlpha.get_signal(
                                 symbol, as_of_date, data_dir),
         }
 

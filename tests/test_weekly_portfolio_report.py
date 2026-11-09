@@ -34,7 +34,7 @@ def book():
              'price': 101.0, 'value': 500.0, 'reason': 'trend_restored'}],
         'pending': [{'symbol': 'NEW.NS', 'side': 'BUY', 'value': 2000.0,
                      'reason': 'top_rank', 'decided_on': '2026-11-13'}],
-        'exposure': 1.0, 'last_rebalance': '2026-11'}
+        'cash': 1000.0, 'exposure': 1.0, 'last_rebalance': '2026-11'}
 
 
 def test_week_is_measured_from_the_last_close_before_monday():
@@ -87,3 +87,28 @@ def test_next_review_rolls_into_january():
 def test_empty_book():
     subject, _ = w.build({}, {}, {})
     assert 'not started' in subject
+
+
+def test_momentum_fund_tax_and_copy_sections():
+    b = book()
+    for p, v in zip(b['nav'], [1000.0, 1010.0, 1020.0, 1030.0]):
+        p['momfund'] = v
+    b['holdings']['WIN.NS']['last_price'] = 400.0          # a big gain
+    summary = {'portfolio': {
+        'data_check': {'prices_as_of': '2026-11-13', 'ok': False,
+                       'stale_stocks': ['HFCL'], 'stale_benchmarks': []},
+        'results_soon': [{'symbol': 'AZAD.NS', 'date': '2026-11-16'}]}}
+    _, html = w.build(b, summary, {})
+    assert 'Nifty500 Momentum 50 index fund' in html
+    assert 'estimated tax' in html and "you'd keep" in html
+    assert 'older than Fri 13 Nov' in html and 'HFCL' in html
+    assert 'Results coming' in html and 'AZAD' in html
+    assert 'If you copied it with' in html
+
+
+def test_chart_is_written(tmp_path):
+    pytest = __import__('pytest')
+    pytest.importorskip('matplotlib')
+    out = tmp_path / 'chart.png'
+    assert w.make_chart(book()['nav'], out)
+    assert out.stat().st_size > 1000

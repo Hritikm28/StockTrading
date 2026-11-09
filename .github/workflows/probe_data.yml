@@ -1,0 +1,56 @@
+name: Probe lab data quality (temporary)
+on:
+  push:
+    branches: [claude/gifted-mendel-59vd8y]
+    paths: [.github/workflows/probe_data.yml]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Restore lab data (read only)
+        uses: actions/cache/restore@v4
+        with:
+          path: data/lab
+          key: probe-none
+          restore-keys: |
+            labpanel-v2-
+      - run: pip install -q pandas pyarrow numpy
+      - name: Compare NSE-adjusted prices with Yahoo
+        run: |
+          python - <<'PY'
+          import numpy as np, pandas as pd
+          import bhav_history as bh
+          from pathlib import Path
+          rows = bh.load()
+          print('rows', len(rows), 'from', rows['date'].min().date(), 'to', rows['date'].max().date())
+          panel = bh.build_panel(rows, min_value=5e7)
+          C = panel['Close']
+          print('nse panel', C.shape)
+          d = C.pct_change(fill_method=None)
+          big = (d.abs() > 0.4).sum().sum()
+          print('daily moves over 40%:', int(big), 'of', int(d.notna().sum().sum()))
+          ex = d.abs().stack().sort_values(ascending=False).head(12)
+          print(ex.to_string())
+          yp = sorted(Path('data/lab').glob('panel_*y.pkl'))
+          if yp:
+              (ypanel, nifty, sectors) = pd.read_pickle(yp[-1])
+              Y = ypanel['Close']
+              common = [c for c in Y.columns if c in C.columns]
+              ym = Y[common].resample('ME').last().pct_change(fill_method=None)
+              nm = C[common].resample('ME').last().pct_change(fill_method=None)
+              diff = (ym - nm).abs()
+              both = diff.notna()
+              print('common symbols', len(common), 'month pairs', int(both.sum().sum()))
+              for th in (0.01, 0.03, 0.10):
+                  print(f'  share of months differing by more than {th:.0%}:',
+                        round(float((diff > th).sum().sum() / both.sum().sum()), 4))
+              per = diff.mean().sort_values(ascending=False).head(10)
+              print('worst symbols (mean abs monthly diff):'); print(per.to_string())
+              corr = ym.stack().corr(nm.stack())
+              print('overall monthly return correlation', round(float(corr), 4))
+          PY

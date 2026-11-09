@@ -1,236 +1,115 @@
 {
  "inception": "2026-11-04",
  "start_capital": 1000000.0,
- "cash": 499000.05010000075,
+ "cash": 23045.49578084139,
  "holdings": {
   "CUPID.NS": {
-   "shares": 97.7517008797654,
+   "shares": 194.08217485475814,
    "entry_date": "2026-11-05",
    "entry_price": 341.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 338.9
+   "cost_basis": 66600.47206423931,
+   "last_price": 342.85
   },
   "WELCORP.NS": {
-   "shares": 13.53912672623883,
+   "shares": 26.831681717778594,
    "entry_date": "2026-11-05",
    "entry_price": 2462.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 2204.9
+   "cost_basis": 63317.68079676692,
+   "last_price": 2202.1
   },
   "TDPOWERSYS.NS": {
-   "shares": 45.524897568970225,
+   "shares": 88.92674972706514,
    "entry_date": "2026-11-05",
    "entry_price": 732.2,
-   "cost_basis": 33399.996660000004,
-   "last_price": 576.5
+   "cost_basis": 59702.47437999261,
+   "last_price": 571.65
   },
   "ATHERENERG.NS": {
-   "shares": 18.33516501650165,
+   "shares": 36.66731100991548,
    "entry_date": "2026-11-05",
    "entry_price": 1818.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 1821.7
+   "cost_basis": 66874.18916628443,
+   "last_price": 1859.8
   },
   "APARINDS.NS": {
-   "shares": 2.0639832817337465,
+   "shares": 4.058130542007719,
    "entry_date": "2026-11-05",
    "entry_price": 16150.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 14106.0
+   "cost_basis": 62578.1976461883,
+   "last_price": 14205.0
   },
   "SYRMA.NS": {
-   "shares": 21.505374193548388,
+   "shares": 42.56764936133362,
    "entry_date": "2026-11-05",
    "entry_price": 1550.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 1459.3
+   "cost_basis": 64851.39653145055,
+   "last_price": 1462.0
   },
   "LAURUSLABS.NS": {
-   "shares": 14.316595799510372,
+   "shares": 28.563174579012816,
    "entry_date": "2026-11-05",
    "entry_price": 2328.3,
-   "cost_basis": 33399.996660000004,
-   "last_price": 2340.0
+   "cost_basis": 66974.06704556759,
+   "last_price": 2454.0
   },
   "AZAD.NS": {
-   "shares": 12.583363533408834,
+   "shares": 24.77764753340883,
    "entry_date": "2026-11-05",
    "entry_price": 2649.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 2422.7
+   "cost_basis": 63952.35531183046,
+   "last_price": 2434.2
   },
   "POWERINDIA.NS": {
-   "shares": 1.1472493546721736,
+   "shares": 2.2871181895542323,
    "entry_date": "2026-11-05",
    "entry_price": 29055.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 27800.0
+   "cost_basis": 65363.25312451778,
+   "last_price": 28150.0
   },
   "MCX.NS": {
-   "shares": 9.920633928571428,
+   "shares": 19.760386529077472,
    "entry_date": "2026-11-05",
    "entry_price": 3360.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 3528.0
+   "cost_basis": 68476.51457,
+   "last_price": 3545.0
   },
   "CHENNPETRO.NS": {
-   "shares": 20.96435849056604,
+   "shares": 41.79579198470801,
    "entry_date": "2026-11-05",
    "entry_price": 1590.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 1441.8
+   "cost_basis": 63692.488423428666,
+   "last_price": 1460.9
   },
   "BHEL.NS": {
-   "shares": 77.88161214953271,
+   "shares": 155.4483660139798,
    "entry_date": "2026-11-05",
    "entry_price": 428.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 418.8
+   "cost_basis": 66088.12439992133,
+   "last_price": 422.95
   },
   "SONACOMS.NS": {
-   "shares": 37.03703333333333,
+   "shares": 73.70938054715148,
    "entry_date": "2026-11-05",
    "entry_price": 900.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 900.0
+   "cost_basis": 66806.20085271259,
+   "last_price": 924.0
   },
   "STLTECH.NS": {
-   "shares": 42.19408860759494,
+   "shares": 88.7267201547505,
    "entry_date": "2026-11-05",
    "entry_price": 790.0,
-   "cost_basis": 33399.996660000004,
-   "last_price": 757.75
+   "cost_basis": 65442.465923820826,
+   "last_price": 670.9500122070312
   },
   "HFCL.NS": {
-   "shares": 147.75411834299837,
+   "shares": 301.57101975144906,
    "entry_date": "2026-11-05",
    "entry_price": 225.6,
-   "cost_basis": 33399.996660000004,
-   "last_price": 221.74000549316406
+   "cost_basis": 66234.623982438,
+   "last_price": 206.47000122070312
   }
  },
- "pending": [
-  {
-   "symbol": "CUPID.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 33128.05
-  },
-  {
-   "symbol": "WELCORP.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 29852.42
-  },
-  {
-   "symbol": "TDPOWERSYS.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 26245.1
-  },
-  {
-   "symbol": "ATHERENERG.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 33401.17
-  },
-  {
-   "symbol": "APARINDS.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 29114.55
-  },
-  {
-   "symbol": "SYRMA.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 31382.79
-  },
-  {
-   "symbol": "LAURUSLABS.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 33500.83
-  },
-  {
-   "symbol": "AZAD.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 30485.71
-  },
-  {
-   "symbol": "POWERINDIA.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 31893.53
-  },
-  {
-   "symbol": "MCX.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 35000.0
-  },
-  {
-   "symbol": "CHENNPETRO.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 30226.41
-  },
-  {
-   "symbol": "BHEL.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 32616.82
-  },
-  {
-   "symbol": "SONACOMS.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 33333.33
-  },
-  {
-   "symbol": "STLTECH.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 31972.57
-  },
-  {
-   "symbol": "HFCL.NS",
-   "side": "BUY",
-   "decided_on": "2026-11-06",
-   "reason": "trend_restored",
-   "topup": true,
-   "value": 32763.0
-  }
- ],
+ "pending": [],
  "last_rebalance": "2026-11",
  "nav": [
   {
@@ -238,21 +117,32 @@
    "nav": 1000000.0,
    "cash": 1000000.0,
    "n_holdings": 0,
-   "nifty": 23960.599609375
+   "nifty": 23960.599609375,
+   "momfund": 53361.95
   },
   {
    "date": "2026-11-05",
    "nav": 987370.53,
    "cash": 565800.04,
    "n_holdings": 13,
-   "nifty": 24536.6
+   "nifty": 24536.6,
+   "momfund": 53212.55
   },
   {
    "date": "2026-11-06",
    "nav": 973916.34,
    "cash": 499000.05,
    "n_holdings": 15,
-   "nifty": 25030.35
+   "nifty": 25030.35,
+   "momfund": 53072.85
+  },
+  {
+   "date": "2026-11-09",
+   "nav": 969132.22,
+   "cash": 23045.5,
+   "n_holdings": 15,
+   "nifty": 25044.65,
+   "momfund": 53691.55
   }
  ],
  "trades": [
@@ -390,12 +280,147 @@
    "shares": 147.75411834299837,
    "value": 33333.33,
    "reason": "top_rank"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "CUPID.NS",
+   "side": "BUY",
+   "price": 343.9,
+   "shares": 96.33047397499274,
+   "value": 33128.05,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "WELCORP.NS",
+   "side": "BUY",
+   "price": 2245.8,
+   "shares": 13.292554991539761,
+   "value": 29852.42,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "TDPOWERSYS.NS",
+   "side": "BUY",
+   "price": 604.7,
+   "shares": 43.40185215809492,
+   "value": 26245.1,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "ATHERENERG.NS",
+   "side": "BUY",
+   "price": 1822.0,
+   "shares": 18.332145993413828,
+   "value": 33401.17,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "APARINDS.NS",
+   "side": "BUY",
+   "price": 14600.0,
+   "shares": 1.9941472602739725,
+   "value": 29114.55,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "SYRMA.NS",
+   "side": "BUY",
+   "price": 1490.0,
+   "shares": 21.062275167785234,
+   "value": 31382.79,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "LAURUSLABS.NS",
+   "side": "BUY",
+   "price": 2351.5,
+   "shares": 14.246578779502446,
+   "value": 33500.83,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "AZAD.NS",
+   "side": "BUY",
+   "price": 2500.0,
+   "shares": 12.194284,
+   "value": 30485.71,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "POWERINDIA.NS",
+   "side": "BUY",
+   "price": 27980.0,
+   "shares": 1.1398688348820585,
+   "value": 31893.53,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "MCX.NS",
+   "side": "BUY",
+   "price": 3557.0,
+   "shares": 9.839752600506044,
+   "value": 35000.0,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "CHENNPETRO.NS",
+   "side": "BUY",
+   "price": 1451.0,
+   "shares": 20.831433494141972,
+   "value": 30226.41,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "BHEL.NS",
+   "side": "BUY",
+   "price": 420.5,
+   "shares": 77.56675386444708,
+   "value": 32616.82,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "SONACOMS.NS",
+   "side": "BUY",
+   "price": 908.95,
+   "shares": 36.67234721381814,
+   "value": 33333.33,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "STLTECH.NS",
+   "side": "BUY",
+   "price": 687.1,
+   "shares": 46.532631547155546,
+   "value": 31972.57,
+   "reason": "trend_restored"
+  },
+  {
+   "date": "2026-11-09",
+   "symbol": "HFCL.NS",
+   "side": "BUY",
+   "price": 213.0,
+   "shares": 153.81690140845072,
+   "value": 32763.0,
+   "reason": "trend_restored"
   }
  ],
  "exposure": 1.0,
  "day_open": {
-  "date": "2026-11-06",
-  "exposure": 0.5,
+  "date": "2026-11-09",
+  "exposure": 1.0,
   "last_rebalance": "2026-11"
  }
 }

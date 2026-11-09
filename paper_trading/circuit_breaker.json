@@ -1,5 +1,5 @@
 {
-  "tripped": false,
+  "tripped": true,
   "epoch_start": "2026-06-19",
   "history": [
     {
@@ -11,15 +11,20 @@
       "event": "reset",
       "on": "2026-06-19",
       "reason": "probation after 7d"
+    },
+    {
+      "event": "trip",
+      "on": "2026-11-09",
+      "reason": "win rate 35.0% over last 20 trades < 40.0%"
     }
   ],
   "metrics": {
-    "win_rate": 13.3,
-    "n_window": 15,
-    "excess_cum": -3.79,
-    "n_excess_days": 1
+    "win_rate": 35.0,
+    "n_window": 20,
+    "excess_cum": -4.78,
+    "n_excess_days": 2
   },
-  "checked_on": "2026-11-06",
-  "tripped_on": "2026-06-12",
-  "reason": "win rate 30.0% over last 20 trades < 40.0%; -7.72% cumulative excess vs NIFTY over last 10 signal days < -2.0%"
+  "checked_on": "2026-11-09",
+  "tripped_on": "2026-11-09",
+  "reason": "win rate 35.0% over last 20 trades < 40.0%"
 }

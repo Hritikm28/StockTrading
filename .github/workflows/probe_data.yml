@@ -19,7 +19,7 @@ jobs:
           key: probe-none
           restore-keys: |
             labpanel-v2-
-      - run: pip install -q pandas pyarrow numpy
+      - run: pip install -q pandas pyarrow numpy requests yfinance
       - name: Compare NSE-adjusted prices with Yahoo
         run: |
           python - <<'PY'

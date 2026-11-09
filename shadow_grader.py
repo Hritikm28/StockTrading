@@ -380,7 +380,7 @@ def _verdict(report: Dict) -> Dict:
             f'Top-{report["top_n"]} picks beat NIFTY by {avg:+.2f}% per hold '
             f'after costs, but t={t} is too weak to rule out luck.')}
     return {'verdict': 'NO_EDGE', 'verdict_text': (
-        f'Top-{report["top_n"]} picks trailed NIFTY by {avg:+.2f}% per '
+        f'Top-{report["top_n"]} picks trailed NIFTY by {abs(avg):.2f}% per '
         f'{report["hold_days"]}-day hold after costs. The ranking is not '
         f'adding value over simply holding the index.')}
 

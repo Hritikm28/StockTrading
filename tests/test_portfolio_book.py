@@ -14,6 +14,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+import costs
 import portfolio_book as pb
 
 DAYS = pd.bdate_range('2026-11-02', '2026-12-31')
@@ -62,9 +63,8 @@ def test_enters_from_cash_and_fills_at_next_open(market, tmp_path):
     s00 = next(f for f in r['fills'] if f['symbol'] == 'S00.NS')
     assert s00['price'] == 99.0                 # 04-Nov open, not a close
     book = pb.load_book(d('2026-11-04'), tmp_path / "book.json")
-    spent = sum(f['value'] for f in r['fills'])
-    assert book['cash'] == pytest.approx(
-        pb.START_CAPITAL - spent * (1 + pb.COST_PER_SIDE_PCT / 100), abs=1.0)
+    spent = sum(f['value'] + costs.buy_cost(f['value']) for f in r['fills'])
+    assert book['cash'] == pytest.approx(pb.START_CAPITAL - spent, abs=1.0)
     assert r['cash_pct'] < 1.0
 
 
@@ -259,3 +259,86 @@ def test_rerun_on_a_review_day_keeps_its_orders(market, tmp_path):
     again = step(market, tmp_path, d('2026-12-01'), order=order)
     assert first['action'] == again['action'] == 'REBALANCE'
     assert again['orders'] == first['orders']
+
+
+def test_real_costs_on_a_round_trip(market, tmp_path):
+    """Buying pays ~0.22%; selling pays ~0.20% plus the Rs 15.93 DP charge."""
+    step(market, tmp_path, d('2026-11-03'))
+    step(market, tmp_path, d('2026-11-04'))
+    book = pb.load_book(d('2026-11-04'), tmp_path / "book.json")
+    h = book['holdings']['S00.NS']
+    assert h['cost_basis'] == pytest.approx(
+        h['shares'] * 99.0 * (1 + costs.BUY_RATE))
+    order = [s for s in SYMS if s != 'S00.NS'] + ['S00.NS']
+    step(market, tmp_path, d('2026-12-01'), order=order)
+    step(market, tmp_path, d('2026-12-02'), order=order)
+    book = pb.load_book(d('2026-12-02'), tmp_path / "book.json")
+    sale = next(t for t in book['trades'] if t['side'] == 'SELL')
+    gross = sale['shares'] * sale['price']
+    assert sale['gain'] == pytest.approx(
+        gross - costs.sell_cost(gross) - h['cost_basis'], abs=0.01)
+    assert sale['held_days'] == 28
+
+
+def test_momentum_fund_benchmark_and_data_check(market, tmp_path):
+    days = pd.bdate_range('2026-11-02', '2026-11-05')    # fund lags a day
+    pd.DataFrame({'Open': 1000.0, 'Close': [1000.0, 1000.0, 1100.0, 1100.0]},
+                 index=days).to_parquet(market / f"{pb.MOMFUND}.parquet")
+    step(market, tmp_path, d('2026-11-04'))
+    r = step(market, tmp_path, d('2026-11-05'))
+    assert r['momfund_return_pct'] == 0.0
+    assert r['data_check']['ok']
+    r = step(market, tmp_path, d('2026-11-06'))
+    dc = r['data_check']
+    assert not dc['ok'] and dc['stale_benchmarks'] == [pb.MOMFUND_NAME]
+    assert dc['stale_stocks'] == [] and dc['prices_as_of'] == '2026-11-06'
+
+
+def test_if_sold_today_charges_costs_and_tax(market, tmp_path):
+    step(market, tmp_path, d('2026-11-03'))
+    step(market, tmp_path, d('2026-11-04'))
+    book = pb.load_book(d('2026-11-04'), tmp_path / "book.json")
+    for h in book['holdings'].values():
+        h['last_price'] *= 1.5                             # a 50% gain
+    est = pb.tax_estimate(book, d('2026-11-04'))
+    gain = est['after_costs'] - pb.START_CAPITAL
+    assert gain > 0 and est['fy_gain'] == pytest.approx(gain, rel=1e-6)
+    assert est['tax'] == pytest.approx(0.20 * gain, rel=1e-6)   # short-term
+    assert est['after_tax'] == pytest.approx(est['after_costs'] - est['tax'])
+    for h in book['holdings'].values():
+        h['last_price'] *= 0.5                             # now a loss
+    assert pb.tax_estimate(book, d('2026-11-04'))['tax'] == 0
+
+
+def test_copy_plan_uses_whole_shares():
+    book = {'holdings': {
+        'CHEAP.NS': {'shares': 100.0, 'last_price': 100.0},       # 10,000
+        'DEAR.NS': {'shares': 1.0, 'last_price': 30_000.0}},      # 30,000
+        'cash': 60_000.0}
+    orders = [{'symbol': 'NEW.NS', 'side': 'BUY', 'value': 20_000.0,
+               'price': 500.0}]
+    plan = pb.copy_plan(book, orders, nav=100_000.0, capital=50_000)
+    by = {r['symbol']: r for r in plan['holdings']}
+    assert by['CHEAP.NS']['shares'] == 50 and by['DEAR.NS']['shares'] == 0
+    assert plan['orders'][0]['shares'] == 20
+    assert plan['min_capital'] == 100_000      # one DEAR share is 30% of it
+
+
+def test_watch_list_stocks_are_skipped_and_replaced_at_review(market, tmp_path):
+    blocked = {'S00.NS', 'S01.NS'}
+    r = pb.run_book(ranking(SYMS), d('2026-11-03'), True, 1.0, False,
+                    lambda s: None, market, tmp_path / "book.json",
+                    blocked={'S00.NS'})
+    assert 'S00.NS' not in {o['symbol'] for o in r['orders']}
+    assert r['orders'][0]['symbol'] == 'S01.NS'
+    step(market, tmp_path, d('2026-11-04'))
+    r = pb.run_book(ranking(SYMS), d('2026-11-05'), True, 1.0, False,
+                    lambda s: None, market, tmp_path / "book.json",
+                    blocked=blocked)
+    assert r['orders'] == []                       # kept between reviews
+    assert r['watch_list_held'] == ['S01.NS']
+    r = pb.run_book(ranking(SYMS), d('2026-12-01'), True, 1.0, False,
+                    lambda s: None, market, tmp_path / "book.json",
+                    blocked=blocked)
+    sells = [o['symbol'] for o in r['orders'] if o['side'] == 'SELL']
+    assert sells == ['S01.NS']                     # replaced at the review

@@ -48,7 +48,9 @@ try:
     import sys
     sys.path.insert(0, '.')
     from signal_decay_detector import get_live_alphas
-    live_alpha_str = ", ".join(sorted(get_live_alphas()))
+    _names = {'resid_mom': 'residual momentum', 'momentum': 'momentum',
+              'mom_riskadj': 'risk-adjusted momentum'}
+    live_alpha_str = ", ".join(sorted(_names.get(a, a) for a in get_live_alphas()))
 except Exception:
     pass
 
@@ -129,8 +131,18 @@ def portfolio_section():
     if exposure is not None:
         status += f" (target {exposure}% invested)"
     perf = (f"Since {book['inception']}: portfolio {_pct(book.get('return_pct'))}"
-            f" vs NIFTY {_pct(book.get('nifty_return_pct'))}"
-            f" (value ₹{book['nav']:,.0f}, costs included)")
+            f" vs NIFTY {_pct(book.get('nifty_return_pct'))}")
+    if book.get('momfund_return_pct') is not None:
+        perf += (f" vs the {book.get('momfund_name', 'momentum')} index fund "
+                 f"{_pct(book.get('momfund_return_pct'))}")
+    perf += f" (value ₹{book['nav']:,.0f}, costs included)"
+    sold = book.get('if_sold_today')
+    if sold and book['n_holdings']:
+        perf += (f"<br>If you sold everything today: ₹{sold['after_costs']:,.0f}"
+                 f" after selling costs, "
+                 + (f"estimated tax ₹{sold['tax']:,.0f}, so you'd keep "
+                    f"<b>₹{sold['after_tax']:,.0f}</b>." if sold['tax'] > 0
+                    else "no tax (no profit this financial year)."))
     buy_rows = [(f"<b>{o['symbol']}</b>",
                  'add' if o.get('topup') else o.get('rank', ''),
                  '' if o.get('topup') else _fmt(o.get('score')),
@@ -144,6 +156,14 @@ def portfolio_section():
                   _pct(h['pnl_pct']), f"{h['weight_pct']:.1f}%")
                  for h in book.get('holdings', [])]
     out = (f"<p style='font-size:14px;margin:4px 0'>{status}<br>{perf}</p>")
+    out += data_check_line(book.get('data_check'))
+    soon = book.get('results_soon') or []
+    if soon:
+        out += ("<p style='font-size:13px;margin:4px 0;color:#8a6d00'>📅 Results "
+                "coming (where known): " + ", ".join(
+                    f"<b>{r['symbol'].replace('.NS', '')}</b> "
+                    f"{date.fromisoformat(r['date']):%a %d %b}" for r in soon)
+                + ". Prices often jump or drop on results day.</p>")
     if buys or sells:
         out += "<h3 style='margin-bottom:4px'>Orders for the next market open</h3>"
         if buys:
@@ -154,6 +174,7 @@ def portfolio_section():
         if sells:
             out += ("<p style='margin:4px 0;color:#b0322b'><b>SELL</b></p>"
                     + _table([('Symbol', 'left'), ('Why', 'left')], sell_rows))
+        out += copy_orders(book.get('copy'))
     else:
         out += ("<p style='font-size:13px;color:#555'>No orders today. Names "
                 "are replaced only at the monthly review, so most days are "
@@ -164,6 +185,38 @@ def portfolio_section():
                           ('Entry', 'right'), ('Last', 'right'),
                           ('P&L', 'right'), ('Weight', 'right')], hold_rows))
     return out
+
+
+def data_check_line(dc):
+    if not dc or not dc.get('prices_as_of'):
+        return ""
+    day = date.fromisoformat(dc['prices_as_of']).strftime('%a %d %b')
+    if dc.get('ok'):
+        return (f"<p style='font-size:13px;margin:4px 0;color:#1a7a3a'>✅ Data "
+                f"check: every price is up to date (closing prices of {day}).</p>")
+    bad = dc.get('stale_benchmarks', []) + dc.get('stale_stocks', [])
+    return (f"<p style='font-size:13px;margin:4px 0;color:#b0322b'>⚠️ Data "
+            f"check: these prices are older than {day}: <b>{', '.join(bad)}</b>. "
+            f"Figures that use them may be off until they update.</p>")
+
+
+def copy_orders(plan):
+    """Whole shares for someone copying the book with plan['capital']."""
+    if not plan or not plan.get('orders'):
+        return ""
+    rows = [(f"<b>{r['symbol'].replace('.NS', '')}</b>",
+             'add' if r['topup'] else 'new', _fmt(r['price']),
+             f"{r['shares']:,}" if r['shares'] else "— (too expensive)",
+             f"₹{r['cost']:,.0f}") for r in plan['orders']]
+    total = sum(r['cost'] for r in plan['orders'])
+    return (f"<p style='margin:8px 0 4px;font-size:13px'><b>If you're copying "
+            f"with ₹{plan['capital']:,.0f}</b> (whole shares, at the last "
+            f"close; the open may differ):</p>"
+            + _table([('Stock', 'left'), ('', 'center'), ('Price', 'right'),
+                      ('Shares', 'right'), ('Cost', 'right')], rows)
+            + f"<p style='font-size:12px;color:#555;margin:4px 0'>Total about "
+              f"₹{total:,.0f}. To hold at least one share of every stock you "
+              f"need about ₹{plan['min_capital']:,.0f}.</p>")
 
 
 def scoreboard():

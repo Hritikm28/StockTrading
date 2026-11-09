@@ -181,3 +181,53 @@ def test_half_gate_on_index():
     nifty = pd.Series(100 * np.cumprod(1 + r), index=days)
     out, half = fl.gated_index(nifty), fl.gated_index(nifty, low=0.5)
     assert out['gated_max_dd_pct'] >= half['gated_max_dd_pct'] >= half['buyhold_max_dd_pct']
+
+
+def test_residual_momentum_ignores_the_market_move():
+    import factors as fx
+    rng = np.random.default_rng(3)
+    m = np.cumprod(1 + rng.normal(0.001, 0.01, 520)) * 100
+    noise = rng.normal(0, 0.005, 520)
+    beta2 = np.cumprod(1 + 2 * np.diff(np.log(m), prepend=np.log(m[0])) + noise) * 50
+    own = np.cumprod(1 + np.diff(np.log(m), prepend=np.log(m[0])) + noise + 0.002) * 50
+    # a high-beta stock with no drift of its own scores far below a stock
+    # that climbs on its own, whatever the market did
+    assert fx.residual_mom(own, m) > fx.residual_mom(beta2, m) + 20
+    assert fx.residual_mom(own[:-1], m) is None           # misaligned
+
+
+def test_watch_list_stocks_are_never_bought():
+    days = pd.bdate_range('2020-01-01', periods=400)
+    rng = np.random.default_rng(0)
+    cols = [f"S{i}" for i in range(20)]
+    close = pd.DataFrame(np.cumprod(1 + rng.normal(0.001, 0.01, (400, 20)), axis=0)
+                         * 100, index=days, columns=cols)
+    watch = pd.DataFrame(0.0, index=days, columns=cols)
+    watch['S0'] = 1.0
+    panel = {'Close': close, 'Open': close, 'Value': close * 0 + 1e9,
+             'Watch': watch}
+    nifty = pd.Series(np.linspace(100, 200, 400), index=days)
+    best_s0 = lambda closes: {i: (100.0 if i == 0 else float(i)) for i in closes}
+    rules = fl.Rules(min_traded_value=1e7, top_n=3, buffer=3)
+    seen = []
+
+    def spy(closes):
+        seen.append(set(closes))
+        return best_s0(closes)
+
+    fl.simulate(panel, nifty, spy, rules)
+    assert any(0 in s for s in seen)                      # S0 is a candidate
+    seen.clear()
+    fl.simulate(panel, nifty, spy, fl.Rules(min_traded_value=1e7, top_n=3,
+                                            buffer=3, skip_watch=True))
+    assert seen and not any(0 in s for s in seen)         # never offered
+
+
+def test_after_tax_charges_each_years_gain():
+    days = pd.date_range('2020-01-01', '2022-12-31', freq='D')
+    nav = pd.Series(np.linspace(100, 172.8, len(days)), index=days)
+    gross = ((nav.iloc[-1] / nav.iloc[0]) ** (365.25 / (days[-1] - days[0]).days) - 1) * 100
+    assert fl.after_tax_cagr(nav) < gross
+    flat = pd.Series(100.0, index=days)
+    assert fl.after_tax_cagr(flat) == pytest.approx(0.0, abs=1e-9)
+    assert fl.index_after_tax_cagr(nav) > fl.after_tax_cagr(nav)  # tax deferred

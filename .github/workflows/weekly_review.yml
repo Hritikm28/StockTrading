@@ -12,6 +12,11 @@ permissions:
 jobs:
   review:
     runs-on: ubuntu-latest
+    env:
+      # Example amount for the "if you copy this" share counts in the emails.
+      # Change it in the repo: Settings > Secrets and variables > Actions >
+      # Variables > COPY_CAPITAL (rupees). Empty means Rs 1,00,000.
+      COPY_CAPITAL: ${{ vars.COPY_CAPITAL }}
     timeout-minutes: 20
 
     steps:
@@ -27,7 +32,7 @@ jobs:
           cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements_cloud.txt
+        run: pip install -r requirements_cloud.txt matplotlib
 
       - name: Run weekly review
         run: python weekly_review.py
@@ -76,6 +81,7 @@ jobs:
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: ${{ env.WEEKLY_SUBJECT }}
           html_body: file://weekly_email_body.html
+          attachments: weekly_chart.png
           to: ${{ secrets.MAIL_TO != '' && secrets.MAIL_TO || secrets.MAIL_USERNAME }}
           from: Trading Bot <${{ secrets.MAIL_USERNAME }}>
 

@@ -73,6 +73,34 @@ def high_52w(c) -> Optional[float]:
     return None if w is None else float(w[-1] / w.max())
 
 
+def residual_mom(c, m) -> Optional[float]:
+    """Residual momentum (Blitz, Huij & Martens 2011): the part of a
+    stock's last-year return (to one month ago) that the market's move does
+    not explain, divided by its own volatility. Plain momentum loads up on
+    high-beta stocks after a fall and crashes when the market snaps back;
+    removing the market's share makes it steadier.
+
+    `m` is the market's closes on the same days as `c`. Beta comes from
+    up to two years of daily returns (at least one); the residual keeps the
+    stock's own drift (no intercept), since that drift is the signal."""
+    if c is None or m is None or len(c) != len(m) or len(c) < YEAR + 1:
+        return None
+    c, m = np.asarray(c, dtype=float), np.asarray(m, dtype=float)
+    n = min(len(c), 2 * YEAR + 1)
+    c, m = c[-n:], m[-n:]
+    if not (np.all(np.isfinite(c)) and np.all(np.isfinite(m))
+            and np.all(c > 0) and np.all(m > 0)):
+        return None
+    rc, rm = np.diff(np.log(c)), np.diff(np.log(m))
+    var = rm.var()
+    if var <= 0:
+        return None
+    beta = ((rc - rc.mean()) * (rm - rm.mean())).mean() / var
+    e = (rc - beta * rm)[-YEAR:-SKIP]
+    sd = e.std(ddof=1)
+    return float(e.sum() / sd) if sd > 0 else None
+
+
 def zscore(values: dict) -> dict:
     """Cross-sectional z-scores, winsorised at +/-3."""
     if len(values) < 3:

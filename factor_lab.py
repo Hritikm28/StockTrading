@@ -5,22 +5,27 @@ Live shadow grading needs months before it can say anything. This replays
 the last ~10 years so a ranking idea can be judged in minutes, using the
 same rules the live paper portfolio (portfolio_book.py) trades:
 
-  - universe on each date: NIFTY 500 names with a year of history whose
+  - universe on each date: every NSE stock with a year of history whose
     60-day median traded value is at least Rs 5 crore, the 150 most traded
   - top 15 by the variant's score (positive half only), equal weight,
     replaced monthly with a top-30 buffer, filled at the next open
-  - 200-DMA trend gate: buy only above it, sell everything 2% below it
-  - 0.20% cost per side
+  - 200-DMA trend gate: buy only above it, cut back 2% below it
+  - 0.22% cost per side (Indian delivery charges plus slippage, costs.py)
 
 Every variant is scored with factors.py, the same code the live alphas use.
 
+The stock data comes from NSE's daily bhav copies (bhav_history.py): every
+stock that traded on each day, including those that later collapsed or
+were delisted, so the test is free of survivorship bias. The old source,
+today's NIFTY 500 from Yahoo, is still run for the live rules, to show how
+much it flattered the results.
+
 Honest limits, printed in the report:
-  - Survivorship bias. The candidate list is TODAY's NIFTY 500, so stocks
-    that collapsed and left the index are missing. That flatters every
-    variant's absolute return. Compare variants with each other; treat
-    the gap to NIFTY as an upper bound.
   - Price returns only (no dividends) for both the strategy and NIFTY.
-  - Sectors are today's NSE industry labels, applied to every past date.
+  - Sectors are today's NSE industry labels; past and delisted stocks
+    without one are not capped.
+  - After-tax figures are estimates: strategy gains taxed at 20% each year
+    (it turns its holdings over about once a year), NIFTY at 12.5% once.
   - Each extra variant tried raises the bar for luck. The deflated Sharpe
     ratio below charges for every variant in this file, but not for ideas
     tried earlier and dropped, so it is still optimistic.
@@ -48,14 +53,15 @@ import factors as fx
 CACHE_DIR = Path("data/lab")
 OUT_DIR = Path("research")
 START_CAPITAL = 1_000_000.0
-WINDOW = 300             # closes handed to each factor function
+WINDOW = 520             # closes handed to each factor function (2 years)
+STCG_RATE, INDEX_LTCG_RATE = 0.20, 0.125
 
 
 @dataclass
 class Rules:
     top_n: int = 15
     buffer: int = 30
-    cost: float = 0.002            # per side
+    cost: float = 0.0022           # per side, see costs.py
     exit_band: float = 0.02
     gate: bool = True
     low_exposure: float = 0.0      # share kept invested while the trend is broken
@@ -64,6 +70,7 @@ class Rules:
     min_traded_value: float = 5e7  # Rs 5 crore
     liq_window: int = 60
     history: int = 260
+    skip_watch: bool = False       # never buy NSE watch-list (BE/BZ) stocks
 
 
 # ---------------------------------------------------------------------------
@@ -102,15 +109,29 @@ def v_riskadj_hi52(closes):
     return {k: (za[k] + zh[k]) / 2 for k in za if k in zh}
 
 
+def v_resid(closes, market):
+    out = {}
+    for k, c in closes.items():
+        v = fx.residual_mom(c, market.get(k))
+        if v is not None:
+            out[k] = v
+    return out
+
+
+v_resid.needs_market = True
+
+HALF = Rules(low_exposure=0.5)          # half invested when the trend breaks
+LIVE = Rules(low_exposure=0.5, skip_watch=True)   # what portfolio_book trades
+
 VARIANTS = [
-    ('mom_12_1', 'Momentum 12-1 (live today)', v_mom, Rules()),
-    ('mom_riskadj', 'Risk-adjusted momentum (NSE style)', v_riskadj, Rules()),
-    ('mom_steady', 'Momentum, steady climbers preferred', v_steady, Rules()),
-    ('hi52', 'Closeness to 52-week high', v_hi52, Rules()),
-    ('riskadj_hi52', 'Risk-adjusted momentum + 52-week high', v_riskadj_hi52, Rules()),
-    ('mom_12_1_nogate', 'Momentum 12-1 without the trend gate', v_mom, Rules(gate=False)),
-    ('mom_12_1_half', 'Momentum 12-1, half invested when the trend breaks', v_mom,
-     Rules(low_exposure=0.5)),
+    ('live', 'Residual momentum, skipping watch-list stocks (live from '
+     '2026-11-10)', v_resid, LIVE),
+    ('resid', 'Residual momentum, watch-list stocks allowed', v_resid, HALF),
+    ('mom_nowatch', 'Plain momentum 12-1, skipping watch-list stocks', v_mom,
+     LIVE),
+    ('mom', 'Plain momentum 12-1 (live until 2026-11-09)', v_mom, HALF),
+    ('mom_nogate', 'Plain momentum 12-1 without the trend gate', v_mom,
+     Rules(gate=False)),
 ]
 
 
@@ -130,13 +151,20 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
     days = panel['Close'].index.intersection(nifty.index)
     close = panel['Close'].reindex(days)
     opn = panel['Open'].reindex(days)
-    tv = (close * panel['Volume'].reindex(days)).rolling(
-        rules.liq_window, min_periods=int(rules.liq_window * 0.7)).median()
+    value = (panel['Value'].reindex(days) if 'Value' in panel
+             else close * panel['Volume'].reindex(days))
+    tv = value.rolling(rules.liq_window,
+                       min_periods=int(rules.liq_window * 0.7)).median()
     nifty = nifty.reindex(days).ffill()
     vs200 = (nifty / nifty.rolling(200).mean() - 1).to_numpy()
     cols = list(close.columns)
     sector_of = [(sectors or {}).get(c) for c in cols]
-    C, O, TV = close.to_numpy(), opn.to_numpy(), tv.to_numpy()
+    C, O, TV = (close.to_numpy(dtype=float), opn.to_numpy(dtype=float),
+                tv.to_numpy(dtype=float))
+    W = (panel['Watch'].reindex(days).to_numpy(dtype=float) == 1
+         if 'Watch' in panel else np.zeros(C.shape, dtype=bool))
+    N = nifty.to_numpy(dtype=float)
+    needs_market = getattr(score_fn, 'needs_market', False)
     valid_count = np.cumsum(np.isfinite(C), axis=0)
 
     cash, holdings, pending = START_CAPITAL, {}, []
@@ -149,12 +177,19 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
         ok = (valid_count[t] >= rules.history) & (TV[t] >= rules.min_traded_value)
         cand = np.where(ok)[0]
         cand = cand[np.argsort(-TV[t, cand])][:rules.universe_size]
-        closes = {}
+        if rules.skip_watch:              # dropped after the universe is set
+            cand = cand[~W[t, cand]]
+        closes, market = {}, {}
+        lo = max(0, t - WINDOW + 1)
         for i in cand:
-            w = C[max(0, t - WINDOW + 1):t + 1, i]
-            w = w[np.isfinite(w)]
-            closes[i] = w
-        scores = fx.rank_to_score(score_fn(closes))
+            w = C[lo:t + 1, i]
+            keep = np.isfinite(w)
+            if needs_market:
+                keep &= np.isfinite(N[lo:t + 1])
+                market[i] = N[lo:t + 1][keep]
+            closes[i] = w[keep]
+        raw = score_fn(closes, market) if needs_market else score_fn(closes)
+        scores = fx.rank_to_score(raw)
         ranked = sorted((i for i, s in scores.items() if s > 0),
                         key=lambda i: -scores[i])
         return ranked
@@ -319,6 +354,34 @@ def deflated_sharpe(x: np.ndarray, trial_srs: List[float]) -> Optional[float]:
     return float(nd.cdf((sr - sr0) * math.sqrt(len(x) - 1) / math.sqrt(denom)))
 
 
+def after_tax_cagr(nav: pd.Series, rate: float = STCG_RATE) -> float:
+    """CAGR after tax when each calendar year's gain is taxed at `rate`
+    (losses carried forward). Assumes gains are realised every year, which
+    is close to true for a book that is turned over about once a year."""
+    years = (nav.index[-1] - nav.index[0]).days / 365.25
+    ends = nav.groupby(nav.index.year).last()
+    value, prev, carry = 1.0, nav.iloc[0], 0.0
+    for end in ends:
+        gain = value * (end / prev - 1)
+        value += gain
+        taxable = gain + carry
+        if taxable > 0:
+            value -= rate * taxable
+            carry = 0.0
+        else:
+            carry = taxable
+        prev = end
+    return (value ** (1 / years) - 1) * 100
+
+
+def index_after_tax_cagr(series: pd.Series, rate: float = INDEX_LTCG_RATE) -> float:
+    """Buy and hold, taxed once on the whole gain when sold at the end."""
+    years = (series.index[-1] - series.index[0]).days / 365.25
+    g = series.iloc[-1] / series.iloc[0]
+    final = g - rate * max(g - 1, 0)
+    return (final ** (1 / years) - 1) * 100
+
+
 def metrics(nav: pd.Series, nifty: pd.Series, traded: float) -> Dict:
     nav = nav.dropna()
     nifty = nifty.reindex(nav.index).ffill()
@@ -344,6 +407,8 @@ def metrics(nav: pd.Series, nifty: pd.Series, traded: float) -> Dict:
     return {
         'cagr_pct': round(cagr * 100, 2), 'nifty_cagr_pct': round(n_cagr * 100, 2),
         'excess_cagr_pct': round((cagr - n_cagr) * 100, 2),
+        'after_tax_cagr_pct': round(after_tax_cagr(nav), 2),
+        'nifty_after_tax_cagr_pct': round(index_after_tax_cagr(nifty), 2),
         'vol_pct': round(d.std() * math.sqrt(252) * 100, 1),
         'sharpe': round(d.mean() / d.std() * math.sqrt(252), 2) if d.std() else None,
         'max_dd_pct': round(dd * 100, 1), 'nifty_max_dd_pct': round(n_dd * 100, 1),
@@ -357,9 +422,41 @@ def metrics(nav: pd.Series, nifty: pd.Series, traded: float) -> Dict:
 # ---------------------------------------------------------------------------
 # Data (runs in the cloud)
 # ---------------------------------------------------------------------------
+def load_nifty(years: int) -> pd.Series:
+    import yfinance as yf
+    start = (date.today() - timedelta(days=int(365.25 * years) + 400)).isoformat()
+    n = yf.download('^NSEI', start=start, auto_adjust=False, progress=False)
+    nifty = n['Close']
+    if isinstance(nifty, pd.DataFrame):
+        nifty = nifty.iloc[:, 0]
+    nifty.index = pd.to_datetime(nifty.index).tz_localize(None)
+    return nifty
+
+
+def load_bias_free_panel(years: int, min_value: float = Rules.min_traded_value
+                         ) -> tuple:
+    """Every NSE stock from the bhav copies (bhav_history.py), adjusted for
+    splits and bonuses, with traded value and the watch-list flag. Only
+    stocks that ever traded Rs `min_value` in a day are kept."""
+    import bhav_history as bh
+    from market_calendar import latest_session
+    from universe import fetch_nifty500_list
+
+    start = date.today() - timedelta(days=int(365.25 * years) + 400)
+    bh.update(start, latest_session())
+    rows = bh.load(start)
+    rows = rows[rows['date'] >= pd.Timestamp(start)]
+    panel = bh.build_panel(rows, min_value=min_value)
+    lst = fetch_nifty500_list()
+    sectors = ({} if lst is None or lst.empty else
+               dict(zip(lst['Symbol'].astype(str), lst.get('Industry', ''))))
+    return panel, load_nifty(years), sectors
+
+
 def load_panel(years: int) -> tuple:
-    """10-year Open/Close/Volume for today's NIFTY 500, NIFTY, and each
-    stock's NSE industry. Cached for a week."""
+    """10-year Open/Close/Volume for TODAY's NIFTY 500 from Yahoo (biased:
+    no stock that collapsed and left the index), NIFTY, and each stock's
+    NSE industry. Cached for a week."""
     import yfinance as yf
     from universe import fetch_nifty500_list
 
@@ -404,7 +501,9 @@ def load_panel(years: int) -> tuple:
 # ---------------------------------------------------------------------------
 # Report
 # ---------------------------------------------------------------------------
-def run(panel, nifty, variants=VARIANTS, sectors=None) -> Dict:
+def run(panel, nifty, variants=VARIANTS, sectors=None, biased=None) -> Dict:
+    """`biased`: optional (panel, nifty, sectors) from today's NIFTY 500;
+    the live rules are replayed on it to measure survivorship bias."""
     results = {}
     for key, label, fn, rules in variants:
         sim = simulate(panel, nifty, fn, rules, sectors)
@@ -427,10 +526,22 @@ def run(panel, nifty, variants=VARIANTS, sectors=None) -> Dict:
                                else round(m['prob_skill_dsr'] * 100, 1))
     days = panel['Close'].index.intersection(nifty.index)
     first = days[min(Rules().history, len(days) - 1)]
+    bias = None
+    if biased is not None:
+        bp, bn, bs = biased
+        sim = simulate(bp, bn, v_mom, HALF, bs)     # no watch flags there
+        nav = sim['nav'].iloc[HALF.history:]
+        nav = nav[nav.index >= first]
+        if len(nav) > 260:
+            m = metrics(nav, bn, sim['traded'])
+            bias = {'cagr_pct': m['cagr_pct'], 'max_dd_pct': m['max_dd_pct'],
+                    'n_candidates': int(bp['Close'].shape[1])}
+            print(f"  plain momentum on today's NIFTY 500 (biased): CAGR {m['cagr_pct']}%")
     return {'generated': date.today().isoformat(),
             'period': [str(first.date()), str(days[-1].date())],
             'n_candidates': int(panel['Close'].shape[1]),
             'n_variants': len(results), 'variants': results,
+            'survivorship': bias,
             'gate_on_nifty': {
                 'all_out': gated_index(nifty.reindex(days).ffill()),
                 'half': gated_index(nifty.reindex(days).ffill(), low=0.5)}}
@@ -441,27 +552,38 @@ def to_markdown(r: Dict) -> str:
     lines = ["# Factor Lab: ten-year test of the portfolio rules", "",
              f"_Generated {r['generated']} by factor_lab.py. Period "
              f"{r['period'][0]} to {r['period'][1]}, {r['n_candidates']} "
-             f"candidate stocks (today's NIFTY 500). Same rules as the live "
-             f"paper portfolio: top 15 (max 4 per industry), monthly "
-             f"replacement with a top-30 buffer, trend gate, 0.4% "
-             f"round-trip costs._", "",
-             "**Read with care (survivorship bias):** the candidate list is "
-             "today's NIFTY 500, so companies that collapsed and left the "
-             "index are missing. "
-             "That flatters every result below. Compare the variants with "
-             "each other; treat the gap to NIFTY as an upper bound. Price "
-             "returns only, for the strategy and NIFTY alike.", "",
-             "| Variant | CAGR | NIFTY | Excess | Max fall | Sharpe | "
-             "Turnover/yr | Months beating NIFTY | Chance it's skill |",
-             "|---|---|---|---|---|---|---|---|---|"]
+             f"stocks from NSE's daily bhav copies, including those that "
+             f"later collapsed or were delisted (no survivorship bias). Same "
+             f"rules as the live paper portfolio: top 15 (max 4 per "
+             f"industry), monthly replacement with a top-30 buffer, trend "
+             f"gate, 0.22% cost per side._", "",
+             "Price returns only, for the strategy and NIFTY alike. "
+             "After-tax figures are estimates: strategy gains taxed at 20% "
+             "each year, NIFTY held throughout and taxed 12.5% once at the "
+             "end.", "",
+             "| Variant | CAGR | After tax | NIFTY | NIFTY after tax | Excess "
+             "| Max fall | Sharpe | Turnover/yr | Months beating NIFTY | "
+             "Chance it's skill |",
+             "|---|---|---|---|---|---|---|---|---|---|---|"]
     for k, m in sorted(v.items(), key=lambda kv: -kv[1]['excess_cagr_pct']):
         p = m['prob_skill_dsr']
         lines.append(
-            f"| {m['label']} | {m['cagr_pct']}% | {m['nifty_cagr_pct']}% | "
+            f"| {m['label']} | {m['cagr_pct']}% | {m.get('after_tax_cagr_pct')}% | "
+            f"{m['nifty_cagr_pct']}% | {m.get('nifty_after_tax_cagr_pct')}% | "
             f"**{m['excess_cagr_pct']:+}%** | {m['max_dd_pct']}% | "
             f"{m['sharpe']} | {m['turnover_pct_yr']:.0f}% | "
             f"{m['beat_nifty_months_pct']}% | "
             f"{'—' if p is None else f'{p}%'} |")
+    sb = r.get('survivorship')
+    old = v.get('mom')
+    if sb and old:
+        lines += ["", f"**Survivorship bias, measured:** plain momentum "
+                  f"tested the old way, on today's NIFTY 500 only "
+                  f"({sb['n_candidates']} stocks), returned {sb['cagr_pct']}% "
+                  f"a year (worst fall {sb['max_dd_pct']}%), against "
+                  f"{old['cagr_pct']}% here. The old test overstated the "
+                  f"yearly return by {sb['cagr_pct'] - old['cagr_pct']:.1f} "
+                  f"points."]
     lines += ["", "_\"Chance it's skill\" is the deflated Sharpe ratio of the "
               "monthly gap to NIFTY: the probability the edge is real after "
               "charging for every variant in this table. 95%+ is "
@@ -497,12 +619,21 @@ def to_markdown(r: Dict) -> str:
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--years', type=int, default=10)
+    ap.add_argument('--skip-biased', action='store_true',
+                    help="don't replay the live rules on today's NIFTY 500")
     args = ap.parse_args(argv)
-    print(f"Loading {args.years}-year price panel...")
-    panel, nifty, sectors = load_panel(args.years)
+    ap_biased = None
+    print(f"Loading {args.years}-year bias-free panel from NSE bhav copies...")
+    panel, nifty, sectors = load_bias_free_panel(args.years)
     print(f"Panel: {panel['Close'].shape[1]} stocks, "
           f"{len(panel['Close'])} days. Simulating {len(VARIANTS)} variants...")
-    report = run(panel, nifty, sectors=sectors)
+    if not args.skip_biased:
+        try:
+            print("Loading today's NIFTY 500 from Yahoo (to measure the bias)...")
+            ap_biased = load_panel(args.years)
+        except Exception as e:
+            print(f"  skipped: {e}")
+    report = run(panel, nifty, sectors=sectors, biased=ap_biased)
     OUT_DIR.mkdir(exist_ok=True)
     (OUT_DIR / "factor_lab_report.json").write_text(
         json.dumps(report, indent=1, default=str))

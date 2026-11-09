@@ -34,6 +34,11 @@ concurrency:
 jobs:
   generate-signals:
     runs-on: ubuntu-latest
+    env:
+      # Example amount for the "if you copy this" share counts in the emails.
+      # Change it in the repo: Settings > Secrets and variables > Actions >
+      # Variables > COPY_CAPITAL (rupees). Empty means Rs 1,00,000.
+      COPY_CAPITAL: ${{ vars.COPY_CAPITAL }}
     # 50 (was 30): a cold cache re-seed (800-day bootstrap) took ~28 min in
     # the past — too close to a 30-min kill while running unattended.
     timeout-minutes: 50

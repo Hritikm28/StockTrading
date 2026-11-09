@@ -192,8 +192,9 @@ class TestAlphaTiers:
         import signal_decay_detector as sdd
         Path("paper_trading").mkdir(parents=True, exist_ok=True)
         with open("paper_trading/disabled_signals.json", 'w') as f:
-            json.dump({'momentum': {'disabled': True}}, f)
-        assert 'momentum' in sdd.get_live_alphas()
+            json.dump({'resid_mom': {'disabled': True}}, f)
+        assert 'resid_mom' in sdd.get_live_alphas()
+        assert sdd.CORE_ALPHAS == {'resid_mom'}
 
 
 # ---------------------------------------------------------------------------

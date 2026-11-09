@@ -156,7 +156,7 @@ def _load_parquet(path: Path) -> Optional[pd.DataFrame]:
 
 
 def _universe_symbols(data_dir: Path) -> List[str]:
-    skip = {'NIFTY50', 'NIFTYBANK', 'INDIAVIX'}
+    skip = {'NIFTY50', 'NIFTYBANK', 'INDIAVIX', 'NIFTY500MOM50'}
     return sorted(p.stem for p in data_dir.glob("*.parquet")
                   if p.stem not in skip)
 

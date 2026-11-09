@@ -31,7 +31,7 @@ RETRY_DAYS  = 7      # a symbol Yahoo had nothing for is retried weekly
 MAX_FETCHES = 60
 FIELDS = {'roe': 'returnOnEquity', 'roa': 'returnOnAssets',
           'de': 'debtToEquity', 'pm': 'profitMargins', 'sector': 'sector'}
-SKIP = {'NIFTY50', 'NIFTYBANK', 'INDIAVIX'}
+SKIP = {'NIFTY50', 'NIFTYBANK', 'INDIAVIX', 'NIFTY500MOM50'}
 
 
 def load(path: Path = CACHE_FILE) -> Dict[str, Dict]:

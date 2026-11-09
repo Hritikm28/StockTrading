@@ -238,7 +238,7 @@ def update_universe(max_fetches: int = 150, stale_days: int = 100):
     import time
 
     stocks_dir = Path("data/stocks")
-    skip = {'NIFTY50', 'NIFTYBANK', 'INDIAVIX'}
+    skip = {'NIFTY50', 'NIFTYBANK', 'INDIAVIX', 'NIFTY500MOM50'}
     symbols = sorted(p.stem for p in stocks_dir.glob("*.parquet")
                      if p.stem not in skip)
     if not symbols:

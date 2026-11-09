@@ -1576,7 +1576,7 @@ class RiskAdjMomentumAlpha:
         closes = {}
         cutoff = pd.Timestamp(as_of_date)
         for f in Path(data_dir).glob("*.parquet"):
-            if f.stem in ('NIFTY50', 'NIFTYBANK', 'INDIAVIX'):
+            if f.stem in ResidualMomentumAlpha.SKIP_FILES:
                 continue
             try:
                 df = pd.read_parquet(f, columns=['Close'])

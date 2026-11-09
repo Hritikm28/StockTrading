@@ -12,6 +12,7 @@ on:
     paths:
       - 'factor_lab.py'
       - 'factors.py'
+      - 'bhav_history.py'
       - '.github/workflows/factor_lab.yml'
 
 permissions:
@@ -24,7 +25,7 @@ concurrency:
 jobs:
   lab:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -42,13 +43,15 @@ jobs:
           python-version: '3.11'
           cache: pip
 
-      - name: Restore ten-year price panel
+      # NSE bhav history (every stock, incl. delisted) + Yahoo panel.
+      # The first run downloads ~2,700 daily files; later runs add new days.
+      - name: Restore ten-year price data
         uses: actions/cache@v4
         with:
           path: data/lab
-          key: labpanel-v1-${{ steps.wk.outputs.wk }}
+          key: labpanel-v2-${{ github.run_id }}
           restore-keys: |
-            labpanel-v1-
+            labpanel-v2-
 
       - name: Install dependencies
         run: pip install -r requirements_engine.txt

@@ -1,56 +1,76 @@
-name: Probe lab data quality (temporary)
+name: Rehearse the daily and weekly runs (temporary)
+# A full dry run of the new code on real data: nothing is committed or
+# emailed, and caches are only restored, never saved.
 on:
   push:
     branches: [claude/gifted-mendel-59vd8y]
     paths: [.github/workflows/probe_data.yml]
 jobs:
-  probe:
+  rehearse:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Restore lab data (read only)
-        uses: actions/cache/restore@v4
+          cache: pip
+      - uses: actions/cache/restore@v4
         with:
-          path: data/lab
-          key: probe-none
-          restore-keys: |
-            labpanel-v2-
-      - run: pip install -q pandas pyarrow numpy requests yfinance
-      - name: Compare NSE-adjusted prices with Yahoo
+          path: data/stocks
+          key: none
+          restore-keys: stockdata-v3-
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/earnings_calendar
+          key: none
+          restore-keys: earningsdata-v1-
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/alpha_cache
+          key: none
+          restore-keys: alphacache-v1-
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/insider_cache
+          key: none
+          restore-keys: insider-
+      - run: pip install -r requirements_engine.txt matplotlib
+      - name: Market data
         run: |
+          python quick_update_data.py || true
+          python quick_update_data.py || true
+          python -c "import pandas as pd; d=pd.read_parquet('data/stocks/NIFTY500MOM50.parquet'); print('MOM50', len(d)); print(d.tail(3))"
+      - run: python earnings_calendar.py --update || true
+      - run: python quality_data.py --update || true
+      - run: python nse_disclosures.py || true
+      - run: python signal_decay_detector.py || true
+      - run: python shadow_grader.py || true
+      - name: Engine (the real daily runner)
+        timeout-minutes: 35
+        run: python daily_runner.py --quick
+      - run: python publish_signals.py
+      - name: Daily email
+        run: |
+          python email_summary.py
+          cat email_subject.txt; echo
           python - <<'PY'
-          import numpy as np, pandas as pd
-          import bhav_history as bh
-          from pathlib import Path
-          rows = bh.load()
-          print('rows', len(rows), 'from', rows['date'].min().date(), 'to', rows['date'].max().date())
-          panel = bh.build_panel(rows, min_value=5e7)
-          C = panel['Close']
-          print('nse panel', C.shape)
-          d = C.pct_change(fill_method=None)
-          big = (d.abs() > 0.4).sum().sum()
-          print('daily moves over 40%:', int(big), 'of', int(d.notna().sum().sum()))
-          ex = d.abs().stack().sort_values(ascending=False).head(12)
-          print(ex.to_string())
-          yp = sorted(Path('data/lab').glob('panel_*y.pkl'))
-          if yp:
-              (ypanel, nifty, sectors) = pd.read_pickle(yp[-1])
-              Y = ypanel['Close']
-              common = [c for c in Y.columns if c in C.columns]
-              ym = Y[common].resample('ME').last().pct_change(fill_method=None)
-              nm = C[common].resample('ME').last().pct_change(fill_method=None)
-              diff = (ym - nm).abs()
-              both = diff.notna()
-              print('common symbols', len(common), 'month pairs', int(both.sum().sum()))
-              for th in (0.01, 0.03, 0.10):
-                  print(f'  share of months differing by more than {th:.0%}:',
-                        round(float((diff > th).sum().sum() / both.sum().sum()), 4))
-              per = diff.mean().sort_values(ascending=False).head(10)
-              print('worst symbols (mean abs monthly diff):'); print(per.to_string())
-              corr = ym.stack().corr(nm.stack())
-              print('overall monthly return correlation', round(float(corr), 4))
+          import re, json, glob
+          html = open('email_body.html').read()
+          text = re.sub(r'<[^>]+>', ' ', html)
+          for key in ('Signals with a vote', 'Since 20', 'If you sold', 'Data check',
+                      'Results coming', "If you're copying", 'To hold at least'):
+              i = text.find(key)
+              print('--', key, '::', ' '.join(text[i:i+400].split()) if i >= 0 else 'MISSING')
+          s = json.load(open(sorted(glob.glob('signals/20??-??-??_summary.json'))[-1]))
+          p = s['portfolio']
+          print('date', s['date'], 'action', p['action'], 'orders', len(p['orders']))
+          print('watch list held', p.get('watch_list_held'))
+          print('top 15 now:', [r['symbol'] for r in s['full_ranking'][:15]])
           PY
+      - name: Weekly email
+        run: |
+          python weekly_portfolio_report.py
+          cat weekly_email_subject.txt; echo
+          ls -la weekly_chart.png
+          python -c "import re; t=re.sub(r'<[^>]+>',' ',open('weekly_email_body.html').read()); print(' '.join(t.split())[:2500])"

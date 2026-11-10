@@ -1,6 +1,11 @@
 """
-Portfolio Circuit Breaker
+Portfolio Circuit Breaker  (SWITCHED OFF 2026-11-10)
 =========================
+No longer called by daily_runner: it judged each buy by its 5-day win rate,
+which suited the old daily-signal system but is mostly noise for the
+15-stock book held a month at a time, and it was never part of the rules
+the bias-free lab tested. Kept for reference and its tests.
+
 System-level kill switch. The per-alpha kill switches (signal_decay_detector)
 police individual signals, but nothing stopped the SYSTEM when the composite
 was bleeding — a 31.5% overall win rate never tripped anything because each

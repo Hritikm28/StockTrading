@@ -119,3 +119,12 @@ filed,trade_date,symbol,category,instrument,txn,mode,value_inr,shares,pre_pct,po
 2026-11-07,2026-11-06,SAJHOTELS,Promoter,Equity,Buy,Market Purchase,967480.0,38000.0,0.023,0.0254,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_23800_WebXMLFile_20261107_132624586.xml,Disclosure1
 2026-11-07,2026-11-06,SAJHOTELS,Promoter,Equity,Buy,Market Purchase,99520.0,4000.0,0.5905,0.5907,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_23800_WebXMLFile_20261107_132139690.xml,Disclosure1
 2026-11-07,2026-11-06,THYROCARE,Designated Person,Equity,Buy,Market Purchase,1037030.0,2121.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_13770_WebXMLFile_20261107_171917617.xml,Disclosure1
+2026-11-10,2026-11-04,HCLTECH,Designated Person,Equity,Buy,ESOS,9179911.0,6411.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_1828_WebXMLFile_20261110_154758591.xml,Disclosure1
+2026-11-10,2026-11-05,HCLTECH,Immediate Relative,Equity,Sell,Market Sale,1432500.0,1000.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_1828_WebXMLFile_20261110_154758591.xml,Disclosure2
+2026-11-10,2026-11-06,HCLTECH,Immediate Relative,Equity,Sell,Market Sale,1455000.0,1000.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_1828_WebXMLFile_20261110_154758591.xml,Disclosure3
+2026-11-10,2026-11-08,HINDCON,Promoter,Equity,Buy,Market Purchase,129150.0,5000.0,0.1903,0.1904,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_15847_WebXMLFile_20261110_155809314.xml,Disclosure1
+2026-11-10,2026-11-08,HINDCON,Promoter,Equity,Buy,Market Purchase,104150.0,4163.0,0.1437,0.1438,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_15847_WebXMLFile_20261110_155809314.xml,Disclosure2
+2026-11-10,2026-11-09,HINDCON,Promoter,Equity,Buy,Market Purchase,128350.0,5000.0,0.1904,0.1905,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_15847_WebXMLFile_20261110_155809314.xml,Disclosure3
+2026-11-10,2026-11-09,HINDCON,Promoter,Equity,Buy,Market Purchase,155960.0,6108.0,0.1438,0.1439,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_15847_WebXMLFile_20261110_155809314.xml,Disclosure4
+2026-11-10,2026-11-09,HINDCON,Promoter,Equity,Buy,Invocation of pledge,128703.0,5000.0,0.0574,0.0575,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_15847_WebXMLFile_20261110_155809314.xml,Disclosure5
+2026-11-10,2026-11-09,SINCLAIR,Promoter,Equity,Buy,Market Purchase,381580.0,5014.0,0.0743,0.0744,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_22933_WebXMLFile_20261110_145641078.xml,Disclosure1

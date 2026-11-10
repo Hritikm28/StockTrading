@@ -1,14 +1,14 @@
 {
-  "generated": "2026-11-09",
+  "generated": "2026-11-10",
   "since": "2026-07-01",
   "hold_days": 20,
   "top_n": 15,
   "cost_pct": 0.4,
   "window": {
     "first_signal": "2026-07-01",
-    "last_signal": "2026-11-06",
-    "signal_days": 90,
-    "gate_open_days": 1,
+    "last_signal": "2026-11-09",
+    "signal_days": 91,
+    "gate_open_days": 2,
     "last_price_date": "2026-11-09",
     "stocks_with_prices": 238
   },
@@ -37,7 +37,7 @@
   "rank_ic": {
     "composite": {
       "5d": {
-        "ic": 0.0404,
+        "ic": 0.0403,
         "t_stat": 1.14,
         "n_dates": 84,
         "pct_positive": 57.1
@@ -126,7 +126,7 @@
     },
     "hi52": {
       "5d": {
-        "ic": -0.0037,
+        "ic": -0.0036,
         "t_stat": -0.09,
         "n_dates": 84,
         "pct_positive": 54.8
@@ -141,7 +141,7 @@
     },
     "mean_rev": {
       "5d": {
-        "ic": 0.0318,
+        "ic": 0.0319,
         "t_stat": 1.04,
         "n_dates": 84,
         "pct_positive": 57.1
@@ -152,7 +152,7 @@
         "n_dates": 68,
         "pct_positive": 55.9
       },
-      "coverage_pct": 32.9
+      "coverage_pct": 33.1
     },
     "mom_riskadj": {
       "5d": {
@@ -167,7 +167,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 2.4
+      "coverage_pct": 3.0
     },
     "momentum": {
       "5d": {
@@ -197,7 +197,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 0.8
+      "coverage_pct": 1.2
     },
     "quality": {
       "5d": {
@@ -212,7 +212,22 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 0.8
+      "coverage_pct": 1.1
+    },
+    "resid_mom": {
+      "5d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "20d": {
+        "ic": null,
+        "t_stat": null,
+        "n_dates": 0,
+        "pct_positive": null
+      },
+      "coverage_pct": 0.7
     },
     "sector_mom": {
       "5d": {

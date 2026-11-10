@@ -1,13 +1,13 @@
 # Shadow Grade: untraded predictions vs reality
 
-_Generated 2026-11-09 by shadow_grader.py. Grades every evening ranking since 2026-07-01, whether or not the trend gate let it trade. Entry at next-day open, 20-day holds, 0.4% round-trip costs._
+_Generated 2026-11-10 by shadow_grader.py. Grades every evening ranking since 2026-07-01, whether or not the trend gate let it trade. Entry at next-day open, 20-day holds, 0.4% round-trip costs._
 
 ## Verdict: **NO_EDGE**
 
 Top-15 picks trailed NIFTY by 0.40% per 20-day hold after costs. The ranking is not adding value over simply holding the index.
 
-- Signal days graded: 90 (2026-07-01 to 2026-11-06), prices through 2026-11-09, 238 stocks priced
-- Days the live trend gate allowed trading: 1
+- Signal days graded: 91 (2026-07-01 to 2026-11-09), prices through 2026-11-09, 238 stocks priced
+- Days the live trend gate allowed trading: 2
 
 ## If we had traded every pick (top-15, ignoring the gate)
 
@@ -32,18 +32,19 @@ Excess of picks over NIFTY (same timing): **-6.82%**
 
 | Signal | IC 5d | IC 20d | t 20d | days | coverage |
 |---|---|---|---|---|---|
-| composite | 0.0404 | 0.0544 | 0.74 | 68 | — |
+| composite | 0.0403 | 0.0544 | 0.74 | 68 | — |
 | momentum | 0.0272 | 0.0509 | 0.49 | 68 | 62.1% |
-| mean_rev | 0.0318 | 0.0393 | 0.45 | 68 | 32.9% |
+| mean_rev | 0.0319 | 0.0393 | 0.45 | 68 | 33.1% |
 | delivery_pct | 0.0374 | 0.0238 | 0.41 | 68 | 62.9% |
-| hi52 | -0.0037 | -0.015 | -0.18 | 68 | 47.9% |
+| hi52 | -0.0036 | -0.015 | -0.18 | 68 | 47.9% |
 | sector_mom | -0.0539 | -0.1155 | -1.31 | 68 | 29.2% |
 | bulk_deal | — | — | — | 0 | 0.4% |
 | corp_event | — | — | — | 0 | 0.0% |
 | fii_dii | — | — | — | 0 | 63.1% |
 | fo_ban | — | — | — | 0 | 0.2% |
-| mom_riskadj | — | — | — | 0 | 2.4% |
-| pead | — | — | — | 0 | 0.8% |
-| quality | — | — | — | 0 | 0.8% |
+| mom_riskadj | — | — | — | 0 | 3.0% |
+| pead | — | — | — | 0 | 1.2% |
+| quality | — | — | — | 0 | 1.1% |
+| resid_mom | — | — | — | 0 | 0.7% |
 
 _IC of 0.02-0.05 is a tradeable edge, above 0.05 is strong, negative means the signal points the wrong way. |t| below 2 means the number could easily be luck._

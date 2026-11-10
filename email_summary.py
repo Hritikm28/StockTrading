@@ -29,14 +29,7 @@ regime = report.get('regime', 'UNKNOWN')
 vix = report.get('vix', '')
 gate_open = report.get('trend_gate_open', True)
 vs200 = report.get('nifty_vs_200dma')
-breaker_tripped = report.get('breaker_tripped', False)
-if not report:
-    try:
-        cb = json.loads(Path('paper_trading/circuit_breaker.json')
-                        .read_text(encoding='utf-8'))
-        breaker_tripped = bool(cb.get('tripped', False))
-    except Exception:
-        pass
+breaker_tripped = report.get('breaker_tripped', False)   # off since 2026-11-10
 
 book = report.get('portfolio') or {}
 orders = book.get('orders', [])
@@ -313,8 +306,10 @@ html = f"""<html><body style='font-family:Segoe UI,Arial,sans-serif;color:#222'>
   Paper portfolio, auto-generated on GitHub Actions after market close from
   today's closing data. Orders are for the next market open. Up to 15
   stocks, replaced only at the monthly review; half invested while the
-  market trend is down; 0.4% round-trip costs charged. This is a research
-  experiment, not investment advice.
+  market trend is down. Real Indian trading costs are charged: about 0.22%
+  to buy and 0.20% plus Rs 16 to sell (stamp duty, STT, exchange and SEBI
+  fees, GST, depository charge, slippage). This is a research experiment,
+  not investment advice.
 </p>
 </body></html>"""
 

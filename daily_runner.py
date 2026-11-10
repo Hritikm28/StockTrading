@@ -378,24 +378,14 @@ class DailyRunner:
         except Exception:
             pass
 
-        # ── Portfolio circuit breaker (system-level kill switch) ─────────────
-        # Per-alpha kill switches never stopped a bleeding composite. If the
-        # trailing portfolio stats breach the trip thresholds, every BUY is
-        # downgraded to HOLD; ranking/tracking continue so learning never
-        # stops. Auto-resets after probation with a fresh evaluation epoch.
+        # The circuit breaker (circuit_breaker.py) was switched off on
+        # 2026-11-10 at the owner's request. It judged each buy by its 5-day
+        # win rate, a test built for the old daily-signal system: for a book
+        # held a month at a time that is mostly noise (it tripped on
+        # 2026-11-09 after 13 of 20 buys were down 5 days later), and it was
+        # never part of the rules the bias-free lab tested. The tested safety,
+        # the 200-day trend gate, stays.
         breaker_tripped = False
-        try:
-            from circuit_breaker import evaluate as evaluate_breaker
-            breaker = evaluate_breaker(as_of_date)
-            breaker_tripped = bool(breaker.get('tripped'))
-        except Exception as e:
-            print(f"      Circuit breaker unavailable ({e}) — continuing")
-        if breaker_tripped:
-            n_gated = int((ranked_df['signal'] == 'BUY').sum())
-            if n_gated:
-                ranked_df.loc[ranked_df['signal'] == 'BUY', 'signal'] = 'HOLD'
-                print(f"      [BREAKER] {n_gated} BUY signal(s) downgraded "
-                      f"to HOLD (portfolio circuit breaker tripped)")
 
         # ── STEP 3: Paper portfolio (fills, NAV, today's orders) ────────────
         print(f"\n[3/4] Updating the paper portfolio...")
@@ -494,12 +484,7 @@ class DailyRunner:
             if 'trend_gate_open' in ranked_df.columns and len(ranked_df) else True
         nifty_vs_200dma = float(ranked_df['nifty_vs_200dma'].iloc[0]) \
             if 'nifty_vs_200dma' in ranked_df.columns and len(ranked_df) else 0.0
-        breaker_tripped = False
-        try:
-            from circuit_breaker import is_tripped
-            breaker_tripped = is_tripped()
-        except Exception:
-            pass
+        breaker_tripped = False             # switched off 2026-11-10
 
         # Alpha data coverage — % of universe where each alpha produced a
         # non-zero signal today. Dead data feeds used to fail SILENTLY

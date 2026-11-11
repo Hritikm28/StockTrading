@@ -2378,5 +2378,481 @@
   "roa": null,
   "roe": null,
   "sector": "Technology"
+ },
+ "LICHSGFIN.NS": {
+  "de": 626.752,
+  "fetched": "2026-11-11",
+  "pm": 0.65825,
+  "roa": 0.01816,
+  "roe": 0.14310999,
+  "sector": "Financial Services"
+ },
+ "LICI.NS": {
+  "de": null,
+  "fetched": "2026-11-11",
+  "pm": 0.06603,
+  "roa": 0.00709,
+  "roe": 0.40567002,
+  "sector": "Financial Services"
+ },
+ "LINDEINDIA.NS": {
+  "de": 23.384,
+  "fetched": "2026-11-11",
+  "pm": 0.18082,
+  "roa": 0.063319996,
+  "roe": 0.11788,
+  "sector": "Basic Materials"
+ },
+ "LLOYDSME.NS": {
+  "de": 123.377,
+  "fetched": "2026-11-11",
+  "pm": 0.21931,
+  "roa": 0.14043,
+  "roe": 0.40415,
+  "sector": "Basic Materials"
+ },
+ "LODHA.NS": {
+  "de": 41.126,
+  "fetched": "2026-11-11",
+  "pm": 0.23076001,
+  "roa": 0.06459,
+  "roe": 0.18639,
+  "sector": "Real Estate"
+ },
+ "LT.NS": {
+  "de": 105.287,
+  "fetched": "2026-11-11",
+  "pm": 0.05789,
+  "roa": 0.046230003,
+  "roe": 0.17875,
+  "sector": "Industrials"
+ },
+ "LTF.NS": {
+  "de": 422.732,
+  "fetched": "2026-11-11",
+  "pm": 0.33196,
+  "roa": 0.02411,
+  "roe": 0.12331,
+  "sector": "Financial Services"
+ },
+ "LTFOODS.NS": {
+  "de": 36.657,
+  "fetched": "2026-11-11",
+  "pm": 0.054229997,
+  "roa": 0.07418,
+  "roe": 0.14446001,
+  "sector": "Consumer Defensive"
+ },
+ "LTIM.NS": {
+  "fetched": "2026-11-11",
+  "missing": true
+ },
+ "LTM.NS": {
+  "de": 9.186,
+  "fetched": "2026-11-11",
+  "pm": 0.11491,
+  "roa": 0.12473,
+  "roe": 0.21041,
+  "sector": "Technology"
+ },
+ "LTTS.NS": {
+  "de": 7.863,
+  "fetched": "2026-11-11",
+  "pm": 0.13242,
+  "roa": 0.11206,
+  "roe": 0.20207001,
+  "sector": "Technology"
+ },
+ "LUPIN.NS": {
+  "de": 25.697,
+  "fetched": "2026-11-11",
+  "pm": 0.16933,
+  "roa": 0.12241,
+  "roe": 0.23853001,
+  "sector": "Healthcare"
+ },
+ "M&M.NS": {
+  "de": 133.325,
+  "fetched": "2026-11-11",
+  "pm": 0.08555,
+  "roa": 0.07379,
+  "roe": 0.20074,
+  "sector": "Consumer Cyclical"
+ },
+ "M&MFIN.NS": {
+  "de": 490.012,
+  "fetched": "2026-11-11",
+  "pm": 0.31957,
+  "roa": 0.02189,
+  "roe": 0.13774,
+  "sector": "Financial Services"
+ },
+ "MAHABANK.NS": {
+  "de": null,
+  "fetched": "2026-11-11",
+  "pm": 0.52651,
+  "roa": 0.01901,
+  "roe": 0.23286,
+  "sector": "Financial Services"
+ },
+ "MANAPPURAM.NS": {
+  "de": 360.191,
+  "fetched": "2026-11-11",
+  "pm": 0.30516002,
+  "roa": null,
+  "roe": null,
+  "sector": "Financial Services"
+ },
+ "MANKIND.NS": {
+  "de": 30.365,
+  "fetched": "2026-11-11",
+  "pm": 0.14583,
+  "roa": 0.070489995,
+  "roe": 0.1356,
+  "sector": "Healthcare"
+ },
+ "MAPMYINDIA.NS": {
+  "de": 0.455,
+  "fetched": "2026-11-11",
+  "pm": 0.29591,
+  "roa": 0.10189,
+  "roe": 0.17157,
+  "sector": "Technology"
+ },
+ "MARICO.NS": {
+  "de": 24.466,
+  "fetched": "2026-11-11",
+  "pm": 0.13641,
+  "roa": 0.14342,
+  "roe": 0.44852,
+  "sector": "Consumer Defensive"
+ },
+ "MARUTI.NS": {
+  "de": 0.076,
+  "fetched": "2026-11-11",
+  "pm": 0.06461,
+  "roa": 0.058720004,
+  "roe": 0.12888,
+  "sector": "Consumer Cyclical"
+ },
+ "MAXHEALTH.NS": {
+  "de": 32.905,
+  "fetched": "2026-11-11",
+  "pm": 0.15095,
+  "roa": 0.06977,
+  "roe": 0.12791,
+  "sector": "Healthcare"
+ },
+ "MAZDOCK.NS": {
+  "de": 7.589,
+  "fetched": "2026-11-11",
+  "pm": 0.17719,
+  "roa": 0.04421,
+  "roe": 0.23207001,
+  "sector": "Industrials"
+ },
+ "MCX.NS": {
+  "de": 0.182,
+  "fetched": "2026-11-11",
+  "pm": 0.55929,
+  "roa": 0.22516,
+  "roe": 0.44389,
+  "sector": "Financial Services"
+ },
+ "MEDANTA.NS": {
+  "de": 31.147,
+  "fetched": "2026-11-11",
+  "pm": 0.122379996,
+  "roa": 0.08898,
+  "roe": 0.15226,
+  "sector": "Healthcare"
+ },
+ "MEESHO.NS": {
+  "de": 1.161,
+  "fetched": "2026-11-11",
+  "pm": -0.061929997,
+  "roa": -0.11225,
+  "roe": -0.36481,
+  "sector": "Consumer Cyclical"
+ },
+ "MFSL.NS": {
+  "de": 35.951,
+  "fetched": "2026-11-11",
+  "pm": 0.0035899999,
+  "roa": 0.0013799999,
+  "roe": 0.03413,
+  "sector": "Financial Services"
+ },
+ "MGL.NS": {
+  "de": 5.138,
+  "fetched": "2026-11-11",
+  "pm": 0.07311,
+  "roa": 0.056760002,
+  "roe": 0.10276,
+  "sector": "Utilities"
+ },
+ "MINDACORP.NS": {
+  "de": 54.689,
+  "fetched": "2026-11-11",
+  "pm": 0.07664,
+  "roa": 0.06343,
+  "roe": 0.20021999,
+  "sector": "Consumer Cyclical"
+ },
+ "MMTC.NS": {
+  "de": 0.114,
+  "fetched": "2026-11-11",
+  "pm": 163.86812,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "MOTHERSON.NS": {
+  "de": 47.731,
+  "fetched": "2026-11-11",
+  "pm": 0.034140002,
+  "roa": 0.04454,
+  "roe": 0.11201,
+  "sector": "Consumer Cyclical"
+ },
+ "MOTILALOFS.NS": {
+  "de": 172.269,
+  "fetched": "2026-11-11",
+  "pm": 0.27956,
+  "roa": 0.06093,
+  "roe": 0.18935,
+  "sector": "Financial Services"
+ },
+ "MPHASIS.NS": {
+  "de": 29.582,
+  "fetched": "2026-11-11",
+  "pm": 0.11635,
+  "roa": 0.09352,
+  "roe": 0.19613001,
+  "sector": "Technology"
+ },
+ "MRF.NS": {
+  "de": 19.374,
+  "fetched": "2026-11-11",
+  "pm": 0.06868,
+  "roa": 0.05599,
+  "roe": 0.1106,
+  "sector": "Consumer Cyclical"
+ },
+ "MRPL.NS": {
+  "de": 59.887,
+  "fetched": "2026-11-11",
+  "pm": 0.0369,
+  "roa": 0.13126001,
+  "roe": 0.29083002,
+  "sector": "Energy"
+ },
+ "MSUMI.NS": {
+  "de": 13.838,
+  "fetched": "2026-11-11",
+  "pm": 0.050329998,
+  "roa": 0.1291,
+  "roe": 0.34418,
+  "sector": "Consumer Cyclical"
+ },
+ "MTARTECH.NS": {
+  "de": 64.616,
+  "fetched": "2026-11-11",
+  "pm": 0.13987,
+  "roa": 0.09684,
+  "roe": 0.22548,
+  "sector": "Industrials"
+ },
+ "MUTHOOTFIN.NS": {
+  "de": 401.441,
+  "fetched": "2026-11-11",
+  "pm": 0.54133,
+  "roa": 0.06307,
+  "roe": 0.3159,
+  "sector": "Financial Services"
+ },
+ "NAM-INDIA.NS": {
+  "de": 1.614,
+  "fetched": "2026-11-11",
+  "pm": 0.49870998,
+  "roa": 0.26812,
+  "roe": 0.35324,
+  "sector": "Financial Services"
+ },
+ "NATCOPHARM.NS": {
+  "de": 7.742,
+  "fetched": "2026-11-11",
+  "pm": 0.32839,
+  "roa": null,
+  "roe": null,
+  "sector": "Healthcare"
+ },
+ "NATIONALUM.NS": {
+  "de": 0.233,
+  "fetched": "2026-11-11",
+  "pm": 0.34965,
+  "roa": 0.20121999,
+  "roe": 0.31995,
+  "sector": "Basic Materials"
+ },
+ "NAUKRI.NS": {
+  "de": 0.495,
+  "fetched": "2026-11-11",
+  "pm": 0.50761,
+  "roa": 0.01281,
+  "roe": 0.04445,
+  "sector": "Communication Services"
+ },
+ "NAVA.NS": {
+  "de": 20.684,
+  "fetched": "2026-11-11",
+  "pm": 0.17541,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "NAVINFLUOR.NS": {
+  "de": 27.964,
+  "fetched": "2026-11-11",
+  "pm": 0.22395,
+  "roa": 0.12457,
+  "roe": 0.22584999,
+  "sector": "Basic Materials"
+ },
+ "NBCC.NS": {
+  "de": 0.016,
+  "fetched": "2026-11-11",
+  "pm": 0.060349997,
+  "roa": 0.03214,
+  "roe": 0.26138002,
+  "sector": "Industrials"
+ },
+ "NCC.NS": {
+  "de": 49.517,
+  "fetched": "2026-11-11",
+  "pm": 0.0318,
+  "roa": 0.04445,
+  "roe": 0.09739,
+  "sector": "Industrials"
+ },
+ "NESTLEIND.NS": {
+  "de": 8.035,
+  "fetched": "2026-11-11",
+  "pm": 0.15966,
+  "roa": 0.25434,
+  "roe": 0.79863,
+  "sector": "Consumer Defensive"
+ },
+ "NETWEB.NS": {
+  "de": 15.817,
+  "fetched": "2026-11-11",
+  "pm": 0.09831,
+  "roa": 0.12267999,
+  "roe": 0.27276,
+  "sector": "Technology"
+ },
+ "NEULANDLAB.NS": {
+  "de": 16.865,
+  "fetched": "2026-11-11",
+  "pm": 0.19614,
+  "roa": 0.13612,
+  "roe": 0.24798,
+  "sector": "Healthcare"
+ },
+ "NH.NS": {
+  "de": 121.375,
+  "fetched": "2026-11-11",
+  "pm": 0.0836,
+  "roa": 0.077309996,
+  "roe": 0.19069,
+  "sector": "Healthcare"
+ },
+ "NHPC.NS": {
+  "de": 118.326,
+  "fetched": "2026-11-11",
+  "pm": 0.32446998,
+  "roa": 0.02457,
+  "roe": 0.09624,
+  "sector": "Utilities"
+ },
+ "NIACL.NS": {
+  "de": null,
+  "fetched": "2026-11-11",
+  "pm": -0.010290001,
+  "roa": -0.00625,
+  "roe": -0.012359999,
+  "sector": "Financial Services"
+ },
+ "NLCINDIA.NS": {
+  "de": 104.418,
+  "fetched": "2026-11-11",
+  "pm": 0.20708999,
+  "roa": 0.037019998,
+  "roe": 0.15775,
+  "sector": "Utilities"
+ },
+ "NMDC.NS": {
+  "de": 18.802,
+  "fetched": "2026-11-11",
+  "pm": 0.23216999,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "NSLNISP.NS": {
+  "de": 35.019,
+  "fetched": "2026-11-11",
+  "pm": 0.006,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "NTPC.NS": {
+  "de": 126.0,
+  "fetched": "2026-11-11",
+  "pm": 0.14822,
+  "roa": 0.050219998,
+  "roe": 0.14458,
+  "sector": "Utilities"
+ },
+ "NTPCGREEN.NS": {
+  "de": 191.669,
+  "fetched": "2026-11-11",
+  "pm": 0.18191,
+  "roa": 0.01964,
+  "roe": 0.034089997,
+  "sector": "Utilities"
+ },
+ "NUVAMA.NS": {
+  "de": 291.971,
+  "fetched": "2026-11-11",
+  "pm": 0.27714002,
+  "roa": 0.03743,
+  "roe": 0.27118,
+  "sector": "Financial Services"
+ },
+ "NUVOCO.NS": {
+  "de": 53.279,
+  "fetched": "2026-11-11",
+  "pm": 0.03481,
+  "roa": 0.03141,
+  "roe": 0.04224,
+  "sector": "Basic Materials"
+ },
+ "NYKAA.NS": {
+  "de": 89.469,
+  "fetched": "2026-11-11",
+  "pm": 0.02852,
+  "roa": 0.078,
+  "roe": 0.20768,
+  "sector": "Consumer Cyclical"
+ },
+ "OBEROIRLTY.NS": {
+  "de": 13.82,
+  "fetched": "2026-11-11",
+  "pm": 0.42339,
+  "roa": 0.08177,
+  "roe": 0.14687,
+  "sector": "Real Estate"
  }
 }

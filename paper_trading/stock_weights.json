@@ -767,5 +767,218 @@
       "delivery_pct": 1,
       "hi52": 1
     }
+  },
+  "AZAD.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.963,
+      "fii_dii": 0.963,
+      "delivery_pct": 1.038,
+      "hi52": 0.963
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "delivery_pct": 1,
+      "hi52": 1
+    }
+  },
+  "BHEL.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.038,
+      "fii_dii": 1.038,
+      "pead": 1.038,
+      "delivery_pct": 0.963,
+      "hi52": 1.038,
+      "sector_mom": 0.963
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "pead": 1,
+      "delivery_pct": 1,
+      "hi52": 1,
+      "sector_mom": 1
+    }
+  },
+  "CHENNPETRO.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.963,
+      "fii_dii": 0.963,
+      "mean_rev": 1.038,
+      "delivery_pct": 1.038,
+      "hi52": 0.963
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1
+    }
+  },
+  "SONACOMS.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.038,
+      "fii_dii": 1.038,
+      "delivery_pct": 1.038,
+      "hi52": 1.038,
+      "sector_mom": 1.038
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "delivery_pct": 1,
+      "hi52": 1,
+      "sector_mom": 1
+    }
+  },
+  "MCX.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.038,
+      "fii_dii": 1.038,
+      "delivery_pct": 0.963,
+      "hi52": 1.038
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "delivery_pct": 1,
+      "hi52": 1
+    }
+  },
+  "POWERINDIA.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.963,
+      "fii_dii": 0.963,
+      "delivery_pct": 1.038
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "delivery_pct": 1
+    }
+  },
+  "LAURUSLABS.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.038,
+      "fii_dii": 1.038,
+      "mean_rev": 0.963,
+      "delivery_pct": 1.038,
+      "hi52": 1.038,
+      "sector_mom": 1.038
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1,
+      "sector_mom": 1
+    }
+  },
+  "APARINDS.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.963,
+      "fii_dii": 0.963,
+      "pead": 0.963,
+      "mean_rev": 1.038,
+      "delivery_pct": 0.963,
+      "hi52": 0.963
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "pead": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1
+    }
+  },
+  "ATHERENERG.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.038,
+      "fii_dii": 1.038,
+      "mean_rev": 0.963,
+      "delivery_pct": 1.038,
+      "hi52": 1.038
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1
+    }
+  },
+  "TDPOWERSYS.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.963,
+      "fii_dii": 0.963,
+      "delivery_pct": 1.038,
+      "hi52": 0.963
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "delivery_pct": 1,
+      "hi52": 1
+    }
+  },
+  "WELCORP.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.963,
+      "fii_dii": 0.963,
+      "mean_rev": 0.963,
+      "hi52": 0.963
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "mean_rev": 1,
+      "hi52": 1
+    }
+  },
+  "CUPID.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 1.038,
+      "fii_dii": 1.038,
+      "mean_rev": 0.963,
+      "delivery_pct": 0.963,
+      "hi52": 1.038
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "mean_rev": 1,
+      "delivery_pct": 1,
+      "hi52": 1
+    }
+  },
+  "SYRMA.NS": {
+    "n_trades": 1,
+    "multipliers": {
+      "momentum": 0.963,
+      "fii_dii": 0.963,
+      "delivery_pct": 1.038,
+      "hi52": 0.963
+    },
+    "sig_counts": {
+      "momentum": 1,
+      "fii_dii": 1,
+      "delivery_pct": 1,
+      "hi52": 1
+    }
   }
 }

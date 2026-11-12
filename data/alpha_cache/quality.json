@@ -2854,5 +2854,485 @@
   "roa": 0.08177,
   "roe": 0.14687,
   "sector": "Real Estate"
+ },
+ "OFSS.NS": {
+  "de": 0.468,
+  "fetched": "2026-11-12",
+  "pm": 0.39383,
+  "roa": 0.31619,
+  "roe": 0.47409,
+  "sector": "Technology"
+ },
+ "OIL.NS": {
+  "de": 58.741,
+  "fetched": "2026-11-12",
+  "pm": 0.21685,
+  "roa": null,
+  "roe": null,
+  "sector": "Energy"
+ },
+ "OLAELEC.NS": {
+  "de": 82.453,
+  "fetched": "2026-11-12",
+  "pm": -0.92606,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Cyclical"
+ },
+ "OLECTRA.NS": {
+  "de": 30.841,
+  "fetched": "2026-11-12",
+  "pm": 0.06984,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "ONESOURCE.NS": {
+  "de": 29.638,
+  "fetched": "2026-11-12",
+  "pm": -0.00096000003,
+  "roa": 0.00593,
+  "roe": -0.00027000002,
+  "sector": "Healthcare"
+ },
+ "ONGC.NS": {
+  "de": 42.217,
+  "fetched": "2026-11-12",
+  "pm": 0.071609996,
+  "roa": 0.0509,
+  "roe": 0.121429995,
+  "sector": "Energy"
+ },
+ "PAGEIND.NS": {
+  "de": 18.422,
+  "fetched": "2026-11-12",
+  "pm": 0.14126,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Cyclical"
+ },
+ "PARADEEP.NS": {
+  "de": 138.269,
+  "fetched": "2026-11-12",
+  "pm": 0.03556,
+  "roa": 0.05312,
+  "roe": 0.12534,
+  "sector": "Basic Materials"
+ },
+ "PATANJALI.NS": {
+  "de": 21.295,
+  "fetched": "2026-11-12",
+  "pm": 0.046090003,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Defensive"
+ },
+ "PAYTM.NS": {
+  "de": 1.589,
+  "fetched": "2026-11-12",
+  "pm": 0.089490004,
+  "roa": 0.00849,
+  "roe": 0.053439997,
+  "sector": "Technology"
+ },
+ "PCBL.NS": {
+  "de": 124.808,
+  "fetched": "2026-11-12",
+  "pm": 0.030639999,
+  "roa": 0.03516,
+  "roe": 0.06819,
+  "sector": "Basic Materials"
+ },
+ "PERSISTENT.NS": {
+  "de": 6.696,
+  "fetched": "2026-11-12",
+  "pm": 0.107329994,
+  "roa": 0.13587,
+  "roe": 0.22918,
+  "sector": "Technology"
+ },
+ "PETRONET.NS": {
+  "de": 8.733,
+  "fetched": "2026-11-12",
+  "pm": 0.13888,
+  "roa": 0.11974,
+  "roe": 0.20446,
+  "sector": "Energy"
+ },
+ "PFC.NS": {
+  "de": 531.392,
+  "fetched": "2026-11-12",
+  "pm": 0.49222,
+  "roa": 0.02683,
+  "roe": 0.18652001,
+  "sector": "Financial Services"
+ },
+ "PFOCUS.NS": {
+  "de": 224.567,
+  "fetched": "2026-11-12",
+  "pm": 0.02349,
+  "roa": null,
+  "roe": null,
+  "sector": "Communication Services"
+ },
+ "PGEL.NS": {
+  "de": 25.375,
+  "fetched": "2026-11-12",
+  "pm": 0.03554,
+  "roa": 0.047119997,
+  "roe": 0.07164,
+  "sector": "Technology"
+ },
+ "PGHH.NS": {
+  "de": 0.115,
+  "fetched": "2026-11-12",
+  "pm": 0.18628,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Defensive"
+ },
+ "PHOENIXLTD.NS": {
+  "de": 54.31,
+  "fetched": "2026-11-12",
+  "pm": 0.28408,
+  "roa": 0.0644,
+  "roe": 0.12944001,
+  "sector": "Real Estate"
+ },
+ "PIDILITIND.NS": {
+  "de": 3.069,
+  "fetched": "2026-11-12",
+  "pm": 0.16628,
+  "roa": 0.14208001,
+  "roe": 0.2566,
+  "sector": "Basic Materials"
+ },
+ "PIIND.NS": {
+  "de": 2.615,
+  "fetched": "2026-11-12",
+  "pm": 0.13836001,
+  "roa": 0.03767,
+  "roe": 0.07879,
+  "sector": "Basic Materials"
+ },
+ "PINELABS.NS": {
+  "de": 5.859,
+  "fetched": "2026-11-12",
+  "pm": 0.05351,
+  "roa": 0.00843,
+  "roe": 0.03287,
+  "sector": "Technology"
+ },
+ "PIRAMALFIN.NS": {
+  "de": 275.204,
+  "fetched": "2026-11-12",
+  "pm": 0.35287997,
+  "roa": 0.01727,
+  "roe": 0.06513,
+  "sector": "Financial Services"
+ },
+ "PNB.NS": {
+  "de": null,
+  "fetched": "2026-11-12",
+  "pm": 0.38777,
+  "roa": 0.01132,
+  "roe": 0.15059,
+  "sector": "Financial Services"
+ },
+ "PNBHOUSING.NS": {
+  "de": 313.751,
+  "fetched": "2026-11-12",
+  "pm": 0.60986,
+  "roa": 0.02508,
+  "roe": 0.12297,
+  "sector": "Financial Services"
+ },
+ "POLICYBZR.NS": {
+  "de": 5.276,
+  "fetched": "2026-11-12",
+  "pm": 0.102019995,
+  "roa": 0.03827,
+  "roe": 0.110740006,
+  "sector": "Financial Services"
+ },
+ "POLYCAB.NS": {
+  "de": 2.054,
+  "fetched": "2026-11-12",
+  "pm": 0.09119,
+  "roa": 0.13298,
+  "roe": 0.26767,
+  "sector": "Industrials"
+ },
+ "POLYMED.NS": {
+  "de": 12.452,
+  "fetched": "2026-11-12",
+  "pm": 0.14919,
+  "roa": 0.056220002,
+  "roe": 0.10135999,
+  "sector": "Healthcare"
+ },
+ "POONAWALLA.NS": {
+  "de": 431.207,
+  "fetched": "2026-11-12",
+  "pm": 0.26737,
+  "roa": 0.0179,
+  "roe": 0.09206,
+  "sector": "Financial Services"
+ },
+ "POWERGRID.NS": {
+  "de": 145.802,
+  "fetched": "2026-11-12",
+  "pm": 0.34188,
+  "roa": 0.058930002,
+  "roe": 0.15749,
+  "sector": "Utilities"
+ },
+ "POWERINDIA.NS": {
+  "de": 1.663,
+  "fetched": "2026-11-12",
+  "pm": 0.12555,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "PPLPHARMA.NS": {
+  "de": 71.93,
+  "fetched": "2026-11-12",
+  "pm": -0.02135,
+  "roa": 0.01143,
+  "roe": -0.02579,
+  "sector": "Healthcare"
+ },
+ "PREMIERENE.NS": {
+  "de": 68.527,
+  "fetched": "2026-11-12",
+  "pm": 0.19108,
+  "roa": 0.14655,
+  "roe": 0.40062,
+  "sector": "Technology"
+ },
+ "PRESTIGE.NS": {
+  "de": 98.18,
+  "fetched": "2026-11-12",
+  "pm": 0.07355,
+  "roa": 0.022909999,
+  "roe": 0.06363,
+  "sector": "Real Estate"
+ },
+ "PRIVISCL.NS": {
+  "de": 61.888,
+  "fetched": "2026-11-12",
+  "pm": 0.13547,
+  "roa": 0.10614,
+  "roe": 0.25929,
+  "sector": "Basic Materials"
+ },
+ "PTCIL.NS": {
+  "de": 17.821,
+  "fetched": "2026-11-12",
+  "pm": 0.18008,
+  "roa": null,
+  "roe": 0.0859,
+  "sector": "Industrials"
+ },
+ "PVRINOX.NS": {
+  "de": 85.371,
+  "fetched": "2026-11-12",
+  "pm": 0.0845,
+  "roa": 0.04524,
+  "roe": 0.06,
+  "sector": "Communication Services"
+ },
+ "PWL.NS": {
+  "de": 21.246,
+  "fetched": "2026-11-12",
+  "pm": 0.02181,
+  "roa": 0.0063899998,
+  "roe": 0.02871,
+  "sector": "Consumer Defensive"
+ },
+ "RADICO.NS": {
+  "de": 10.744,
+  "fetched": "2026-11-12",
+  "pm": 0.122889996,
+  "roa": 0.13023,
+  "roe": 0.23958999,
+  "sector": "Consumer Defensive"
+ },
+ "RAILTEL.NS": {
+  "de": 2.548,
+  "fetched": "2026-11-12",
+  "pm": 0.07324,
+  "roa": 0.05343,
+  "roe": 0.15138,
+  "sector": "Communication Services"
+ },
+ "RAINBOW.NS": {
+  "de": 55.777,
+  "fetched": "2026-11-12",
+  "pm": 0.15194,
+  "roa": 0.0967,
+  "roe": 0.18266001,
+  "sector": "Healthcare"
+ },
+ "RAMCOCEM.NS": {
+  "de": 49.127,
+  "fetched": "2026-11-12",
+  "pm": 0.06432,
+  "roa": 0.01983,
+  "roe": 0.07762,
+  "sector": "Basic Materials"
+ },
+ "RBLBANK.NS": {
+  "de": null,
+  "fetched": "2026-11-12",
+  "pm": 0.14082,
+  "roa": 0.0064,
+  "roe": 0.04045,
+  "sector": "Financial Services"
+ },
+ "RECLTD.NS": {
+  "de": 606.306,
+  "fetched": "2026-11-12",
+  "pm": 0.66909,
+  "roa": 0.022969998,
+  "roe": 0.16898,
+  "sector": "Financial Services"
+ },
+ "REDINGTON.NS": {
+  "de": 58.45,
+  "fetched": "2026-11-12",
+  "pm": 0.013049999,
+  "roa": 0.04796,
+  "roe": 0.15549,
+  "sector": "Technology"
+ },
+ "RELIANCE.NS": {
+  "de": 44.325,
+  "fetched": "2026-11-12",
+  "pm": 0.06848,
+  "roa": 0.03898,
+  "roe": 0.08759,
+  "sector": "Energy"
+ },
+ "RHIM.NS": {
+  "de": 12.595,
+  "fetched": "2026-11-12",
+  "pm": -0.0868,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "RITES.NS": {
+  "de": 0.214,
+  "fetched": "2026-11-12",
+  "pm": 0.16438,
+  "roa": 0.0515,
+  "roe": 0.16274,
+  "sector": "Industrials"
+ },
+ "RKFORGE.NS": {
+  "de": 63.959,
+  "fetched": "2026-11-12",
+  "pm": 0.03787,
+  "roa": 0.04309,
+  "roe": 0.05613,
+  "sector": "Industrials"
+ },
+ "RPOWER.NS": {
+  "de": 92.348,
+  "fetched": "2026-11-12",
+  "pm": -0.041199997,
+  "roa": null,
+  "roe": null,
+  "sector": "Utilities"
+ },
+ "RRKABEL.NS": {
+  "de": 18.999,
+  "fetched": "2026-11-12",
+  "pm": 0.05623,
+  "roa": 0.12157,
+  "roe": 0.24992001,
+  "sector": "Industrials"
+ },
+ "RUBICON.NS": {
+  "de": 35.027,
+  "fetched": "2026-11-12",
+  "pm": 0.15467,
+  "roa": 0.12189999,
+  "roe": 0.31252,
+  "sector": "Healthcare"
+ },
+ "RVNL.NS": {
+  "de": 49.078,
+  "fetched": "2026-11-12",
+  "pm": 0.0432,
+  "roa": null,
+  "roe": null,
+  "sector": "Industrials"
+ },
+ "SAGILITY.NS": {
+  "de": 8.819,
+  "fetched": "2026-11-12",
+  "pm": 0.12845,
+  "roa": 0.07412,
+  "roe": 0.10735,
+  "sector": "Healthcare"
+ },
+ "SAIL.NS": {
+  "de": 50.327,
+  "fetched": "2026-11-12",
+  "pm": 0.048130002,
+  "roa": 0.0427,
+  "roe": 0.09278,
+  "sector": "Basic Materials"
+ },
+ "SAILIFE.NS": {
+  "de": 23.049,
+  "fetched": "2026-11-12",
+  "pm": 0.15864,
+  "roa": 0.08567,
+  "roe": 0.15177,
+  "sector": "Healthcare"
+ },
+ "SAMMAANCAP.NS": {
+  "de": 273.033,
+  "fetched": "2026-11-12",
+  "pm": 0.0,
+  "roa": null,
+  "roe": null,
+  "sector": "Financial Services"
+ },
+ "SANSERA.NS": {
+  "de": 19.023,
+  "fetched": "2026-11-12",
+  "pm": 0.09284,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Cyclical"
+ },
+ "SARDAEN.NS": {
+  "de": 29.905,
+  "fetched": "2026-11-12",
+  "pm": 0.19722,
+  "roa": 0.08189,
+  "roe": 0.14929,
+  "sector": "Basic Materials"
+ },
+ "SBICARD.NS": {
+  "de": 278.65,
+  "fetched": "2026-11-12",
+  "pm": 0.19863,
+  "roa": 0.037,
+  "roe": 0.16319999,
+  "sector": "Financial Services"
+ },
+ "SBILIFE.NS": {
+  "de": null,
+  "fetched": "2026-11-12",
+  "pm": 0.0216,
+  "roa": 0.0035299999,
+  "roe": 0.13676,
+  "sector": "Financial Services"
  }
 }

@@ -81,7 +81,7 @@ jobs:
           password: ${{ secrets.MAIL_PASSWORD }}
           subject: ${{ env.WEEKLY_SUBJECT }}
           html_body: file://weekly_email_body.html
-          attachments: weekly_chart.png
+          attachments: weekly_chart.png,market_dashboard.png
           to: ${{ secrets.MAIL_TO != '' && secrets.MAIL_TO || secrets.MAIL_USERNAME }}
           from: Trading Bot <${{ secrets.MAIL_USERNAME }}>
 

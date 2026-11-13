@@ -1,97 +1,67 @@
-name: Probe free market data (temporary)
+name: Rehearse the market dashboard (temporary)
+# Dry run on real data: nothing is committed or emailed; caches are only read.
 on:
   push:
     branches: [claude/gifted-mendel-59vd8y]
     paths: [.github/workflows/probe_data.yml]
 jobs:
-  probe:
+  rehearse:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: pip
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/stocks
+          key: none
+          restore-keys: stockdata-v3-
       - uses: actions/cache/restore@v4
         with:
           path: data/alpha_cache
           key: none
           restore-keys: alphacache-v1-
-      - run: pip install -q pandas pyarrow yfinance requests lxml
-      - name: NSE files
+      - uses: actions/cache/restore@v4
+        with:
+          path: data/insider_cache
+          key: none
+          restore-keys: insider-
+      - run: pip install -q -r requirements_engine.txt matplotlib
+      - name: Collect (first-run backfill, timed)
+        run: time python market_data.py
+      - name: Second collect (should fetch nothing)
+        run: time python market_data.py
+      - name: Stores
         run: |
           python - <<'PY'
-          import io, zipfile, requests, pandas as pd
-          h = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36', 'Referer': 'https://www.nseindia.com/'}
-          def get(u):
-              try:
-                  r = requests.get(u, headers=h, timeout=30); return r
-              except Exception as e:
-                  print('ERR', u, e); return None
-          print('#### participant OI')
-          for d in ['12112026', '12112025', '10012024', '04012021']:
-              for host in ['nsearchives', 'archives']:
-                  r = get(f'https://{host}.nseindia.com/content/nsccl/fao_participant_oi_{d}.csv')
-                  if r is None: continue
-                  print(d, host, r.status_code, len(r.content))
-                  if r.status_code == 200 and d == '12112026':
-                      print(r.text[:1500])
-                  if r.status_code == 200: break
-          print('#### participant volume')
-          r = get('https://nsearchives.nseindia.com/content/nsccl/fao_participant_vol_12112026.csv')
-          print(r.status_code if r is not None else None)
-          print('#### FO bhav')
-          for d in ['20261112', '20251112', '20240710']:
-              r = get(f'https://nsearchives.nseindia.com/content/fo/BhavCopy_NSE_FO_0_0_0_{d}_F_0000.csv.zip')
-              print(d, r.status_code if r is not None else None, len(r.content) if r is not None else 0)
-              if r is not None and r.status_code == 200 and d == '20261112':
-                  z = zipfile.ZipFile(io.BytesIO(r.content)); df = pd.read_csv(z.open(z.namelist()[0]))
-                  print(list(df.columns)); print(len(df))
-                  n = df[(df['TckrSymb'] == 'NIFTY')]
-                  print(n['FinInstrmTp'].value_counts().to_dict())
-                  o = n[n['OptnTp'].isin(['CE', 'PE'])]
-                  g = o.groupby('OptnTp')[['OpnIntrst', 'TtlTradgVol']].sum()
-                  print(g); print('PCR OI', g.loc['PE', 'OpnIntrst'] / g.loc['CE', 'OpnIntrst'])
-                  print(n[~n['OptnTp'].isin(['CE', 'PE'])][['XpryDt', 'ClsPric', 'OpnIntrst', 'UndrlygPric']].head(4))
-          print('#### index file names')
-          r = get('https://nsearchives.nseindia.com/content/indices/ind_close_all_12112026.csv')
-          df = pd.read_csv(io.StringIO(r.text)); print(len(df))
-          print(df[['Index Name', 'Closing Index Value', 'P/E', 'P/B', 'Div Yield']].head(70).to_string())
-          print('#### RSS feeds')
-          for name in ['Online_announcements', 'Board_Meetings', 'Financial_Results', 'Corporate_action', 'Insider_Trading', 'Shareholding_Pattern']:
-              r = get(f'https://nsearchives.nseindia.com/content/RSS/{name}.xml')
-              if r is None: continue
-              print(name, r.status_code, len(r.content))
-              if r.status_code == 200:
-                  t = r.text
-                  i = t.find('<item>')
-                  print('  items', t.count('<item>'), '|', ' '.join(t[i:i+700].split()))
+          import pandas as pd, market_data as md
+          for f in (md.INDEX_FILE, md.OI_FILE, md.DERIV_FILE, md.GLOBAL_FILE):
+              d = pd.read_parquet(f); print(f.name, d.shape)
+              print(d.tail(3).to_string())
+          fl = md.load_filings(); print('filings', fl.shape, fl['kind'].value_counts().to_dict())
+          print(fl.tail(5).to_string())
           PY
-      - name: Yahoo macro and FRED
+      - name: Dashboard
+        run: |
+          python market_dashboard.py
+          python - <<'PY'
+          import json
+          d = json.load(open('paper_trading/results/dashboard.json'))
+          print('bytes', len(json.dumps(d)))
+          print('JSON_START' + json.dumps(d, separators=(',', ':')) + 'JSON_END')
+          PY
+      - name: Weekly email
+        run: |
+          python weekly_portfolio_report.py
+          ls -la weekly_chart.png market_dashboard.png
+          python -c "import re; t=re.sub(r'<[^>]+>',' ',open('weekly_email_body.html').read()); t=' '.join(t.split()); i=t.find('Signal report card'); print(t[i:i+6000])"
+      - name: Daily email line
         run: |
           python - <<'PY'
-          import io, requests, yfinance as yf, pandas as pd
-          for s in ['^GSPC', '^IXIC', '^TNX', 'DX-Y.NYB', 'INR=X', 'BZ=F', 'GC=F', '^VIX', '^N225', '^HSI', '^CRSLDX', '^NSEMDCP50', 'NIFTYMIDCAP150.NS', '^CNXSC']:
-              try:
-                  d = yf.download(s, period='2y', progress=False, auto_adjust=False)
-                  c = d['Close']; c = c.iloc[:, 0] if hasattr(c, 'columns') else c
-                  print(s, len(c), str(c.index[0].date()), str(c.index[-1].date()), round(float(c.iloc[-1]), 2))
-              except Exception as e:
-                  print(s, 'ERR', e)
-          for sid in ['INDIRLTLT01STM', 'DGS10', 'INDCPIALLMINMEI']:
-              try:
-                  r = requests.get(f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}', timeout=30)
-                  print(sid, r.status_code, r.text.strip().splitlines()[-2:])
-              except Exception as e:
-                  print(sid, 'ERR', e)
+          import json, re, dashboard_email as de
+          d = json.load(open('paper_trading/results/dashboard.json'))
+          print(re.sub(r'<[^>]+>', '', de.lights_summary(d)))
           PY
-      - name: Existing flow data
-        run: |
-          python - <<'PY'
-          import pandas as pd, pathlib, json
-          for f in ['fii_dii_flows.parquet', 'bulk_deals.parquet']:
-              p = pathlib.Path('data/alpha_cache') / f
-              if not p.exists(): print(f, 'MISSING'); continue
-              d = pd.read_parquet(p); print(f, d.shape, list(d.columns)); print(d.tail(4).to_string())
-          PY
-          grep -n "fii_dii_flows\|fiidii\|FII" india_alpha_signals.py | head -12

@@ -150,6 +150,7 @@ def portfolio_section():
                  for h in book.get('holdings', [])]
     out = (f"<p style='font-size:14px;margin:4px 0'>{status}<br>{perf}</p>")
     out += data_check_line(book.get('data_check'))
+    out += market_health_line()
     soon = book.get('results_soon') or []
     if soon:
         out += ("<p style='font-size:13px;margin:4px 0;color:#8a6d00'>📅 Results "
@@ -178,6 +179,17 @@ def portfolio_section():
                           ('Entry', 'right'), ('Last', 'right'),
                           ('P&L', 'right'), ('Weight', 'right')], hold_rows))
     return out
+
+
+def market_health_line():
+    """Seven traffic lights from the market dashboard, in one line."""
+    try:
+        import dashboard_email as de
+        d = json.loads(Path('paper_trading/results/dashboard.json')
+                       .read_text(encoding='utf-8'))
+        return de.lights_summary(d) if d.get('as_of') == today else ""
+    except Exception:
+        return ""
 
 
 def data_check_line(dc):

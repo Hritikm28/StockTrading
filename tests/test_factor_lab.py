@@ -231,3 +231,60 @@ def test_after_tax_charges_each_years_gain():
     flat = pd.Series(100.0, index=days)
     assert fl.after_tax_cagr(flat) == pytest.approx(0.0, abs=1e-9)
     assert fl.index_after_tax_cagr(nav) > fl.after_tax_cagr(nav)  # tax deferred
+
+
+def test_review_every_ten_sessions_reviews_more_often_than_monthly():
+    panel, nifty, truth = make_market()
+    calls = {'m': 0, 'b': 0}
+
+    def counting(key):
+        def fn(closes):
+            calls[key] += 1
+            return {i: truth[i] for i in closes}
+        return fn
+
+    fl.simulate(panel, nifty, counting('m'), fl.Rules(min_traded_value=1e7))
+    fl.simulate(panel, nifty, counting('b'),
+                fl.Rules(min_traded_value=1e7, review_days=10))
+    sessions = N_DAYS - 260
+    assert calls['m'] == pytest.approx(sessions / 21, abs=3)     # ~monthly
+    assert calls['b'] == pytest.approx(sessions / 10, abs=3)     # every 2 weeks
+
+
+def test_more_holdings_are_actually_held():
+    panel, nifty, truth = make_market()
+    held = []
+
+    def spy_rules(n):
+        return fl.Rules(min_traded_value=1e7, top_n=n, buffer=2 * n,
+                        universe_size=59)
+
+    for n in (15, 25):
+        sim = fl.simulate(panel, nifty, oracle(truth), spy_rules(n))
+        # with n equal positions, the largest daily move shrinks as n grows
+        held.append(sim['nav'].pct_change().abs().max())
+    assert held[1] < held[0]
+
+
+def test_steady_variant_prefers_calm_stocks_at_equal_strength():
+    rng = np.random.default_rng(5)
+    rm = rng.normal(0.0005, 0.008, 520)
+    m = 100 * np.cumprod(1 + rm)
+    calm = 100 * np.cumprod(1 + rm + 0.001 + rng.normal(0, 0.004, 520))
+    wild = 100 * np.cumprod(1 + rm + 0.001 + rng.normal(0, 0.03, 520))
+    filler = {i: 100 * np.cumprod(1 + rm + rng.normal(0, 0.01, 520))
+              for i in range(2, 12)}
+    closes = {0: calm, 1: wild, **filler}
+    market = {k: m for k in closes}
+    s = fl.v_resid_steady(closes, market)
+    assert s[0] > s[1]
+
+
+def test_risk_detail_metrics_are_reported():
+    panel, nifty, truth = make_market()
+    sim = fl.simulate(panel, nifty, oracle(truth), fl.Rules(min_traded_value=1e7))
+    m = fl.metrics(sim['nav'].iloc[260:], nifty, sim['traded'])
+    for k in ('sortino', 'calmar', 'longest_underwater_months', 'worst_12m_pct',
+              'excess_first_half_pct', 'excess_second_half_pct'):
+        assert m[k] is not None, k
+    assert m['longest_underwater_months'] >= 0

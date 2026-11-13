@@ -1,13 +1,13 @@
 {
   "mean_rev": {
-    "multiplier": 0.839,
-    "win_rate": 46.2,
-    "n": 52
+    "multiplier": 0.863,
+    "win_rate": 47.5,
+    "n": 59
   },
   "delivery_pct": {
-    "multiplier": 0.963,
-    "win_rate": 52.9,
-    "n": 34
+    "multiplier": 0.983,
+    "win_rate": 54.1,
+    "n": 37
   },
   "corp_event": {
     "multiplier": 1.0,
@@ -15,9 +15,9 @@
     "n": 6
   },
   "momentum": {
-    "multiplier": 0.87,
-    "win_rate": 47.8,
-    "n": 69
+    "multiplier": 0.931,
+    "win_rate": 51.2,
+    "n": 84
   },
   "rel_strength": {
     "multiplier": 0.741,
@@ -25,33 +25,33 @@
     "n": 27
   },
   "sector_mom": {
-    "multiplier": 1.077,
-    "win_rate": 59.3,
-    "n": 27
+    "multiplier": 1.104,
+    "win_rate": 60.7,
+    "n": 28
   },
   "fii_dii": {
-    "multiplier": 1.0,
-    "win_rate": 46.2,
-    "n": 13
+    "multiplier": 1.039,
+    "win_rate": 57.1,
+    "n": 28
   },
   "mom_riskadj": {
-    "multiplier": 1.0,
-    "win_rate": 46.2,
-    "n": 13
+    "multiplier": 1.039,
+    "win_rate": 57.1,
+    "n": 28
   },
   "pead": {
     "multiplier": 1.0,
-    "win_rate": 50.0,
-    "n": 2
+    "win_rate": 80.0,
+    "n": 5
   },
   "hi52": {
     "multiplier": 1.0,
-    "win_rate": 85.7,
-    "n": 7
+    "win_rate": 92.3,
+    "n": 13
   },
   "quality": {
     "multiplier": 1.0,
-    "win_rate": 0.0,
-    "n": 2
+    "win_rate": 40.0,
+    "n": 5
   }
 }

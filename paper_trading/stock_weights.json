@@ -769,216 +769,256 @@
     }
   },
   "AZAD.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 0.963,
-      "fii_dii": 0.963,
-      "delivery_pct": 1.038,
+      "momentum": 0.931,
+      "fii_dii": 0.931,
+      "delivery_pct": 0.995,
       "hi52": 0.963
     },
     "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "delivery_pct": 1,
+      "momentum": 2,
+      "fii_dii": 2,
+      "delivery_pct": 2,
       "hi52": 1
     }
   },
   "BHEL.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.07,
+      "fii_dii": 1.07,
+      "pead": 1.07,
+      "delivery_pct": 0.931,
+      "hi52": 1.07,
+      "sector_mom": 0.931
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "pead": 2,
+      "delivery_pct": 2,
+      "hi52": 2,
+      "sector_mom": 2
+    }
+  },
+  "CHENNPETRO.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 0.931,
+      "fii_dii": 0.931,
+      "mean_rev": 1.038,
+      "delivery_pct": 1.07,
+      "hi52": 0.931
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "mean_rev": 1,
+      "delivery_pct": 2,
+      "hi52": 2
+    }
+  },
+  "SONACOMS.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.07,
+      "fii_dii": 1.07,
+      "delivery_pct": 1.07,
+      "hi52": 1.07,
+      "sector_mom": 1.07
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "delivery_pct": 2,
+      "hi52": 2,
+      "sector_mom": 2
+    }
+  },
+  "MCX.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.07,
+      "fii_dii": 1.07,
+      "delivery_pct": 0.931,
+      "hi52": 1.07,
+      "pead": 0.963,
+      "mean_rev": 0.963
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "delivery_pct": 2,
+      "hi52": 2,
+      "pead": 1,
+      "mean_rev": 1
+    }
+  },
+  "POWERINDIA.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.006,
+      "fii_dii": 1.006,
+      "delivery_pct": 0.995
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "delivery_pct": 2
+    }
+  },
+  "LAURUSLABS.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.07,
+      "fii_dii": 1.07,
+      "mean_rev": 1.006,
+      "delivery_pct": 1.07,
+      "hi52": 1.07,
+      "sector_mom": 1.038,
+      "pead": 1.038
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "hi52": 2,
+      "sector_mom": 1,
+      "pead": 1
+    }
+  },
+  "APARINDS.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.006,
+      "fii_dii": 1.006,
+      "pead": 1.006,
+      "mean_rev": 1.07,
+      "delivery_pct": 1.006,
+      "hi52": 0.963
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "pead": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "hi52": 1
+    }
+  },
+  "ATHERENERG.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.07,
+      "fii_dii": 1.07,
+      "mean_rev": 0.931,
+      "delivery_pct": 0.995,
+      "hi52": 1.07
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "hi52": 2
+    }
+  },
+  "TDPOWERSYS.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.006,
+      "fii_dii": 1.006,
+      "delivery_pct": 1.038,
+      "hi52": 0.931,
+      "mean_rev": 1.038
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "delivery_pct": 1,
+      "hi52": 2,
+      "mean_rev": 1
+    }
+  },
+  "WELCORP.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 0.931,
+      "fii_dii": 0.931,
+      "mean_rev": 0.931,
+      "hi52": 0.963,
+      "delivery_pct": 0.963
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "mean_rev": 2,
+      "hi52": 1,
+      "delivery_pct": 1
+    }
+  },
+  "CUPID.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.07,
+      "fii_dii": 1.07,
+      "mean_rev": 0.931,
+      "delivery_pct": 1.006,
+      "hi52": 1.07
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "mean_rev": 2,
+      "delivery_pct": 2,
+      "hi52": 2
+    }
+  },
+  "SYRMA.NS": {
+    "n_trades": 2,
+    "multipliers": {
+      "momentum": 1.006,
+      "fii_dii": 1.006,
+      "delivery_pct": 0.995,
+      "hi52": 1.006,
+      "mean_rev": 1.038
+    },
+    "sig_counts": {
+      "momentum": 2,
+      "fii_dii": 2,
+      "delivery_pct": 2,
+      "hi52": 2,
+      "mean_rev": 1
+    }
+  },
+  "HFCL.NS": {
     "n_trades": 1,
     "multipliers": {
-      "momentum": 1.038,
-      "fii_dii": 1.038,
-      "pead": 1.038,
-      "delivery_pct": 0.963,
-      "hi52": 1.038,
+      "momentum": 0.963,
+      "fii_dii": 0.963,
+      "mean_rev": 0.963,
       "sector_mom": 0.963
     },
     "sig_counts": {
       "momentum": 1,
       "fii_dii": 1,
-      "pead": 1,
-      "delivery_pct": 1,
-      "hi52": 1,
+      "mean_rev": 1,
       "sector_mom": 1
     }
   },
-  "CHENNPETRO.NS": {
+  "STLTECH.NS": {
     "n_trades": 1,
     "multipliers": {
       "momentum": 0.963,
       "fii_dii": 0.963,
-      "mean_rev": 1.038,
-      "delivery_pct": 1.038,
-      "hi52": 0.963
+      "mean_rev": 0.963
     },
     "sig_counts": {
       "momentum": 1,
       "fii_dii": 1,
-      "mean_rev": 1,
-      "delivery_pct": 1,
-      "hi52": 1
-    }
-  },
-  "SONACOMS.NS": {
-    "n_trades": 1,
-    "multipliers": {
-      "momentum": 1.038,
-      "fii_dii": 1.038,
-      "delivery_pct": 1.038,
-      "hi52": 1.038,
-      "sector_mom": 1.038
-    },
-    "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "delivery_pct": 1,
-      "hi52": 1,
-      "sector_mom": 1
-    }
-  },
-  "MCX.NS": {
-    "n_trades": 1,
-    "multipliers": {
-      "momentum": 1.038,
-      "fii_dii": 1.038,
-      "delivery_pct": 0.963,
-      "hi52": 1.038
-    },
-    "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "delivery_pct": 1,
-      "hi52": 1
-    }
-  },
-  "POWERINDIA.NS": {
-    "n_trades": 1,
-    "multipliers": {
-      "momentum": 0.963,
-      "fii_dii": 0.963,
-      "delivery_pct": 1.038
-    },
-    "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "delivery_pct": 1
-    }
-  },
-  "LAURUSLABS.NS": {
-    "n_trades": 1,
-    "multipliers": {
-      "momentum": 1.038,
-      "fii_dii": 1.038,
-      "mean_rev": 0.963,
-      "delivery_pct": 1.038,
-      "hi52": 1.038,
-      "sector_mom": 1.038
-    },
-    "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "mean_rev": 1,
-      "delivery_pct": 1,
-      "hi52": 1,
-      "sector_mom": 1
-    }
-  },
-  "APARINDS.NS": {
-    "n_trades": 1,
-    "multipliers": {
-      "momentum": 0.963,
-      "fii_dii": 0.963,
-      "pead": 0.963,
-      "mean_rev": 1.038,
-      "delivery_pct": 0.963,
-      "hi52": 0.963
-    },
-    "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "pead": 1,
-      "mean_rev": 1,
-      "delivery_pct": 1,
-      "hi52": 1
-    }
-  },
-  "ATHERENERG.NS": {
-    "n_trades": 1,
-    "multipliers": {
-      "momentum": 1.038,
-      "fii_dii": 1.038,
-      "mean_rev": 0.963,
-      "delivery_pct": 1.038,
-      "hi52": 1.038
-    },
-    "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "mean_rev": 1,
-      "delivery_pct": 1,
-      "hi52": 1
-    }
-  },
-  "TDPOWERSYS.NS": {
-    "n_trades": 1,
-    "multipliers": {
-      "momentum": 0.963,
-      "fii_dii": 0.963,
-      "delivery_pct": 1.038,
-      "hi52": 0.963
-    },
-    "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "delivery_pct": 1,
-      "hi52": 1
-    }
-  },
-  "WELCORP.NS": {
-    "n_trades": 1,
-    "multipliers": {
-      "momentum": 0.963,
-      "fii_dii": 0.963,
-      "mean_rev": 0.963,
-      "hi52": 0.963
-    },
-    "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "mean_rev": 1,
-      "hi52": 1
-    }
-  },
-  "CUPID.NS": {
-    "n_trades": 1,
-    "multipliers": {
-      "momentum": 1.038,
-      "fii_dii": 1.038,
-      "mean_rev": 0.963,
-      "delivery_pct": 0.963,
-      "hi52": 1.038
-    },
-    "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "mean_rev": 1,
-      "delivery_pct": 1,
-      "hi52": 1
-    }
-  },
-  "SYRMA.NS": {
-    "n_trades": 1,
-    "multipliers": {
-      "momentum": 0.963,
-      "fii_dii": 0.963,
-      "delivery_pct": 1.038,
-      "hi52": 0.963
-    },
-    "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "delivery_pct": 1,
-      "hi52": 1
+      "mean_rev": 1
     }
   }
 }

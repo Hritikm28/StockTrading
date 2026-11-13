@@ -33,3 +33,32 @@ def test_topup_and_new_buy_orders_are_both_formatted(tmp_path):
     assert out[0]['topup'] and out[0]['rank'] == 1
     assert out[0]['composite_score'] == 0.9 and out[0]['current_price'] == 100.0
     assert not out[1]['topup'] and out[1]['rank'] == 2
+
+
+def test_sector_cap_uses_nse_industry_labels_first(monkeypatch):
+    """Five of the first fifteen picks had no sector label, so the cap of
+    four let six capital-goods companies through."""
+    import universe
+    import quality_data
+    monkeypatch.setattr(universe, 'fetch_nifty500_list', lambda force=False: pd.DataFrame({
+        'Symbol': ['BHEL', 'TDPOWERSYS', 'WELCORP'],
+        'Industry': ['Capital Goods', 'Capital Goods', 'Capital Goods']}))
+    monkeypatch.setattr(quality_data, 'load', lambda: {
+        'BHEL.NS': {'sector': 'Industrials'},          # another vocabulary
+        'OTHER.NS': {'sector': 'Energy'}})             # not in the NSE list
+    fake = SimpleNamespace(_sectors=None)
+    sector = lambda s: daily_runner.DailyRunner._sector_of(fake, s)
+    assert sector('BHEL.NS') == 'Capital Goods'        # NSE label wins
+    assert sector('TDPOWERSYS.NS') == 'Capital Goods'  # was unlabelled: uncapped
+    assert sector('WELCORP.NS') == 'Capital Goods'
+    assert sector('OTHER.NS') == 'Energy'              # fallback still works
+    assert sector('UNKNOWN.NS') is None
+
+
+def test_sector_cap_falls_back_when_the_nse_list_is_unavailable(monkeypatch):
+    import universe
+    import quality_data
+    monkeypatch.setattr(universe, 'fetch_nifty500_list', lambda force=False: None)
+    monkeypatch.setattr(quality_data, 'load', lambda: {'ZZTEST.NS': {'sector': 'Industrials'}})
+    fake = SimpleNamespace(_sectors=None)
+    assert daily_runner.DailyRunner._sector_of(fake, 'ZZTEST.NS') == 'Industrials'

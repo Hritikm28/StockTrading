@@ -1,5 +1,5 @@
 name: Rehearse the market dashboard (temporary)
-# Dry run on real data: nothing is committed or emailed; caches are only read.
+# Dry run on real data: nothing is committed or emailed; caches are only read. (run 2)
 on:
   push:
     branches: [claude/gifted-mendel-59vd8y]

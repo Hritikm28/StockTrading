@@ -74,6 +74,22 @@ def _chg(s: pd.Series, n: int) -> Optional[float]:
     return _r((s.iloc[-1] / s.iloc[-n - 1] - 1) * 100)
 
 
+def clean_closes(df: pd.DataFrame) -> pd.DataFrame:
+    """Drop stray dates and bridge short gaps.
+
+    The price files don't share one calendar: a date that only a few files
+    have (a special session, a vendor glitch) leaves a blank for every other
+    stock, and one blank breaks a 200-day average for the next 200 days. On
+    the first real run (2026-11-13) that emptied breadth from July onwards.
+    Dates on which under half the stocks have a price are dropped; a stock
+    missing up to three sessions keeps its last price."""
+    if df.empty:
+        return df
+    df = df[~df.index.duplicated(keep='last')].sort_index()
+    enough = df.notna().sum(axis=1) >= 0.5 * df.shape[1]
+    return df[enough].ffill(limit=3)
+
+
 def load_closes(data_dir: Path, as_of: date, days: int = 470) -> pd.DataFrame:
     """Daily closes, one column per stock (index files left out)."""
     cols = {}
@@ -86,18 +102,22 @@ def load_closes(data_dir: Path, as_of: date, days: int = 470) -> pd.DataFrame:
             c.index = pd.to_datetime(c.index)
             if getattr(c.index, 'tz', None) is not None:
                 c.index = c.index.tz_localize(None)
+            c.index = c.index.normalize()
             c = c[~c.index.duplicated(keep='last')].sort_index()
             c = c[c.index <= cutoff].dropna()
             if len(c):
-                cols[f.stem] = c.tail(days)
+                cols[f.stem] = c.tail(days + 30)
         except Exception:
             continue
-    return pd.DataFrame(cols).sort_index().tail(days)
+    return clean_closes(pd.DataFrame(cols)).tail(days)
 
 
 def load_index(data_dir: Path, name: str, as_of: date) -> pd.Series:
     c = pd.read_parquet(Path(data_dir) / f"{name}.parquet", columns=['Close'])['Close']
     c.index = pd.to_datetime(c.index)
+    if getattr(c.index, 'tz', None) is not None:
+        c.index = c.index.tz_localize(None)
+    c.index = c.index.normalize()
     c = c[~c.index.duplicated(keep='last')].sort_index()
     return c[c.index <= pd.Timestamp(as_of)].dropna()
 
@@ -108,8 +128,8 @@ def load_index(data_dir: Path, name: str, as_of: date) -> pd.Series:
 def breadth(closes: pd.DataFrame) -> Dict:
     """How widely the market is rising: the index can climb on a few giants
     while most stocks fall."""
-    sma200 = closes.rolling(200, min_periods=200).mean()
-    sma50 = closes.rolling(50, min_periods=50).mean()
+    sma200 = closes.rolling(200, min_periods=180).mean()
+    sma50 = closes.rolling(50, min_periods=45).mean()
     above200 = ((closes > sma200) & sma200.notna()).sum(axis=1) / sma200.notna().sum(axis=1) * 100
     above50 = ((closes > sma50) & sma50.notna()).sum(axis=1) / sma50.notna().sum(axis=1) * 100
     last = closes.iloc[-1]
@@ -317,6 +337,11 @@ def portfolio_risk(book: Dict, closes: pd.DataFrame, nifty: pd.Series,
     }
 
 
+ROUTINE_FILING = (r'newspaper|trading window|share certificate|regulation 74'
+                  r'|investor grievance|registrar|duplicate|postal ballot'
+                  r'|esop|esos|allotment of securities|closure of')
+
+
 def holdings_filings(filings: pd.DataFrame, symbols: List[str], as_of: date,
                       news_days: int = 7, ahead_days: int = 21) -> Dict:
     """Official NSE filings for the stocks we hold: last week's
@@ -328,8 +353,9 @@ def holdings_filings(filings: pd.DataFrame, symbols: List[str], as_of: date,
     since = (pd.Timestamp(as_of) - pd.Timedelta(days=news_days)).strftime('%Y-%m-%d')
     until = (pd.Timestamp(as_of) + pd.Timedelta(days=ahead_days)).strftime('%Y-%m-%d')
     news, per = [], {}
-    for _, r in f[(f['kind'] == 'news') & (f['pub'] >= since)].sort_values(
-            'pub', ascending=False).iterrows():
+    recent = f[(f['kind'] == 'news') & (f['pub'] >= since)
+               & ~f['text'].str.contains(ROUTINE_FILING, case=False, na=False)]
+    for _, r in recent.sort_values('pub', ascending=False).iterrows():
         per[r['symbol']] = per.get(r['symbol'], 0) + 1
         if per[r['symbol']] <= 3:
             news.append({'date': r['pub'][:10], 'symbol': r['symbol'],

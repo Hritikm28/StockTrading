@@ -176,3 +176,41 @@ def test_results_dates_merge_yahoo_and_board_meetings():
                           filings=filings_frame())
     assert got == [{'symbol': 'AAA.NS', 'date': '2026-11-18'},
                    {'symbol': 'BBB.NS', 'date': '2026-11-20'}]
+
+
+def test_stray_dates_do_not_empty_breadth():
+    """2026-11-13: dates that only a few files had left blanks in every
+    other stock and broke every 200-day average after them."""
+    up = np.linspace(100, 200, 460)
+    closes = pd.DataFrame({f"S{i}": up * (i + 1) for i in range(10)}, index=DAYS)
+    closes['D'] = np.linspace(200, 100, 460)             # the one falling stock
+    weekends = [d for d in pd.date_range(DAYS[250], DAYS[-1]) if d.weekday() == 5][:30]
+    stray = pd.DataFrame({'D': 150.0}, index=weekends)   # only D has these dates
+    dirty = pd.concat([closes, stray]).sort_index()
+    assert len(dirty) == 490
+    # the bug: only D still has a 200-day average, so "0% in an uptrend"
+    assert mdash.breadth(dirty)['pct_above_200dma'] == 0
+    clean = mdash.clean_closes(dirty)
+    assert len(clean) == 460                             # strays dropped
+    assert mdash.breadth(clean)['pct_above_200dma'] == 91   # 10 of 11
+    # one stray date alone no longer breaks the averages either
+    one = pd.concat([closes, stray.iloc[:1]]).sort_index()
+    assert mdash.breadth(one)['pct_above_200dma'] == 91
+
+
+def test_short_gaps_are_bridged_but_new_listings_are_not_invented():
+    days = pd.bdate_range('2026-01-01', periods=10)
+    c = pd.DataFrame({k: np.arange(1.0, 11.0) for k in 'ABCD'}, index=days)
+    c['NEW'] = [np.nan] * 6 + [5.0, 6.0, 7.0, 8.0]
+    c.loc[days[4], 'A'] = np.nan
+    out = mdash.clean_closes(c)
+    assert len(out) == 10
+    assert out['A'].iloc[4] == 4.0                        # carried over one day
+    assert out['NEW'].iloc[:6].isna().all()               # no history made up
+
+
+def test_routine_filings_are_left_out():
+    f = filings_frame()
+    f.loc[0, 'text'] = 'Copy of Newspaper Publication'
+    got = mdash.holdings_filings(f, ['AAA.NS'], date(2026, 11, 13))
+    assert 'Copy of Newspaper Publication' not in [n['text'] for n in got['news']]

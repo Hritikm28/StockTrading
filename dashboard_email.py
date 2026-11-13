@@ -108,7 +108,7 @@ def lights_html(d: Dict) -> str:
 def market_detail_html(d: Dict) -> str:
     out: List[str] = []
     b = d.get('breadth')
-    if b:
+    if b and b.get('pct_above_200dma') is not None and b.get('pct_above_50dma') is not None:
         out.append(
             f"<b>Breadth:</b> {b['pct_above_200dma']:.0f}% of {b['n_stocks']} stocks "
             "are above their 200-day average"
@@ -118,7 +118,7 @@ def market_detail_html(d: Dict) -> str:
             f"{b['new_highs']} hit a one-year high, {b['new_lows']} a one-year low.")
     v = (d.get('valuation') or {})
     n = v.get('NIFTY 50')
-    if n:
+    if n and all(n.get(k) is not None for k in ('pe', 'pe_median', 'pe_low', 'pe_high')):
         line = (f"<b>Price tag:</b> NIFTY trades at {n['pe']:.1f} times profits "
                 f"(usual since {n['since'][:4]}: {n['pe_median']:.1f}; range "
                 f"{n['pe_low']:.0f} to {n['pe_high']:.0f})")
@@ -126,13 +126,13 @@ def market_detail_html(d: Dict) -> str:
             line += f", pays {n['div_yield']:.1f}% in dividends"
         for label, word in (('Midcap 150', 'mid-sized'), ('Smallcap 250', 'small')):
             m = v.get(label)
-            if m:
+            if m and m.get('pe') is not None:
                 line += (f"; {word} companies {m['pe']:.1f} times"
                          + (f" (pricier than {m['pe_percentile']:.0f}% of days)"
                             if m.get('pe_percentile') is not None else ""))
         out.append(line + ".")
     f = d.get('flows')
-    if f:
+    if f and all(f.get(k) is not None for k in ('fii_5d', 'fii_20d', 'dii_5d', 'dii_20d')):
         def money(x):
             return f"{'+' if x >= 0 else '−'}₹{abs(x):,.0f} crore"
         out.append(f"<b>Big money:</b> foreign investors {money(f['fii_5d'])} this "
@@ -199,7 +199,9 @@ def sectors_html(d: Dict) -> str:
 # ---------------------------------------------------------------------------
 def risk_html(d: Dict) -> str:
     r = d.get('risk') or {}
-    if r.get('beta') is None:
+    need = ('beta', 'vol_pct', 'nifty_vol_pct', 'var95_rupees', 'var95_pct',
+            'worst_day_pct', 'worst_day', 'top_weight_pct')
+    if any(r.get(k) is None for k in need):
         return ""
 
     def rs(x):

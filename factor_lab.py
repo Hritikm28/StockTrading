@@ -145,7 +145,13 @@ def _live(**kw) -> Rules:
 VARIANTS = [
     ('live', 'Residual momentum, skipping watch-list stocks (live from '
      '2026-11-10)', v_resid, LIVE),
-    # 2026-11-13 ideas, each changing ONE thing from the live rule
+    # 2026-11-13 ideas, each changing ONE thing from the live rule. None was
+    # adopted: 20 stocks returned 14.0% a year against the live rule's 13.3%
+    # but with a deeper worst fall (-39% vs -32%), and 25 stocks only 9.3%,
+    # so size shows noise, not a trend; a two-week review added 0.2 points
+    # for more trading and a deeper fall; the low-volatility blend returned
+    # 9.0%. Kept here so the luck bar (deflated Sharpe) keeps charging for
+    # them and nobody retries them unknowingly.
     ('top20', 'Live rule with 20 stocks instead of 15', v_resid,
      _live(top_n=20, buffer=40, max_per_sector=5)),
     ('top25', 'Live rule with 25 stocks instead of 15', v_resid,

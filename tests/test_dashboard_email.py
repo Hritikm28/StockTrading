@@ -117,3 +117,19 @@ def test_chart_is_drawn(tmp_path):
     pytest.importorskip('matplotlib')
     out = tmp_path / 'd.png'
     assert de.make_dashboard_chart(DASH, out) and out.stat().st_size > 5000
+
+
+def test_missing_numbers_skip_a_line_instead_of_crashing():
+    """The first real dashboard had breadth without its percentages, and
+    the weekly email crashed formatting None."""
+    import copy
+    d = copy.deepcopy(DASH)
+    d['breadth']['pct_above_200dma'] = None
+    d['flows']['fii_5d'] = None
+    d['valuation']['NIFTY 50']['pe_median'] = None
+    d['risk']['var95_rupees'] = None
+    detail = de.market_detail_html(d)
+    assert 'Breadth' not in detail and 'Big money' not in detail
+    assert 'Options market' in detail                     # the rest still shows
+    assert de.risk_html(d) == ""
+    assert de.make_dashboard_chart(d, Path('/tmp/claude-0/x-should-not-matter.png')) in (True, False)

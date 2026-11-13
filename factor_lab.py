@@ -71,6 +71,7 @@ class Rules:
     liq_window: int = 60
     history: int = 260
     skip_watch: bool = False       # never buy NSE watch-list (BE/BZ) stocks
+    review_days: int = 0           # 0 = once a calendar month; N = every N sessions
 
 
 # ---------------------------------------------------------------------------
@@ -120,12 +121,45 @@ def v_resid(closes, market):
 
 v_resid.needs_market = True
 
+
+def v_resid_steady(closes, market):
+    """Residual momentum blended with low volatility: prefers stocks that
+    climbed on their own AND move calmly. A price-only stand-in for
+    'quality'; real quality (profits, debt) has no free ten-year history,
+    so that signal is graded live instead (QualityAlpha, on probation)."""
+    zr = fx.zscore(v_resid(closes, market))
+    vol = _apply(fx.volatility, closes)
+    zv = fx.zscore({k: -v for k, v in vol.items()})
+    return {k: (zr[k] + zv[k]) / 2 for k in zr if k in zv}
+
+
+v_resid_steady.needs_market = True
+
 HALF = Rules(low_exposure=0.5)          # half invested when the trend breaks
 LIVE = Rules(low_exposure=0.5, skip_watch=True)   # what portfolio_book trades
+
+def _live(**kw) -> Rules:
+    return Rules(low_exposure=0.5, skip_watch=True, **kw)
+
 
 VARIANTS = [
     ('live', 'Residual momentum, skipping watch-list stocks (live from '
      '2026-11-10)', v_resid, LIVE),
+    # 2026-11-13 ideas, each changing ONE thing from the live rule. None was
+    # adopted: 20 stocks returned 14.0% a year against the live rule's 13.3%
+    # but with a deeper worst fall (-39% vs -32%), and 25 stocks only 9.3%,
+    # so size shows noise, not a trend; a two-week review added 0.2 points
+    # for more trading and a deeper fall; the low-volatility blend returned
+    # 9.0%. Kept here so the luck bar (deflated Sharpe) keeps charging for
+    # them and nobody retries them unknowingly.
+    ('top20', 'Live rule with 20 stocks instead of 15', v_resid,
+     _live(top_n=20, buffer=40, max_per_sector=5)),
+    ('top25', 'Live rule with 25 stocks instead of 15', v_resid,
+     _live(top_n=25, buffer=50, max_per_sector=6)),
+    ('biweekly', 'Live rule, reviewed every 2 weeks instead of monthly',
+     v_resid, _live(review_days=10)),
+    ('steady', 'Live rule, blended with low volatility (steadier stocks)',
+     v_resid_steady, LIVE),
     ('resid', 'Residual momentum, watch-list stocks allowed', v_resid, HALF),
     ('mom_nowatch', 'Plain momentum 12-1, skipping watch-list stocks', v_mom,
      LIVE),
@@ -171,6 +205,7 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
     exposure: Optional[float] = None
     last_px: Dict[int, float] = {}
     last_month, nav, traded, invested_days = None, [], 0.0, 0
+    last_review = -10 ** 9
     cost = rules.cost
 
     def pick(t) -> List[int]:
@@ -251,7 +286,9 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
                            for i in holdings]
             continue
         can_buy = exposure > 0 and (exposure < 1.0 or not rules.gate or v > 0)
-        rebalance = bool(holdings) and month != last_month
+        due = (t - last_review >= rules.review_days if rules.review_days
+               else month != last_month)
+        rebalance = bool(holdings) and due
         entering = not holdings and can_buy
         if not (rebalance or entering):
             continue
@@ -280,7 +317,7 @@ def simulate(panel: Dict[str, pd.DataFrame], nifty: pd.Series,
             per = min(exposure * value / rules.top_n,
                       (cash + freed) / (len(buys) * (1 + cost)))
         pending = [('S', i, 0.0) for i in sells] + [('B', i, per) for i in buys]
-        last_month = month
+        last_month, last_review = month, t
 
     nav = pd.Series(nav, index=days)
     return {'nav': nav, 'traded': traded,
@@ -404,6 +441,22 @@ def metrics(nav: pd.Series, nifty: pd.Series, traded: float) -> Dict:
     y, ny = period_returns(nav, 'Y'), period_returns(nifty, 'Y')
     yearly = {int(p.year): [round(y[p] * 100, 1), round(ny[p] * 100, 1)]
               for p in y.index}
+    # the tests a fund's risk desk would ask for
+    downside = d[d < 0].std()
+    month_end = nav.groupby(nav.index.to_period('M')).last()
+    under = (month_end < month_end.cummax()).astype(int)
+    longest = int(under.groupby((under == 0).cumsum()).sum().max()) if len(under) else 0
+    roll12 = (month_end / month_end.shift(12) - 1).dropna()
+    n_me = nifty.groupby(nifty.index.to_period('M')).last()
+    roll36 = ((month_end / month_end.shift(36)) / (n_me / n_me.shift(36)) - 1).dropna()
+    half = nav.index[len(nav) // 2]
+
+    def excess_cagr(a, b):
+        yrs = (a.index[-1] - a.index[0]).days / 365.25
+        if yrs <= 0:
+            return None
+        return round(((a.iloc[-1] / a.iloc[0]) ** (1 / yrs)
+                      - (b.iloc[-1] / b.iloc[0]) ** (1 / yrs)) * 100, 2)
     return {
         'cagr_pct': round(cagr * 100, 2), 'nifty_cagr_pct': round(n_cagr * 100, 2),
         'excess_cagr_pct': round((cagr - n_cagr) * 100, 2),
@@ -415,6 +468,15 @@ def metrics(nav: pd.Series, nifty: pd.Series, traded: float) -> Dict:
         'turnover_pct_yr': round(traded / nav.mean() / years * 100 / 2, 0),
         'beat_nifty_months_pct': round((exc > 0).mean() * 100, 1),
         't_excess': round(t_exc, 2) if t_exc is not None else None,
+        'sortino': (round(d.mean() / downside * math.sqrt(252), 2)
+                    if downside and downside > 0 else None),
+        'calmar': round(cagr / abs(dd), 2) if dd < 0 else None,
+        'longest_underwater_months': longest,
+        'worst_12m_pct': round(roll12.min() * 100, 1) if len(roll12) else None,
+        'beat_nifty_3y_windows_pct': (round((roll36 > 0).mean() * 100, 1)
+                                      if len(roll36) else None),
+        'excess_first_half_pct': excess_cagr(nav[:half], nifty[:half]),
+        'excess_second_half_pct': excess_cagr(nav[half:], nifty[half:]),
         'yearly': yearly, '_monthly_excess': exc.to_numpy().tolist(),
     }
 
@@ -584,6 +646,23 @@ def to_markdown(r: Dict) -> str:
                   f"{old['cagr_pct']}% here. The old test overstated the "
                   f"yearly return by {sb['cagr_pct'] - old['cagr_pct']:.1f} "
                   f"points."]
+    lines += ["", "## Risk detail", "",
+              "| Variant | Sortino | Return / worst fall | Worst 12 months | "
+              "Longest time below a past peak | 3-year periods that beat NIFTY "
+              "| Edge, first half | Edge, second half |",
+              "|---|---|---|---|---|---|---|---|"]
+    for k, m in sorted(v.items(), key=lambda kv: -kv[1]['excess_cagr_pct']):
+        lines.append(
+            f"| {m['label']} | {m.get('sortino')} | {m.get('calmar')} | "
+            f"{m.get('worst_12m_pct')}% | {m.get('longest_underwater_months')} "
+            f"months | {m.get('beat_nifty_3y_windows_pct')}% | "
+            f"{m.get('excess_first_half_pct')}% | "
+            f"{m.get('excess_second_half_pct')}% |")
+    lines += ["", "_An edge that shows up in only one half of the period is "
+              "more likely luck or a passing market phase. 'Steadier stocks' "
+              "uses low price volatility as a stand-in for quality: profit "
+              "and debt history isn't free for ten years, so real quality is "
+              "graded live instead._"]
     lines += ["", "_\"Chance it's skill\" is the deflated Sharpe ratio of the "
               "monthly gap to NIFTY: the probability the edge is real after "
               "charging for every variant in this table. 95%+ is "

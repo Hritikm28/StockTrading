@@ -14,6 +14,10 @@ reports on what actually runs: the 15-stock paper portfolio.
   6. What happens next (pending orders, trend rule, next monthly review)
   7. Whole-share copy list for a chosen amount
   8. Whether the stock picking has shown an edge yet
+  9. Signal report card: which ideas are earning a vote
+ 10. Market dashboard (dashboard_email.py): health lights, sectors and
+     styles, the portfolio's risk X-ray, company filings, world markets,
+     plus a six-chart picture (market_dashboard.png)
 
 Reads only committed files (paper_trading/portfolio.json, the latest
 signals/*_summary.json, the shadow report). Writes weekly_email_body.html,
@@ -25,11 +29,13 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+import dashboard_email as de
 from costs import sell_cost
 from portfolio_book import (BOOK_FILE, EXIT_BAND_PCT, MOMFUND_NAME,
                             copy_plan, tax_estimate)
 
 SHADOW_FILE = Path('paper_trading/results/shadow_report.json')
+DASH_FILE = Path('paper_trading/results/dashboard.json')
 SIGNALS_DIR = Path('signals')
 BODY_FILE = Path('weekly_email_body.html')
 SUBJECT_FILE = Path('weekly_email_subject.txt')
@@ -114,7 +120,17 @@ def next_review(last_rebalance: Optional[str], today: date) -> str:
     return date(y, m, 1).strftime('%B %Y')
 
 
-def build(book: Dict, summary: Dict, shadow: Dict) -> Tuple[str, str]:
+def _voting() -> List[str]:
+    try:
+        from signal_decay_detector import get_live_alphas
+        return sorted(get_live_alphas())
+    except Exception:
+        return ['resid_mom']
+
+
+def build(book: Dict, summary: Dict, shadow: Dict, dash: Dict = None,
+          voting: List[str] = None) -> Tuple[str, str]:
+    dash = dash or {}
     nav = sorted(book.get('nav', []), key=lambda p: p['date'])
     if not nav:
         return ("Weekly portfolio: not started yet",
@@ -294,6 +310,21 @@ def build(book: Dict, summary: Dict, shadow: Dict) -> Tuple[str, str]:
                  f"</b> {shadow.get('verdict_text', '')} Judging it fairly needs "
                  "a few months of results, not a few weeks.</p>"]
 
+    # 9. Signal report card
+    if shadow.get('rank_ic'):
+        html.append(de.report_card_html(shadow, voting if voting is not None
+                                        else _voting()))
+
+    # 10. Market dashboard (context, not trading rules)
+    if dash.get('lights') or dash.get('risk'):
+        html.append(f"<h2 style='color:{NAVY};margin:24px 0 4px'>Market "
+                    "dashboard</h2><p style='font-size:13px;color:#555;margin:0'>"
+                    "The same kinds of checks big funds run, from free public "
+                    "data. The picture attached to this email shows them as "
+                    "charts.</p>")
+        html += [de.lights_html(dash), de.risk_html(dash), de.filings_html(dash),
+                 de.sectors_html(dash), de.market_detail_html(dash)]
+
     html.append("<p style='color:#888;font-size:12px'>Paper portfolio (practice "
                 "money), auto-generated weekly from the daily runs. This is a "
                 "research experiment, not investment advice.</p>")
@@ -364,9 +395,12 @@ def latest_summary(signals_dir: Path = SIGNALS_DIR) -> Dict:
 
 def main():
     book = _load(BOOK_FILE)
-    subject, body = build(book, latest_summary(), _load(SHADOW_FILE))
+    dash = _load(DASH_FILE)
+    subject, body = build(book, latest_summary(), _load(SHADOW_FILE), dash)
     if make_chart(book.get('nav', [])):
         print(f"Wrote {CHART_FILE}")
+    if dash and de.make_dashboard_chart(dash):
+        print(f"Wrote {de.CHART_FILE}")
     BODY_FILE.write_text(body, encoding='utf-8')
     SUBJECT_FILE.write_text(subject, encoding='utf-8')
     print(f"Wrote {BODY_FILE} and {SUBJECT_FILE}")

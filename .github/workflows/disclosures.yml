@@ -42,3 +42,8 @@ jobs:
 
       - name: Collect new filings
         run: python nse_disclosures.py
+
+      # Company announcements, board meetings (results dates) and corporate
+      # actions: these feeds also hold only a few hours of items.
+      - name: Collect company announcements
+        run: python market_data.py --filings || true

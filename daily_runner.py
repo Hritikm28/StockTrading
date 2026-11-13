@@ -276,9 +276,15 @@ class DailyRunner:
         self._sectors = None
 
     def _sector_of(self, symbol: str):
-        """Sector for the portfolio's per-sector cap: the hand-made map
-        first, then yfinance's sector from the quality cache for the ~40%
-        of the universe the map does not cover. None means uncapped."""
+        """Sector for the portfolio's per-sector cap.
+
+        NSE's own industry label from the NIFTY 500 list comes first: it
+        covers every candidate, and it is what the ten-year lab capped on.
+        Until 2026-11-13 only yfinance's sector and a hand-made map were
+        used; they had no label for five of the first fifteen picks, and an
+        unlabelled stock is uncapped, so six capital-goods companies (43% of
+        the money) got through a cap of four. Those two sources remain as
+        fallbacks. None still means uncapped."""
         if self._sectors is None:
             self._sectors = {}
             try:
@@ -291,6 +297,15 @@ class DailyRunner:
             try:
                 from sector_mapping import STOCK_SECTOR_MAP
                 self._sectors.update(STOCK_SECTOR_MAP)
+            except Exception:
+                pass
+            try:
+                from universe import fetch_nifty500_list
+                lst = fetch_nifty500_list()
+                for sym, industry in zip(lst['Symbol'].astype(str),
+                                         lst['Industry'].astype(str)):
+                    if industry.strip() and industry.strip().lower() != 'nan':
+                        self._sectors[f"{sym.strip().upper()}.NS"] = industry.strip()
             except Exception:
                 pass
         return self._sectors.get(symbol)

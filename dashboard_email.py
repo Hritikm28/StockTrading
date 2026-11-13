@@ -373,7 +373,8 @@ def make_dashboard_chart(d: Dict, path: Path = CHART_FILE) -> bool:
         if ax.lines:
             loc = mdates.AutoDateLocator(maxticks=6)
             ax.xaxis.set_major_locator(loc)
-            ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(loc))
+            ax.xaxis.set_major_formatter(
+                mdates.ConciseDateFormatter(loc, show_offset=False))
 
     ax = axes[0][0]
     n, m = xy(d.get('series_nifty')), xy(d.get('series_nifty_200dma'))

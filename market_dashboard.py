@@ -339,7 +339,8 @@ def portfolio_risk(book: Dict, closes: pd.DataFrame, nifty: pd.Series,
 
 ROUTINE_FILING = (r'newspaper|trading window|share certificate|regulation 74'
                   r'|investor grievance|registrar|duplicate|postal ballot'
-                  r'|esop|esos|allotment of securities|closure of')
+                  r'|esop|esos|allotment of securities|closure of'
+                  r'|analyst|investor meet|con\. call')
 
 
 def holdings_filings(filings: pd.DataFrame, symbols: List[str], as_of: date,

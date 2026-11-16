@@ -8,105 +8,105 @@
    "entry_date": "2026-11-05",
    "entry_price": 341.0,
    "cost_basis": 66600.47206423931,
-   "last_price": 377.8
+   "last_price": 361.9
   },
   "WELCORP.NS": {
    "shares": 26.831681717778594,
    "entry_date": "2026-11-05",
    "entry_price": 2462.0,
    "cost_basis": 63317.68079676692,
-   "last_price": 2230.4
+   "last_price": 2210.7
   },
   "TDPOWERSYS.NS": {
    "shares": 88.92674972706514,
    "entry_date": "2026-11-05",
    "entry_price": 732.2,
    "cost_basis": 59702.47437999261,
-   "last_price": 637.55
+   "last_price": 635.45
   },
   "ATHERENERG.NS": {
    "shares": 36.66731100991548,
    "entry_date": "2026-11-05",
    "entry_price": 1818.0,
    "cost_basis": 66874.18916628443,
-   "last_price": 1945.0
+   "last_price": 1939.6
   },
   "APARINDS.NS": {
    "shares": 4.058130542007719,
    "entry_date": "2026-11-05",
    "entry_price": 16150.0,
    "cost_basis": 62578.1976461883,
-   "last_price": 14667.0
+   "last_price": 14831.0
   },
   "SYRMA.NS": {
    "shares": 42.56764936133362,
    "entry_date": "2026-11-05",
    "entry_price": 1550.0,
    "cost_basis": 64851.39653145055,
-   "last_price": 1504.1
+   "last_price": 1455.0
   },
   "LAURUSLABS.NS": {
    "shares": 28.563174579012816,
    "entry_date": "2026-11-05",
    "entry_price": 2328.3,
    "cost_basis": 66974.06704556759,
-   "last_price": 2424.0
+   "last_price": 2220.0
   },
   "AZAD.NS": {
    "shares": 24.77764753340883,
    "entry_date": "2026-11-05",
    "entry_price": 2649.0,
    "cost_basis": 63952.35531183046,
-   "last_price": 2455.9
+   "last_price": 2398.3
   },
   "POWERINDIA.NS": {
    "shares": 2.2871181895542323,
    "entry_date": "2026-11-05",
    "entry_price": 29055.0,
    "cost_basis": 65363.25312451778,
-   "last_price": 31595.0
+   "last_price": 30885.0
   },
   "MCX.NS": {
    "shares": 19.760386529077472,
    "entry_date": "2026-11-05",
    "entry_price": 3360.0,
    "cost_basis": 68476.51457,
-   "last_price": 3720.0
+   "last_price": 3729.6
   },
   "CHENNPETRO.NS": {
    "shares": 41.79579198470801,
    "entry_date": "2026-11-05",
    "entry_price": 1590.0,
    "cost_basis": 63692.488423428666,
-   "last_price": 1428.2
+   "last_price": 1424.0
   },
   "BHEL.NS": {
    "shares": 155.4483660139798,
    "entry_date": "2026-11-05",
    "entry_price": 428.0,
    "cost_basis": 66088.12439992133,
-   "last_price": 436.3
+   "last_price": 430.1
   },
   "SONACOMS.NS": {
    "shares": 73.70938054715148,
    "entry_date": "2026-11-05",
    "entry_price": 900.0,
    "cost_basis": 66806.20085271259,
-   "last_price": 919.0
+   "last_price": 899.0
   },
   "STLTECH.NS": {
    "shares": 88.7267201547505,
    "entry_date": "2026-11-05",
    "entry_price": 790.0,
    "cost_basis": 65442.465923820826,
-   "last_price": 711.4000244140625
+   "last_price": 710.75
   },
   "HFCL.NS": {
    "shares": 301.57101975144906,
    "entry_date": "2026-11-05",
    "entry_price": 225.6,
    "cost_basis": 66234.623982438,
-   "last_price": 210.02000427246094
+   "last_price": 205.47000122070312
   }
  },
  "pending": [],
@@ -175,6 +175,14 @@
    "n_holdings": 15,
    "nifty": 25144.3,
    "momfund": 54985.15
+  },
+  {
+   "date": "2026-11-16",
+   "nav": 987188.18,
+   "cash": 23045.5,
+   "n_holdings": 15,
+   "nifty": 25291.1,
+   "momfund": 54136.6
   }
  ],
  "trades": [
@@ -451,7 +459,7 @@
  ],
  "exposure": 1.0,
  "day_open": {
-  "date": "2026-11-13",
+  "date": "2026-11-16",
   "exposure": 1.0,
   "last_rebalance": "2026-11"
  }

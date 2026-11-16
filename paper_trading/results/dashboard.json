@@ -1,10 +1,9 @@
 {
-"as_of": "2026-11-13",
+"as_of": "2026-11-16",
 "errors": [],
-"trend_vs_200dma": 4.8,
+"trend_vs_200dma": 5.41,
 "series_nifty": {
 "dates": [
-"2025-11-06",
 "2025-11-07",
 "2025-11-10",
 "2025-11-11",
@@ -255,10 +254,10 @@
 "2026-11-09",
 "2026-11-11",
 "2026-11-12",
-"2026-11-13"
+"2026-11-13",
+"2026-11-16"
 ],
 "values": [
-25509.7,
 25492.3,
 25574.3,
 25694.9,
@@ -509,12 +508,12 @@
 25044.7,
 25255.0,
 25299.3,
-25144.3
+25144.3,
+25291.1
 ]
 },
 "series_nifty_200dma": {
 "dates": [
-"2025-11-06",
 "2025-11-07",
 "2025-11-10",
 "2025-11-11",
@@ -765,10 +764,10 @@
 "2026-11-09",
 "2026-11-11",
 "2026-11-12",
-"2026-11-13"
+"2026-11-13",
+"2026-11-16"
 ],
 "values": [
-24364.3,
 24375.2,
 24387.1,
 24398.8,
@@ -1019,21 +1018,21 @@
 23995.8,
 23993.6,
 23992.2,
-23991.8
+23991.8,
+23992.4
 ]
 },
 "breadth": {
 "pct_above_200dma": 49.0,
-"pct_above_50dma": 59.0,
+"pct_above_50dma": 56.0,
 "pct_above_200dma_month_ago": 41.0,
-"new_highs": 17,
-"new_lows": 1,
-"advancers": 159,
-"decliners": 335,
+"new_highs": 14,
+"new_lows": 3,
+"advancers": 176,
+"decliners": 319,
 "n_stocks": 499,
 "series": {
 "dates": [
-"2025-11-10",
 "2025-11-11",
 "2025-11-12",
 "2025-11-13",
@@ -1284,10 +1283,10 @@
 "2026-11-10",
 "2026-11-11",
 "2026-11-12",
-"2026-11-13"
+"2026-11-13",
+"2026-11-16"
 ],
 "values": [
-60.5,
 61.1,
 62.6,
 61.4,
@@ -1538,20 +1537,21 @@
 47.0,
 50.2,
 52.4,
+48.6,
 48.6
 ]
 }
 },
 "valuation": {
 "NIFTY 50": {
-"pe": 20.49,
-"pe_percentile": 14.0,
+"pe": 20.6,
+"pe_percentile": 16.0,
 "pe_median": 22.12,
 "pe_low": 18.92,
 "pe_high": 33.61,
-"pb": 3.08,
-"div_yield": 1.4,
-"earnings_yield": 4.88,
+"pb": 3.1,
+"div_yield": 1.37,
+"earnings_yield": 4.85,
 "since": "2021-04-01"
 },
 "series": {
@@ -1849,7 +1849,8 @@
 "2026-10-25",
 "2026-11-01",
 "2026-11-08",
-"2026-11-15"
+"2026-11-15",
+"2026-11-22"
 ],
 "values": [
 33.6,
@@ -2145,39 +2146,39 @@
 19.05,
 19.3,
 20.65,
-20.49
+20.49,
+20.6
 ]
 },
 "Midcap 150": {
-"pe": 28.17,
-"pe_percentile": 40.0,
+"pe": 28.01,
+"pe_percentile": 39.0,
 "pe_median": 30.04,
 "pe_low": 21.59,
 "pe_high": 45.8,
-"pb": 3.97,
-"div_yield": 0.95,
-"earnings_yield": 3.55,
+"pb": 3.96,
+"div_yield": 0.93,
+"earnings_yield": 3.57,
 "since": "2021-04-01"
 },
 "Smallcap 250": {
-"pe": 32.55,
-"pe_percentile": 79.0,
+"pe": 32.06,
+"pe_percentile": 76.0,
 "pe_median": 28.91,
 "pe_low": 16.9,
 "pe_high": 48.15,
-"pb": 3.46,
+"pb": 3.42,
 "div_yield": 0.76,
-"earnings_yield": 3.07,
+"earnings_yield": 3.12,
 "since": "2021-04-01"
 }
 },
 "vix": {
-"level": 15.5,
-"percentile_1y": 69.0,
-"avg_1y": 14.39,
+"level": 15.68,
+"percentile_1y": 71.0,
+"avg_1y": 14.4,
 "series": {
 "dates": [
-"2025-11-06",
 "2025-11-07",
 "2025-11-10",
 "2025-11-11",
@@ -2428,10 +2429,10 @@
 "2026-11-09",
 "2026-11-11",
 "2026-11-12",
-"2026-11-13"
+"2026-11-13",
+"2026-11-16"
 ],
 "values": [
-12.41,
 12.56,
 12.3,
 12.49,
@@ -2682,7 +2683,8 @@
 17.42,
 17.56,
 16.62,
-15.5
+15.5,
+15.68
 ]
 }
 },
@@ -2690,223 +2692,222 @@
 {
 "name": "Govt banks",
 "group": "sector",
-"week": 8.14,
-"month": 13.65,
-"quarter": 5.0
-},
-{
-"name": "Real estate",
-"group": "sector",
-"week": 2.83,
-"month": 11.0,
-"quarter": 3.53
-},
-{
-"name": "NIFTY 50",
-"group": "size",
-"week": 2.48,
-"month": 10.66,
-"quarter": 2.9
-},
-{
-"name": "Infrastructure",
-"group": "sector",
-"week": 1.12,
-"month": 10.5,
-"quarter": 0.74
+"week": 8.04,
+"month": 13.93,
+"quarter": 5.87
 },
 {
 "name": "Financials",
 "group": "sector",
-"week": 4.72,
-"month": 10.41,
-"quarter": 5.41
+"week": 2.68,
+"month": 12.29,
+"quarter": 6.41
+},
+{
+"name": "NIFTY 50",
+"group": "size",
+"week": 1.04,
+"month": 11.8,
+"quarter": 3.67
 },
 {
 "name": "Banks",
 "group": "sector",
-"week": 5.64,
-"month": 10.01,
-"quarter": 5.44
-},
-{
-"name": "Auto",
-"group": "sector",
-"week": 1.19,
-"month": 10.0,
-"quarter": -4.88
-},
-{
-"name": "Value",
-"group": "style",
-"week": 2.55,
-"month": 9.85,
-"quarter": 2.48
+"week": 4.21,
+"month": 11.32,
+"quarter": 6.84
 },
 {
 "name": "Private banks",
 "group": "sector",
-"week": 4.88,
-"month": 9.71,
-"quarter": 9.38
+"week": 2.51,
+"month": 11.32,
+"quarter": 10.94
 },
 {
-"name": "Pharma",
+"name": "Infrastructure",
 "group": "sector",
-"week": 3.36,
-"month": 9.44,
-"quarter": 6.63
-},
-{
-"name": "Oil & gas",
-"group": "sector",
-"week": 0.85,
-"month": 9.3,
-"quarter": 0.16
+"week": 0.99,
+"month": 11.19,
+"quarter": 1.57
 },
 {
 "name": "Consumption",
 "group": "sector",
+"week": 1.17,
+"month": 10.88,
+"quarter": -0.34
+},
+{
+"name": "Real estate",
+"group": "sector",
 "week": 1.36,
-"month": 9.29,
-"quarter": -1.04
+"month": 10.46,
+"quarter": 1.17
+},
+{
+"name": "Value",
+"group": "style",
+"week": 0.95,
+"month": 10.29,
+"quarter": 3.24
 },
 {
 "name": "Healthcare",
 "group": "sector",
-"week": 2.47,
-"month": 8.65,
-"quarter": 3.61
+"week": 1.4,
+"month": 9.61,
+"quarter": 3.53
 },
 {
-"name": "Media",
+"name": "Auto",
 "group": "sector",
-"week": 3.63,
-"month": 7.72,
-"quarter": 12.02
+"week": -0.87,
+"month": 9.59,
+"quarter": -6.2
+},
+{
+"name": "Pharma",
+"group": "sector",
+"week": 0.57,
+"month": 9.18,
+"quarter": 5.29
+},
+{
+"name": "Oil & gas",
+"group": "sector",
+"week": 0.64,
+"month": 8.64,
+"quarter": 0.96
 },
 {
 "name": "NIFTY 500",
 "group": "size",
-"week": 2.19,
-"month": 7.44,
-"quarter": 0.26
-},
-{
-"name": "IT",
-"group": "sector",
-"week": -2.76,
-"month": 7.04,
-"quarter": 1.91
+"week": 1.26,
+"month": 7.78,
+"quarter": 0.4
 },
 {
 "name": "Low volatility",
 "group": "style",
-"week": 1.0,
-"month": 6.92,
-"quarter": -1.66
+"week": 0.47,
+"month": 7.6,
+"quarter": -0.8
+},
+{
+"name": "Media",
+"group": "sector",
+"week": 5.56,
+"month": 7.43,
+"quarter": 11.96
 },
 {
 "name": "High dividend",
 "group": "style",
-"week": 0.79,
-"month": 6.46,
-"quarter": -2.15
+"week": 0.37,
+"month": 6.29,
+"quarter": -2.04
+},
+{
+"name": "IT",
+"group": "sector",
+"week": -3.14,
+"month": 5.87,
+"quarter": 1.55
 },
 {
 "name": "High beta",
 "group": "style",
-"week": 2.91,
-"month": 5.87,
-"quarter": -2.05
-},
-{
-"name": "Next 50",
-"group": "size",
-"week": 1.54,
-"month": 5.73,
-"quarter": -2.51
-},
-{
-"name": "Quality",
-"group": "style",
-"week": -0.02,
-"month": 5.55,
-"quarter": -1.85
+"week": 1.94,
+"month": 5.62,
+"quarter": -3.06
 },
 {
 "name": "Consumer staples",
 "group": "sector",
-"week": 0.78,
-"month": 4.7,
-"quarter": -3.3
+"week": 1.97,
+"month": 5.38,
+"quarter": -2.31
+},
+{
+"name": "Next 50",
+"group": "size",
+"week": 1.16,
+"month": 5.06,
+"quarter": -2.99
+},
+{
+"name": "Quality",
+"group": "style",
+"week": -0.5,
+"month": 4.97,
+"quarter": -2.32
 },
 {
 "name": "Metals",
 "group": "sector",
-"week": 0.42,
-"month": 4.63,
-"quarter": -3.97
-},
-{
-"name": "Energy",
-"group": "sector",
-"week": 1.4,
-"month": 3.96,
-"quarter": -3.55
+"week": -1.73,
+"month": 3.76,
+"quarter": -4.41
 },
 {
 "name": "Midcap 150",
 "group": "size",
-"week": 1.75,
-"month": 3.9,
-"quarter": -3.57
+"week": 1.42,
+"month": 3.52,
+"quarter": -4.04
+},
+{
+"name": "Energy",
+"group": "sector",
+"week": 1.11,
+"month": 2.12,
+"quarter": -3.65
 },
 {
 "name": "Momentum",
 "group": "style",
-"week": 3.33,
-"month": 3.37,
-"quarter": -1.07
+"week": 2.0,
+"month": 2.09,
+"quarter": -1.94
 },
 {
 "name": "Smallcap 250",
 "group": "size",
-"week": 2.31,
-"month": 0.6,
-"quarter": -2.15
-},
-{
-"name": "Microcap 250",
-"group": "size",
-"week": 2.64,
-"month": -0.09,
-"quarter": -1.22
+"week": 2.21,
+"month": -0.34,
+"quarter": -3.24
 },
 {
 "name": "Alpha",
 "group": "style",
-"week": 3.04,
-"month": -0.57,
-"quarter": -3.51
+"week": 2.62,
+"month": -1.47,
+"quarter": -4.43
+},
+{
+"name": "Microcap 250",
+"group": "size",
+"week": 2.07,
+"month": -2.25,
+"quarter": -2.81
 },
 {
 "name": "Defence",
 "group": "sector",
-"week": 0.85,
-"month": -1.74,
-"quarter": -5.92
+"week": 0.71,
+"month": -3.24,
+"quarter": -8.34
 }
 ],
 "flows": {
-"as_of": "2026-11-13",
-"fii_5d": 47093.0,
-"fii_20d": 69649.0,
-"dii_5d": -30161.0,
-"dii_20d": -28296.0,
+"as_of": "2026-11-16",
+"fii_5d": 38207.0,
+"fii_20d": 76371.0,
+"dii_5d": -27711.0,
+"dii_20d": -34485.0,
 "series_fii": {
 "dates": [
-"2026-06-16",
 "2026-06-17",
 "2026-06-18",
 "2026-06-19",
@@ -3005,114 +3006,114 @@
 "2026-11-09",
 "2026-11-11",
 "2026-11-12",
-"2026-11-13"
+"2026-11-13",
+"2026-11-16"
 ],
 "values": [
--749.0,
--648.0,
--1673.0,
-3186.0,
-2550.0,
-2568.0,
-725.0,
-1109.0,
--242.0,
--2798.0,
--3939.0,
--4251.0,
--2895.0,
--2652.0,
--2259.0,
--296.0,
--829.0,
-1775.0,
--1288.0,
--2027.0,
--2763.0,
--6969.0,
--7345.0,
--5695.0,
--6514.0,
--9513.0,
--13406.0,
--15094.0,
--14339.0,
--11357.0,
--7734.0,
--7456.0,
--6534.0,
--4087.0,
--5031.0,
--4551.0,
--2576.0,
--2317.0,
--3320.0,
--3831.0,
--3322.0,
--5858.0,
--4206.0,
--3798.0,
--4381.0,
--4924.0,
--3742.0,
--2149.0,
--1646.0,
--1945.0,
--6984.0,
--14970.0,
--13827.0,
--7138.0,
--9484.0,
--12596.0,
--12316.0,
--12439.0,
--13022.0,
--13461.0,
--14391.0,
--17369.0,
--19402.0,
--22611.0,
--22011.0,
--22587.0,
--26397.0,
--24780.0,
--29807.0,
--33501.0,
--38854.0,
--48835.0,
--58983.0,
--68467.0,
--73166.0,
--76128.0,
--82249.0,
--95193.0,
--96901.0,
--98206.0,
--100064.0,
--105349.0,
--104183.0,
--105332.0,
--104309.0,
--107768.0,
--106880.0,
--108343.0,
--104103.0,
--103231.0,
--104174.0,
--100576.0,
--97461.0,
--90624.0,
--75650.0,
--61900.0,
--54688.0,
--42124.0,
--34294.0,
--28557.0
+102.0,
+-924.0,
+3935.0,
+3300.0,
+3317.0,
+1474.0,
+1858.0,
+508.0,
+-2049.0,
+-3190.0,
+-3501.0,
+-2146.0,
+-1903.0,
+-1510.0,
+453.0,
+-80.0,
+2524.0,
+-538.0,
+-1278.0,
+-2014.0,
+-6220.0,
+-6596.0,
+-4946.0,
+-5765.0,
+-8764.0,
+-12657.0,
+-14345.0,
+-13590.0,
+-10608.0,
+-6985.0,
+-6707.0,
+-5785.0,
+-3338.0,
+-4282.0,
+-3801.0,
+-1827.0,
+-1568.0,
+-2571.0,
+-3081.0,
+-2573.0,
+-5108.0,
+-3457.0,
+-3049.0,
+-3632.0,
+-4175.0,
+-2993.0,
+-1400.0,
+-897.0,
+-1195.0,
+-6235.0,
+-14221.0,
+-13078.0,
+-6389.0,
+-8735.0,
+-11847.0,
+-11567.0,
+-11690.0,
+-12273.0,
+-12711.0,
+-13642.0,
+-16620.0,
+-18653.0,
+-21861.0,
+-21262.0,
+-21838.0,
+-25648.0,
+-24031.0,
+-29058.0,
+-32752.0,
+-38105.0,
+-48085.0,
+-58234.0,
+-67718.0,
+-72417.0,
+-75378.0,
+-81500.0,
+-94443.0,
+-96152.0,
+-97457.0,
+-99314.0,
+-104600.0,
+-103434.0,
+-104583.0,
+-103560.0,
+-107019.0,
+-106131.0,
+-107594.0,
+-103353.0,
+-102482.0,
+-103425.0,
+-99827.0,
+-96712.0,
+-89875.0,
+-74900.0,
+-61151.0,
+-53938.0,
+-41375.0,
+-33545.0,
+-27808.0,
+-22943.0
 ]
 },
 "series_dii": {
 "dates": [
-"2026-06-16",
 "2026-06-17",
 "2026-06-18",
 "2026-06-19",
@@ -3211,15 +3212,15 @@
 "2026-11-09",
 "2026-11-11",
 "2026-11-12",
-"2026-11-13"
+"2026-11-13",
+"2026-11-16"
 ],
 "values": [
-0.0,
 1561.0,
 5078.0,
 3919.0,
 4954.0,
-5635.0,
+5634.0,
 9272.0,
 15020.0,
 17821.0,
@@ -3227,7 +3228,7 @@
 27823.0,
 29607.0,
 27653.0,
-31445.0,
+31444.0,
 31061.0,
 31851.0,
 33909.0,
@@ -3268,7 +3269,7 @@
 112705.0,
 114552.0,
 117365.0,
-122343.0,
+122342.0,
 131273.0,
 131839.0,
 133189.0,
@@ -3292,7 +3293,7 @@
 209048.0,
 213644.0,
 224347.0,
-227393.0,
+227392.0,
 229832.0,
 232502.0,
 235822.0,
@@ -3313,13 +3314,14 @@
 218555.0,
 210121.0,
 203790.0,
-201536.0
+201536.0,
+198017.0
 ]
 }
 },
 "positioning": {
-"fii_long_pct": 35.0,
-"fii_long_pct_month_ago": 10.0,
+"fii_long_pct": 34.0,
+"fii_long_pct_month_ago": 9.0,
 "fii_percentile_1y": 99.0,
 "series_fii_long_pct": {
 "dates": [
@@ -3567,7 +3569,8 @@
 "2026-11-09",
 "2026-11-11",
 "2026-11-12",
-"2026-11-13"
+"2026-11-13",
+"2026-11-16"
 ],
 "values": [
 12.0,
@@ -3814,125 +3817,126 @@
 26.8,
 31.0,
 37.0,
-34.6
+34.6,
+34.1
 ]
 },
-"retail_long_pct": 61.0,
-"retail_long_pct_month_ago": 83.0,
-"pcr": 0.98,
-"pcr_avg_20d": 1.14,
-"futures_premium_pct": 0.11
+"retail_long_pct": 60.0,
+"retail_long_pct_month_ago": 85.0,
+"pcr": 1.03,
+"pcr_avg_20d": 1.12,
+"futures_premium_pct": 0.01
 },
 "global": {
 "rows": [
 {
 "symbol": "^GSPC",
 "name": "US shares (S&P 500)",
-"last": 7561.73,
-"week": 2.51,
-"month": -2.35,
+"last": 7416.59,
+"week": -1.77,
+"month": -3.17,
 "points": false,
-"as_of": "2026-11-13"
+"as_of": "2026-11-16"
 },
 {
 "symbol": "^IXIC",
 "name": "US tech shares (Nasdaq)",
-"last": 25136.27,
-"week": 2.27,
-"month": -5.9,
+"last": 24509.76,
+"week": -2.94,
+"month": -6.24,
 "points": false,
-"as_of": "2026-11-13"
+"as_of": "2026-11-16"
 },
 {
 "symbol": "^VIX",
 "name": "US fear gauge (VIX)",
-"last": 19.17,
-"week": -6.47,
-"month": 2.71,
+"last": 22.91,
+"week": 2.99,
+"month": 2.92,
 "points": true,
-"as_of": "2026-11-13"
+"as_of": "2026-11-16"
 },
 {
 "symbol": "^TNX",
 "name": "US 10-year interest rate",
-"last": 5.15,
-"week": 0.3,
-"month": 0.07,
+"last": 5.12,
+"week": 0.26,
+"month": 0.02,
 "points": true,
-"as_of": "2026-11-13"
+"as_of": "2026-11-16"
 },
 {
 "symbol": "DX-Y.NYB",
 "name": "US dollar index",
-"last": 103.43,
-"week": 1.1,
-"month": 1.4,
+"last": 103.59,
+"week": 1.9,
+"month": 1.71,
 "points": false,
-"as_of": "2026-11-13"
+"as_of": "2026-11-16"
 },
 {
 "symbol": "INR=X",
 "name": "Rupees per US dollar",
-"last": 94.23,
-"week": -0.24,
-"month": -0.97,
+"last": 93.91,
+"week": 0.01,
+"month": -0.65,
 "points": false,
-"as_of": "2026-11-13"
+"as_of": "2026-11-16"
 },
 {
 "symbol": "BZ=F",
 "name": "Crude oil (Brent)",
-"last": 96.08,
-"week": -2.28,
-"month": -9.29,
+"last": 92.21,
+"week": -0.39,
+"month": -16.07,
 "points": false,
-"as_of": "2026-11-13"
+"as_of": "2026-11-16"
 },
 {
 "symbol": "GC=F",
 "name": "Gold",
-"last": 3879.9,
-"week": -4.79,
-"month": -6.96,
+"last": 3857.3,
+"week": -6.25,
+"month": -7.74,
 "points": false,
-"as_of": "2026-11-13"
+"as_of": "2026-11-16"
 },
 {
 "symbol": "^N225",
 "name": "Japan shares (Nikkei)",
-"last": 60819.36,
-"week": -0.42,
-"month": -10.27,
+"last": 61142.35,
+"week": 6.46,
+"month": -9.75,
 "points": false,
-"as_of": "2026-11-12"
+"as_of": "2026-11-13"
 },
 {
 "symbol": "^HSI",
 "name": "Hong Kong shares (Hang Seng)",
-"last": 24008.55,
-"week": -3.18,
-"month": -1.38,
+"last": 23637.6,
+"week": -3.45,
+"month": -2.78,
 "points": false,
-"as_of": "2026-11-12"
+"as_of": "2026-11-13"
 }
 ],
-"us_vs_200dma_pct": 3.02,
-"us_vix": 19.17
+"us_vs_200dma_pct": 1.01,
+"us_vix": 22.91
 },
 "risk": {
-"nav": 1005344.0,
+"nav": 987188.0,
 "invested_pct": 98.0,
 "beta": 0.79,
 "corr_nifty": 0.46,
-"vol_pct": 24.4,
+"vol_pct": 24.5,
 "nifty_vol_pct": 14.3,
 "var95_pct": 2.31,
-"var95_rupees": 23238.0,
-"bad_day_avg_pct": 3.04,
-"worst_day_pct": -4.16,
+"var95_rupees": 22833.0,
+"bad_day_avg_pct": 3.05,
+"worst_day_pct": -4.19,
 "worst_day": "2026-09-15",
 "avg_correlation": 0.24,
-"top_weight_pct": 7.3,
+"top_weight_pct": 7.5,
 "sectors": [
 {
 "name": "Capital Goods",
@@ -3951,19 +3955,19 @@
 "pct": 7.0
 },
 {
-"name": "Healthcare",
+"name": "Financial Services",
 "pct": 7.0
 },
 {
-"name": "Financial Services",
-"pct": 7.0
+"name": "Healthcare",
+"pct": 6.0
 },
 {
 "name": "Oil Gas & Consumable Fuels",
 "pct": 6.0
 }
 ],
-"if_nifty_falls_10_pct": -7.93,
+"if_nifty_falls_10_pct": -7.86,
 "replay_worst_week": {
 "from": "2026-03-09",
 "to": "2026-03-13",
@@ -3975,78 +3979,78 @@
 "contributors": [
 {
 "symbol": "POWERINDIA",
-"rupees": 6898.0,
-"pct_of_start": 0.69
-},
-{
-"symbol": "CUPID",
-"rupees": 6724.0,
-"pct_of_start": 0.67
+"rupees": 5274.0,
+"pct_of_start": 0.53
 },
 {
 "symbol": "MCX",
-"rupees": 5032.0,
-"pct_of_start": 0.5
+"rupees": 5222.0,
+"pct_of_start": 0.52
 },
 {
 "symbol": "ATHERENERG",
-"rupees": 4444.0,
-"pct_of_start": 0.44
+"rupees": 4246.0,
+"pct_of_start": 0.42
 },
 {
-"symbol": "LAURUSLABS",
-"rupees": 2263.0,
-"pct_of_start": 0.23
+"symbol": "CUPID",
+"rupees": 3638.0,
+"pct_of_start": 0.36
 },
 {
 "symbol": "BHEL",
-"rupees": 1734.0,
-"pct_of_start": 0.17
+"rupees": 770.0,
+"pct_of_start": 0.08
 },
 {
 "symbol": "SONACOMS",
-"rupees": 933.0,
-"pct_of_start": 0.09
-},
-{
-"symbol": "SYRMA",
-"rupees": -825.0,
-"pct_of_start": -0.08
+"rupees": -541.0,
+"pct_of_start": -0.05
 },
 {
 "symbol": "STLTECH",
-"rupees": -2322.0,
-"pct_of_start": -0.23
+"rupees": -2380.0,
+"pct_of_start": -0.24
 },
 {
-"symbol": "HFCL",
-"rupees": -2899.0,
+"symbol": "APARINDS",
+"rupees": -2392.0,
+"pct_of_start": -0.24
+},
+{
+"symbol": "SYRMA",
+"rupees": -2915.0,
 "pct_of_start": -0.29
 },
 {
 "symbol": "TDPOWERSYS",
-"rupees": -3007.0,
-"pct_of_start": -0.3
+"rupees": -3194.0,
+"pct_of_start": -0.32
 },
 {
-"symbol": "APARINDS",
-"rupees": -3058.0,
-"pct_of_start": -0.31
-},
-{
-"symbol": "AZAD",
-"rupees": -3101.0,
-"pct_of_start": -0.31
+"symbol": "LAURUSLABS",
+"rupees": -3564.0,
+"pct_of_start": -0.36
 },
 {
 "symbol": "WELCORP",
-"rupees": -3472.0,
-"pct_of_start": -0.35
+"rupees": -4001.0,
+"pct_of_start": -0.4
 },
 {
 "symbol": "CHENNPETRO",
-"rupees": -4000.0,
-"pct_of_start": -0.4
+"rupees": -4175.0,
+"pct_of_start": -0.42
+},
+{
+"symbol": "HFCL",
+"rupees": -4271.0,
+"pct_of_start": -0.43
+},
+{
+"symbol": "AZAD",
+"rupees": -4528.0,
+"pct_of_start": -0.45
 }
 ],
 "realised_rupees": 0.0,
@@ -4055,6 +4059,12 @@
 },
 "filings": {
 "news": [
+{
+"date": "2026-11-16",
+"symbol": "BHEL",
+"text": "Record Date Updates",
+"link": "https://nsearchives.nseindia.com/content/debt/WDM/BHELCORPFIN_16112026102036_BHEL_CP-Record_Date__Dec_2026.pdf"
+},
 {
 "date": "2026-11-13",
 "symbol": "HFCL",
@@ -4074,7 +4084,7 @@
 {
 "name": "Trend",
 "status": "green",
-"text": "NIFTY is 4.8% above its 200-day average."
+"text": "NIFTY is 5.4% above its 200-day average."
 },
 {
 "name": "Breadth",
@@ -4084,27 +4094,27 @@
 {
 "name": "Price tag",
 "status": "green",
-"text": "NIFTY costs 20.5 times its yearly profits, pricier than on 14% of days since 2021 (cheaper than usual)."
+"text": "NIFTY costs 20.6 times its yearly profits, pricier than on 16% of days since 2021 (cheaper than usual)."
 },
 {
 "name": "Fear",
 "status": "amber",
-"text": "The fear gauge (India VIX) is 15.5: a little nervous."
+"text": "The fear gauge (India VIX) is 15.7: a little nervous."
 },
 {
 "name": "Foreign money",
 "status": "green",
-"text": "Foreign investors bought a net \u20b969,649 crore of shares over the last 20 trading days."
+"text": "Foreign investors bought a net \u20b976,371 crore of shares over the last 20 trading days."
 },
 {
 "name": "Foreign bets",
 "status": "amber",
-"text": "35% of foreign investors' index-futures bets are on the market rising (it was 10% a month ago)."
+"text": "34% of foreign investors' index-futures bets are on the market rising (it was 9% a month ago)."
 },
 {
 "name": "World",
-"status": "green",
-"text": "US shares are 3.0% above their 200-day average; the US fear gauge is 19.2."
+"status": "amber",
+"text": "US shares are 1.0% above their 200-day average; the US fear gauge is 22.9."
 }
 ]
 }

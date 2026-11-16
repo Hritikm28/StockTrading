@@ -464,7 +464,7 @@
   "sector": "Industrials"
  },
  "BAGMANE.NS": {
-  "fetched": "2026-11-04",
+  "fetched": "2026-11-16",
   "missing": true
  },
  "BAJAJ-AUTO.NS": {
@@ -676,7 +676,7 @@
   "sector": "Healthcare"
  },
  "BIRET.NS": {
-  "fetched": "2026-11-05",
+  "fetched": "2026-11-16",
   "missing": true
  },
  "BLS.NS": {
@@ -1208,7 +1208,7 @@
   "sector": "Healthcare"
  },
  "DUMMYHEG.NS": {
-  "fetched": "2026-11-07",
+  "fetched": "2026-11-16",
   "missing": true
  },
  "ECLERX.NS": {
@@ -1268,7 +1268,7 @@
   "sector": "Consumer Defensive"
  },
  "EMBASSY.NS": {
-  "fetched": "2026-11-07",
+  "fetched": "2026-11-16",
   "missing": true
  },
  "EMCURE.NS": {
@@ -1832,8 +1832,12 @@
   "sector": "Financial Services"
  },
  "IDEA.NS": {
-  "fetched": "2026-11-09",
-  "missing": true
+  "de": null,
+  "fetched": "2026-11-16",
+  "pm": 0.80053,
+  "roa": -0.00806,
+  "roe": null,
+  "sector": "Communication Services"
  },
  "IDFCFIRSTB.NS": {
   "de": null,
@@ -3806,5 +3810,281 @@
  "TTML.NS": {
   "fetched": "2026-11-13",
   "missing": true
+ },
+ "TVSMOTOR.NS": {
+  "de": 320.877,
+  "fetched": "2026-11-16",
+  "pm": 0.05819,
+  "roa": 0.08831,
+  "roe": 0.3723,
+  "sector": "Consumer Cyclical"
+ },
+ "UBL.NS": {
+  "de": 24.508,
+  "fetched": "2026-11-16",
+  "pm": 0.048800003,
+  "roa": 0.04074,
+  "roe": 0.108610004,
+  "sector": "Consumer Defensive"
+ },
+ "UCOBANK.NS": {
+  "de": null,
+  "fetched": "2026-11-16",
+  "pm": 0.22572,
+  "roa": 0.00756,
+  "roe": 0.08898,
+  "sector": "Financial Services"
+ },
+ "ULTRACEMCO.NS": {
+  "de": 37.694,
+  "fetched": "2026-11-16",
+  "pm": 0.092089996,
+  "roa": 0.05953,
+  "roe": 0.114980005,
+  "sector": "Basic Materials"
+ },
+ "UNIONBANK.NS": {
+  "de": null,
+  "fetched": "2026-11-16",
+  "pm": 0.41458,
+  "roa": 0.0141199995,
+  "roe": 0.16291,
+  "sector": "Financial Services"
+ },
+ "UNITDSPR.NS": {
+  "de": 4.743,
+  "fetched": "2026-11-16",
+  "pm": 0.14689,
+  "roa": 0.087519996,
+  "roe": 0.19247,
+  "sector": "Consumer Defensive"
+ },
+ "UNOMINDA.NS": {
+  "de": 37.171,
+  "fetched": "2026-11-16",
+  "pm": 0.0584,
+  "roa": 0.07748,
+  "roe": 0.19396,
+  "sector": "Consumer Cyclical"
+ },
+ "UPL.NS": {
+  "de": 82.669,
+  "fetched": "2026-11-16",
+  "pm": 0.03586,
+  "roa": 0.042280003,
+  "roe": 0.05467,
+  "sector": "Basic Materials"
+ },
+ "URBANCO.NS": {
+  "de": 7.15,
+  "fetched": "2026-11-16",
+  "pm": -0.24349001,
+  "roa": -0.11111,
+  "roe": -0.21533,
+  "sector": "Technology"
+ },
+ "USHAMART.NS": {
+  "de": 6.922,
+  "fetched": "2026-11-16",
+  "pm": 0.13215,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "UTIAMC.NS": {
+  "de": 3.129,
+  "fetched": "2026-11-16",
+  "pm": 0.27998,
+  "roa": 0.098400004,
+  "roe": 0.10973,
+  "sector": "Financial Services"
+ },
+ "VAML.NS": {
+  "de": 105.473,
+  "fetched": "2026-11-16",
+  "pm": 0.50109,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "VBL.NS": {
+  "de": 15.869,
+  "fetched": "2026-11-16",
+  "pm": 0.13446,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Defensive"
+ },
+ "VEDL.NS": {
+  "de": 134.123,
+  "fetched": "2026-11-16",
+  "pm": 0.22863,
+  "roa": 0.112849995,
+  "roe": 0.48202,
+  "sector": "Basic Materials"
+ },
+ "VEDPOWER.NS": {
+  "de": 64.8,
+  "fetched": "2026-11-16",
+  "pm": 0.0060900003,
+  "roa": 0.03827,
+  "roe": 0.00875,
+  "sector": "Utilities"
+ },
+ "VIJAYA.NS": {
+  "de": 48.116,
+  "fetched": "2026-11-16",
+  "pm": 0.22358999,
+  "roa": 0.1169,
+  "roe": 0.21190001,
+  "sector": "Healthcare"
+ },
+ "VISL.NS": {
+  "de": 78.094,
+  "fetched": "2026-11-16",
+  "pm": 1.72712,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "VMM.NS": {
+  "de": 26.886,
+  "fetched": "2026-11-16",
+  "pm": 0.06452,
+  "roa": 0.066750005,
+  "roe": 0.12133,
+  "sector": "Consumer Cyclical"
+ },
+ "VOGL.NS": {
+  "de": 15.154,
+  "fetched": "2026-11-16",
+  "pm": 4.70414,
+  "roa": null,
+  "roe": null,
+  "sector": "Basic Materials"
+ },
+ "VOLTAS.NS": {
+  "de": 23.099,
+  "fetched": "2026-11-16",
+  "pm": 0.030480001,
+  "roa": 0.036760002,
+  "roe": 0.06966,
+  "sector": "Consumer Cyclical"
+ },
+ "VTL.NS": {
+  "de": 16.15,
+  "fetched": "2026-11-16",
+  "pm": 0.09628,
+  "roa": 0.05574,
+  "roe": 0.09658,
+  "sector": "Consumer Cyclical"
+ },
+ "WAAREEENER.NS": {
+  "de": 30.592,
+  "fetched": "2026-11-16",
+  "pm": 0.11724,
+  "roa": 0.10141,
+  "roe": 0.26746,
+  "sector": "Technology"
+ },
+ "WELCORP.NS": {
+  "de": 9.947,
+  "fetched": "2026-11-16",
+  "pm": 0.13477999,
+  "roa": 0.06885,
+  "roe": 0.24476999,
+  "sector": "Basic Materials"
+ },
+ "WELSPUNLIV.NS": {
+  "de": 47.296,
+  "fetched": "2026-11-16",
+  "pm": 0.04198,
+  "roa": 0.04064,
+  "roe": 0.088479996,
+  "sector": "Consumer Cyclical"
+ },
+ "WHIRLPOOL.NS": {
+  "de": 7.748,
+  "fetched": "2026-11-16",
+  "pm": 0.02743,
+  "roa": 0.018129999,
+  "roe": 0.056420002,
+  "sector": "Consumer Cyclical"
+ },
+ "WIPRO.NS": {
+  "de": 27.753,
+  "fetched": "2026-11-16",
+  "pm": 0.13578,
+  "roa": 0.07264,
+  "roe": 0.15939,
+  "sector": "Technology"
+ },
+ "WOCKPHARMA.NS": {
+  "de": 40.691,
+  "fetched": "2026-11-16",
+  "pm": 0.10677,
+  "roa": 0.041729998,
+  "roe": 0.07806,
+  "sector": "Healthcare"
+ },
+ "YESBANK.NS": {
+  "de": null,
+  "fetched": "2026-11-16",
+  "pm": 0.2448,
+  "roa": 0.008880001,
+  "roe": 0.08173,
+  "sector": "Financial Services"
+ },
+ "ZEEL.NS": {
+  "de": 0.523,
+  "fetched": "2026-11-16",
+  "pm": 0.02098,
+  "roa": -0.00206,
+  "roe": 0.01426,
+  "sector": "Communication Services"
+ },
+ "ZENSARTECH.NS": {
+  "de": 1.325,
+  "fetched": "2026-11-16",
+  "pm": 0.13129,
+  "roa": 0.09057,
+  "roe": 0.17148,
+  "sector": "Technology"
+ },
+ "ZENTEC.NS": {
+  "de": 1.392,
+  "fetched": "2026-11-16",
+  "pm": 0.24957001,
+  "roa": 0.07429,
+  "roe": 0.12149,
+  "sector": "Industrials"
+ },
+ "ZFCVINDIA.NS": {
+  "de": 1.485,
+  "fetched": "2026-11-16",
+  "pm": 0.118599996,
+  "roa": null,
+  "roe": null,
+  "sector": "Consumer Cyclical"
+ },
+ "ZOMATO.NS": {
+  "fetched": "2026-11-16",
+  "missing": true
+ },
+ "ZYDUSLIFE.NS": {
+  "de": 46.059,
+  "fetched": "2026-11-16",
+  "pm": 0.1382,
+  "roa": 0.06373,
+  "roe": 0.14723,
+  "sector": "Healthcare"
+ },
+ "ZYDUSWELL.NS": {
+  "de": 53.613,
+  "fetched": "2026-11-16",
+  "pm": 0.049089998,
+  "roa": 0.02644,
+  "roe": 0.042379998,
+  "sector": "Consumer Defensive"
  }
 }

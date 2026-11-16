@@ -1,52 +1,52 @@
 {
-  "generated": "2026-11-13",
+  "generated": "2026-11-16",
   "since": "2026-07-01",
   "hold_days": 20,
   "top_n": 15,
   "cost_pct": 0.4,
   "window": {
     "first_signal": "2026-07-01",
-    "last_signal": "2026-11-12",
-    "signal_days": 94,
-    "gate_open_days": 5,
-    "last_price_date": "2026-11-13",
+    "last_signal": "2026-11-13",
+    "signal_days": 95,
+    "gate_open_days": 6,
+    "last_price_date": "2026-11-16",
     "stocks_with_prices": 238
   },
   "shadow_portfolio": {
-    "top_picks_net_pct": -1.47,
-    "nifty_same_timing_pct": 3.75,
-    "excess_vs_nifty_pct": -5.22,
-    "nifty_buy_and_hold_pct": 4.74,
-    "live_gated_pct": 0.18,
+    "top_picks_net_pct": -2.28,
+    "nifty_same_timing_pct": 4.34,
+    "excess_vs_nifty_pct": -6.62,
+    "nifty_buy_and_hold_pct": 5.35,
+    "live_gated_pct": -0.32,
     "max_drawdown_pct": -10.45,
     "nifty_max_drawdown_pct": -9.95,
-    "avg_exposure_pct": 84.0
+    "avg_exposure_pct": 84.1
   },
   "cohorts": {
-    "n_matured": 71,
-    "avg_net_excess_pct": -0.73,
-    "beat_nifty_rate_pct": 47.9,
-    "t_stat": -0.38,
+    "n_matured": 72,
+    "avg_net_excess_pct": -0.87,
+    "beat_nifty_rate_pct": 47.2,
+    "t_stat": -0.43,
     "n_independent": 3
   },
   "top_vs_bottom": {
-    "avg_spread_pct": 1.99,
-    "pct_positive": 71.8,
-    "t_stat": 1.0
+    "avg_spread_pct": 1.94,
+    "pct_positive": 70.8,
+    "t_stat": 0.99
   },
   "rank_ic": {
     "composite": {
       "5d": {
-        "ic": 0.0379,
-        "t_stat": 1.08,
-        "n_dates": 86,
-        "pct_positive": 57.0
+        "ic": 0.0382,
+        "t_stat": 1.1,
+        "n_dates": 87,
+        "pct_positive": 57.5
       },
       "20d": {
-        "ic": 0.051,
-        "t_stat": 0.72,
-        "n_dates": 71,
-        "pct_positive": 57.7
+        "ic": 0.0491,
+        "t_stat": 0.7,
+        "n_dates": 72,
+        "pct_positive": 56.9
       }
     },
     "bulk_deal": {
@@ -81,16 +81,16 @@
     },
     "delivery_pct": {
       "5d": {
-        "ic": 0.034,
-        "t_stat": 1.18,
-        "n_dates": 86,
-        "pct_positive": 64.0
+        "ic": 0.0338,
+        "t_stat": 1.19,
+        "n_dates": 87,
+        "pct_positive": 64.4
       },
       "20d": {
-        "ic": 0.0283,
-        "t_stat": 0.49,
-        "n_dates": 71,
-        "pct_positive": 56.3
+        "ic": 0.0285,
+        "t_stat": 0.5,
+        "n_dates": 72,
+        "pct_positive": 56.9
       },
       "coverage_pct": 62.9
     },
@@ -126,16 +126,16 @@
     },
     "hi52": {
       "5d": {
-        "ic": -0.0041,
-        "t_stat": -0.11,
-        "n_dates": 86,
-        "pct_positive": 54.7
+        "ic": -0.0029,
+        "t_stat": -0.08,
+        "n_dates": 87,
+        "pct_positive": 55.2
       },
       "20d": {
-        "ic": -0.0175,
-        "t_stat": -0.22,
-        "n_dates": 71,
-        "pct_positive": 45.1
+        "ic": -0.0162,
+        "t_stat": -0.21,
+        "n_dates": 72,
+        "pct_positive": 45.8
       },
       "coverage_pct": 47.9
     },
@@ -156,25 +156,25 @@
     },
     "mean_rev": {
       "5d": {
-        "ic": 0.0322,
-        "t_stat": 1.07,
-        "n_dates": 86,
-        "pct_positive": 58.1
+        "ic": 0.0329,
+        "t_stat": 1.11,
+        "n_dates": 87,
+        "pct_positive": 58.6
       },
       "20d": {
-        "ic": 0.0381,
+        "ic": 0.0377,
         "t_stat": 0.45,
-        "n_dates": 71,
-        "pct_positive": 54.9
+        "n_dates": 72,
+        "pct_positive": 55.6
       },
       "coverage_pct": 33.4
     },
     "mom_riskadj": {
       "5d": {
-        "ic": 0.0192,
+        "ic": 0.046,
         "t_stat": null,
-        "n_dates": 2,
-        "pct_positive": 50.0
+        "n_dates": 3,
+        "pct_positive": 66.7
       },
       "20d": {
         "ic": null,
@@ -182,28 +182,28 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 4.8
+      "coverage_pct": 5.4
     },
     "momentum": {
       "5d": {
-        "ic": 0.0271,
-        "t_stat": 0.68,
-        "n_dates": 86,
-        "pct_positive": 54.7
+        "ic": 0.0276,
+        "t_stat": 0.7,
+        "n_dates": 87,
+        "pct_positive": 55.2
       },
       "20d": {
-        "ic": 0.0477,
+        "ic": 0.0476,
         "t_stat": 0.48,
-        "n_dates": 71,
-        "pct_positive": 47.9
+        "n_dates": 72,
+        "pct_positive": 48.6
       },
       "coverage_pct": 62.0
     },
     "pead": {
       "5d": {
-        "ic": 0.0701,
+        "ic": 0.0661,
         "t_stat": null,
-        "n_dates": 2,
+        "n_dates": 3,
         "pct_positive": 100.0
       },
       "20d": {
@@ -212,7 +212,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 2.6
+      "coverage_pct": 3.0
     },
     "pledge": {
       "5d": {
@@ -231,10 +231,10 @@
     },
     "quality": {
       "5d": {
-        "ic": 0.1149,
+        "ic": 0.1614,
         "t_stat": null,
-        "n_dates": 2,
-        "pct_positive": 50.0
+        "n_dates": 3,
+        "pct_positive": 66.7
       },
       "20d": {
         "ic": null,
@@ -242,7 +242,7 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 2.4
+      "coverage_pct": 2.9
     },
     "resid_mom": {
       "5d": {
@@ -257,24 +257,24 @@
         "n_dates": 0,
         "pct_positive": null
       },
-      "coverage_pct": 2.6
+      "coverage_pct": 3.2
     },
     "sector_mom": {
       "5d": {
-        "ic": -0.062,
-        "t_stat": -1.39,
-        "n_dates": 86,
-        "pct_positive": 38.4
+        "ic": -0.0666,
+        "t_stat": -1.47,
+        "n_dates": 87,
+        "pct_positive": 37.9
       },
       "20d": {
-        "ic": -0.1178,
-        "t_stat": -1.37,
-        "n_dates": 71,
-        "pct_positive": 23.9
+        "ic": -0.1182,
+        "t_stat": -1.4,
+        "n_dates": 72,
+        "pct_positive": 23.6
       },
-      "coverage_pct": 29.2
+      "coverage_pct": 29.3
     }
   },
   "verdict": "NO_EDGE",
-  "verdict_text": "Top-15 picks trailed NIFTY by 0.73% per 20-day hold after costs. The ranking is not adding value over simply holding the index."
+  "verdict_text": "Top-15 picks trailed NIFTY by 0.87% per 20-day hold after costs. The ranking is not adding value over simply holding the index."
 }

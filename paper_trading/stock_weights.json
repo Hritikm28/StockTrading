@@ -994,31 +994,33 @@
     }
   },
   "HFCL.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 0.963,
-      "fii_dii": 0.963,
-      "mean_rev": 0.963,
-      "sector_mom": 0.963
+      "momentum": 0.931,
+      "fii_dii": 0.931,
+      "mean_rev": 0.931,
+      "sector_mom": 0.931,
+      "hi52": 0.963
     },
     "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "mean_rev": 1,
-      "sector_mom": 1
+      "momentum": 2,
+      "fii_dii": 2,
+      "mean_rev": 2,
+      "sector_mom": 2,
+      "hi52": 1
     }
   },
   "STLTECH.NS": {
-    "n_trades": 1,
+    "n_trades": 2,
     "multipliers": {
-      "momentum": 0.963,
-      "fii_dii": 0.963,
-      "mean_rev": 0.963
+      "momentum": 0.931,
+      "fii_dii": 0.931,
+      "mean_rev": 0.931
     },
     "sig_counts": {
-      "momentum": 1,
-      "fii_dii": 1,
-      "mean_rev": 1
+      "momentum": 2,
+      "fii_dii": 2,
+      "mean_rev": 2
     }
   }
 }

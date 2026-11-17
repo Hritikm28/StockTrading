@@ -1,8 +1,8 @@
 {
   "mean_rev": {
-    "multiplier": 0.863,
-    "win_rate": 47.5,
-    "n": 59
+    "multiplier": 0.835,
+    "win_rate": 45.9,
+    "n": 61
   },
   "delivery_pct": {
     "multiplier": 0.983,
@@ -15,9 +15,9 @@
     "n": 6
   },
   "momentum": {
-    "multiplier": 0.931,
-    "win_rate": 51.2,
-    "n": 84
+    "multiplier": 0.909,
+    "win_rate": 50.0,
+    "n": 86
   },
   "rel_strength": {
     "multiplier": 0.741,
@@ -30,14 +30,14 @@
     "n": 28
   },
   "fii_dii": {
-    "multiplier": 1.039,
-    "win_rate": 57.1,
-    "n": 28
+    "multiplier": 0.97,
+    "win_rate": 53.3,
+    "n": 30
   },
   "mom_riskadj": {
-    "multiplier": 1.039,
-    "win_rate": 57.1,
-    "n": 28
+    "multiplier": 0.97,
+    "win_rate": 53.3,
+    "n": 30
   },
   "pead": {
     "multiplier": 1.0,

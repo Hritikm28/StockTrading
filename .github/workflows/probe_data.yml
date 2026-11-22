@@ -6,94 +6,64 @@ on:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - run: pip install -q requests
-      - name: Who owns nseindia.in
-        run: |
-          sudo apt-get install -y -qq whois >/dev/null 2>&1 || true
-          for d in nseindia.in nseindia.com; do echo "== WHOIS $d"; whois $d 2>/dev/null | grep -iE "^(Registrant Organization|Registrant Name|Registrant State|Registrant Country|Registrar|Creation Date|Updated Date|Name Server)" | head -12; done
-          for h in www.nseindia.in mcp.nseindia.in; do echo "== TLS $h"; echo | openssl s_client -connect $h:443 -servername $h 2>/dev/null | openssl x509 -noout -subject -issuer -dates -ext subjectAltName 2>/dev/null | head -12; done
-          echo "== TLS www.nseindia.com"; echo | openssl s_client -connect www.nseindia.com:443 -servername www.nseindia.com 2>/dev/null | openssl x509 -noout -subject -issuer -ext subjectAltName 2>/dev/null | head -8
-      - name: Pages
+      - name: Holdings closes and a year of splits/bonuses
         run: |
           python - <<'PY'
-          import re, requests
-          h = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/124 Safari/537.36'}
-          for u in ['https://www.nseindia.in/nse-mcp', 'https://www.nseindia.com/nse-mcp', 'https://www.nseindia.in/']:
-              try:
-                  r = requests.get(u, headers=h, timeout=30, allow_redirects=True)
-                  t = re.sub(r'<script.*?</script>|<style.*?</style>', ' ', r.text, flags=re.S)
-                  t = ' '.join(re.sub(r'<[^>]+>', ' ', t).split())
-                  print('==', u, r.status_code, '->', r.url, len(r.text))
-                  print('   history', [(x.status_code, x.headers.get('location')) for x in r.history])
-                  for k in ('mcp', 'MCP', 'commercial', 'disclaimer', 'Disclaimer', 'terms', 'rate'):
-                      for m in list(re.finditer(k, t))[:2]:
-                          print('   ..', k, '::', t[max(0, m.start()-200):m.start()+300])
-                  links = sorted(set(re.findall(r'https?://[a-zA-Z0-9.-]*nseindia\.(?:in|com)[^"\'\s<>]*', r.text)))
-                  print('   nse links', links[:15])
-              except Exception as e:
-                  print('==', u, 'ERR', e)
-          PY
-      - name: MCP servers
-        run: |
-          python - <<'PY'
-          import json, time, requests
+          import csv, io, json, time, requests
+          URL = 'https://mcp.nseindia.in/bhavcopy/cm/mcp'
           H = {'Content-Type': 'application/json', 'Accept': 'application/json, text/event-stream',
                'User-Agent': 'StockTrading-research-probe/1.0'}
           def parse(r):
-              ct = r.headers.get('content-type', '')
-              if 'event-stream' in ct:
+              if 'event-stream' in r.headers.get('content-type', ''):
                   for line in r.text.splitlines():
                       if line.startswith('data:'):
                           return json.loads(line[5:])
-                  return None
               return r.json()
-          def session(url):
-              t = time.time()
-              r = requests.post(url, headers=H, timeout=60, json={'jsonrpc': '2.0', 'id': 1, 'method': 'initialize',
-                  'params': {'protocolVersion': '2025-06-18', 'capabilities': {}, 'clientInfo': {'name': 'probe', 'version': '1'}}})
-              print('initialize', r.status_code, f'{time.time()-t:.1f}s', r.headers.get('content-type'))
-              init = parse(r); print('  server', json.dumps(init.get('result', {}).get('serverInfo')), '| instructions:', str(init.get('result', {}).get('instructions'))[:600])
-              h = dict(H); sid = r.headers.get('mcp-session-id')
-              if sid: h['Mcp-Session-Id'] = sid
-              requests.post(url, headers=h, timeout=30, json={'jsonrpc': '2.0', 'method': 'notifications/initialized'})
-              return h
-          def call(url, h, name, args, show=1500):
-              t = time.time()
-              r = requests.post(url, headers=h, timeout=90, json={'jsonrpc': '2.0', 'id': 3, 'method': 'tools/call',
+          r = requests.post(URL, headers=H, timeout=60, json={'jsonrpc': '2.0', 'id': 1, 'method': 'initialize',
+              'params': {'protocolVersion': '2025-06-18', 'capabilities': {}, 'clientInfo': {'name': 'probe', 'version': '1'}}})
+          h = dict(H)
+          if r.headers.get('mcp-session-id'):
+              h['Mcp-Session-Id'] = r.headers['mcp-session-id']
+          requests.post(URL, headers=h, timeout=30, json={'jsonrpc': '2.0', 'method': 'notifications/initialized'})
+          def call(name, args):
+              r = requests.post(URL, headers=h, timeout=90, json={'jsonrpc': '2.0', 'id': 3, 'method': 'tools/call',
                                                                    'params': {'name': name, 'arguments': args}})
-              res = parse(r)
-              txt = ''
+              return json.loads(parse(r)['result']['content'][0]['text'])
+
+          held = ['CUPID', 'WELCORP', 'TDPOWERSYS', 'ATHERENERG', 'APARINDS', 'SYRMA', 'LAURUSLABS', 'AZAD',
+                  'POWERINDIA', 'MCX', 'CHENNPETRO', 'BHEL', 'SONACOMS', 'STLTECH', 'HFCL']
+          print('== official closes, 2026-11-10 .. 2026-11-20')
+          for s in held:
               try:
-                  txt = res['result']['content'][0]['text']
-              except Exception:
-                  txt = json.dumps(res)[:show]
-              print(f'-- {name}({json.dumps(args)}) {r.status_code} {time.time()-t:.1f}s, {len(txt)} chars')
-              print('  ', txt[:show].replace('\n', ' '))
-          for url in ['https://mcp.nseindia.in/bhavcopy/cm/mcp', 'https://mcp.nseindia.in/cmmkt/mcp']:
-              print('\n########', url)
-              try:
-                  h = session(url)
-                  r = requests.post(url, headers=h, timeout=60, json={'jsonrpc': '2.0', 'id': 2, 'method': 'tools/list'})
-                  tools = parse(r)['result']['tools']
-                  print('tools', len(tools))
-                  for tl in tools:
-                      props = list((tl.get('inputSchema') or {}).get('properties', {}).keys())
-                      print(f"  * {tl['name']}({', '.join(props)}): {' '.join(str(tl.get('description','')).split())[:240]}")
-                  if 'bhavcopy' in url:
-                      call(url, h, 'get_stock_history', {'symbol': 'STLTECH', 'months': 1, 'endDate': '2026-11-20'})
-                      call(url, h, 'get_bulk_quote', {'symbols': ['HFCL', 'STLTECH', 'RELIANCE']})
-                      call(url, h, 'get_market_breadth', {'date': '2026-11-20'})
-                      call(url, h, 'get_corporate_actions', {'symbol': 'RELIANCE', 'fromDate': '', 'toDate': ''})
-                      call(url, h, 'get_stock_history', {'symbol': 'RELIANCE', 'months': 3, 'endDate': '2021-12-31'}, 400)
-                  else:
-                      call(url, h, 'cm_get_data_status', {})
-                      call(url, h, 'cm_get_stock_quote', {'symbol': 'HFCL'})
-                      call(url, h, 'nse_get_market_movers', {'indexName': 'NIFTY', 'limit': 3})
+                  d = call('get_stock_history', {'symbol': s, 'months': 1, 'endDate': '2026-11-20'})
+                  rows = [x for x in d['data'] if x['date'] >= '2026-11-10']
+                  print('CLOSE', s, rows[-1]['series'] if rows else '?',
+                        json.dumps({x['date'][5:]: x['close'] for x in rows}))
               except Exception as e:
-                  print('ERR', type(e).__name__, e)
+                  print('CLOSE', s, 'ERR', e)
+
+          print('== splits / bonuses in the NIFTY 500 over the last year')
+          lst = requests.get('https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv',
+                             headers={'User-Agent': 'Mozilla/5.0'}, timeout=30).text
+          syms = [row['Symbol'] for row in csv.DictReader(io.StringIO(lst))]
+          print('universe', len(syms))
+          hits, fails = [], 0
+          for s in syms:
+              try:
+                  d = call('get_corporate_actions', {'symbol': s, 'fromDate': '2025-11-21', 'toDate': '2026-11-20'})
+                  for a in d.get('actions', []):
+                      if a.get('actionType') in ('SPLIT', 'BONUS') or (a.get('adjustmentFactor') or 1) != 1:
+                          hits.append((a['exDate'], s, a.get('actionType'), a.get('purpose'), a.get('adjustmentFactor')))
+              except Exception as e:
+                  fails += 1
+              time.sleep(0.2)
+          print('events', len(hits), 'stocks', len({x[1] for x in hits}), 'failed calls', fails)
+          for x in sorted(hits):
+              print('CA', *x)
           PY

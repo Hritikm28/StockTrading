@@ -56,6 +56,17 @@ def final_bars(df: pd.DataFrame, upto: date) -> pd.DataFrame:
     return df[idx.normalize() <= pd.Timestamp(upto)]
 
 
+def merge_bars(existing: pd.DataFrame, new: pd.DataFrame) -> pd.DataFrame:
+    """Stored bars plus Yahoo's new days. A stored bar is never replaced:
+    it may be NSE's official one (official_prices.py), and on a split Yahoo
+    re-sends its last few days already adjusted, which broke the stored
+    history a few days before the ex-date (CONCORDBIO, 2026-11-04)."""
+    existing = existing.dropna(subset=['Close'])
+    combined = pd.concat([existing, new])
+    combined = combined[~combined.index.duplicated(keep='first')]
+    return combined.sort_index()
+
+
 # NSE's own daily index closes. Yahoo can post an index's daily bar late:
 # at 02:00 IST on 2026-11-07, NIFTY's 2026-11-06 bar was still missing, so
 # the portfolio was compared with Thursday's NIFTY again.
@@ -234,8 +245,7 @@ def _update_symbol(symbol: str) -> bool:
             try:
                 existing = pd.read_parquet(fpath)
                 existing.index = pd.to_datetime(existing.index)
-                combined = pd.concat([existing, new_df])
-                combined = combined[~combined.index.duplicated(keep='last')]
+                combined = merge_bars(existing, new_df)
                 combined = combined.sort_index()
             except Exception:
                 combined = new_df
@@ -332,9 +342,7 @@ def run_update(verbose: bool = True):
                         if fpath.exists():
                             existing = pd.read_parquet(fpath)
                             existing.index = pd.to_datetime(existing.index)
-                            combined = pd.concat([existing, sym_df])
-                            combined = combined[~combined.index.duplicated(keep='last')]
-                            combined = combined.sort_index()
+                            combined = merge_bars(existing, sym_df)
                         else:
                             combined = sym_df
 
@@ -574,9 +582,7 @@ def run_update(verbose: bool = True):
                         if fpath.exists():
                             existing = pd.read_parquet(fpath)
                             existing.index = pd.to_datetime(existing.index)
-                            combined = pd.concat([existing, sym_df])
-                            combined = combined[~combined.index.duplicated(keep='last')]
-                            combined = combined.sort_index()
+                            combined = merge_bars(existing, sym_df)
                         else:
                             combined = sym_df
 
@@ -605,9 +611,17 @@ def run_update(verbose: bool = True):
         time.sleep(0.3)
 
     if verbose:
-        total_yf = updated + skipped
         print(f"  yfinance: {updated} updated, {skipped} already current, {failed} failed")
 
+    # Step 3: NSE's official bars for every series (Yahoo has watch-list
+    # stocks a day late) and split/bonus repairs. See official_prices.py.
+    try:
+        import official_prices
+        official_prices.update(expected, DATA_DIR, verbose=verbose)
+    except Exception as e:
+        print(f"  NSE official prices failed: {e}")
+
+    if verbose:
         # Verify
         sp = DATA_DIR / "NIFTY50.parquet"
         if sp.exists():

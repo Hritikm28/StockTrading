@@ -152,6 +152,40 @@ class Prices:
 # ---------------------------------------------------------------------------
 # Daily steps
 # ---------------------------------------------------------------------------
+def apply_corporate_actions(book: Dict, events: List[Dict],
+                            as_of: date) -> List[Dict]:
+    """Splits and bonus issues (official_prices.load_events). On the
+    ex-date NSE rescales the price by `factor` (0.5 for a 1:1 bonus), so a
+    holder's shares are divided by it: twice the shares at half the price,
+    the same value and cost. Shares bought on or after the ex-date are
+    already on the new basis. Each event is applied once
+    (book['corporate_actions'])."""
+    done = {(e['symbol'], e['ex_date'])
+            for e in book.get('corporate_actions', [])}
+    applied = []
+    for e in sorted(events, key=lambda e: e['ex_date']):
+        sym, ex = e['symbol'], e['ex_date']
+        k = float(e.get('factor') or 0)
+        h = book['holdings'].get(sym)
+        if (h is None or (sym, ex) in done or not k > 0
+                or ex > as_of.isoformat() or h['entry_date'] >= ex):
+            continue
+        after = sum(t['shares'] for t in book['trades']
+                    if t['symbol'] == sym and t['side'] == 'BUY'
+                    and t['date'] >= ex)
+        after = min(after, h['shares'])
+        before = h['shares']
+        h['shares'] = (before - after) / k + after
+        h['entry_price'] = round(h['entry_price'] * k, 2)
+        h['last_price'] = h['last_price'] * k
+        rec = {'symbol': sym, 'ex_date': ex, 'factor': k,
+               'shares_before': round(before, 4),
+               'shares_after': round(h['shares'], 4)}
+        book.setdefault('corporate_actions', []).append(rec)
+        applied.append(rec)
+    return applied
+
+
 def fill_pending(book: Dict, as_of: date, px: Prices) -> List[Dict]:
     """Fill orders decided before `as_of` at the next session's open.
     Sells go first so their cash funds the buys."""
@@ -474,6 +508,14 @@ def run_book(ranked: pd.DataFrame, as_of: date, gate_open: bool,
     """One daily step: fill yesterday's orders, mark, decide, save."""
     px = Prices(data_dir)
     book = load_book(as_of, path)
+    # before today's fills: an order filled at the ex-date's open is
+    # already on the new basis
+    try:
+        from official_prices import load_events
+        events = load_events(data_dir)
+    except Exception:
+        events = []
+    splits = apply_corporate_actions(book, events, as_of)
     fills = fill_pending(book, as_of, px)
     nav = mark_nav(book, as_of, px)
     action, orders = decide(book, ranked, as_of, nav, gate_open,
@@ -513,5 +555,6 @@ def run_book(ranked: pd.DataFrame, as_of: date, gate_open: bool,
         'target_holdings': TARGET_HOLDINGS,
         'exposure_pct': round((book.get('exposure') or 0) * 100),
         'holdings': holdings, 'orders': orders, 'fills': fills,
+        'corporate_actions': splits,
         'last_rebalance': book.get('last_rebalance'),
     }

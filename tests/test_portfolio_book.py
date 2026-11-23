@@ -342,3 +342,42 @@ def test_watch_list_stocks_are_skipped_and_replaced_at_review(market, tmp_path):
                     blocked=blocked)
     sells = [o['symbol'] for o in r['orders'] if o['side'] == 'SELL']
     assert sells == ['S01.NS']                     # replaced at the review
+
+
+def test_bonus_issue_doubles_shares_and_keeps_value():
+    book = pb.new_book(d('2026-11-03'))
+    book['holdings'] = {
+        'AAA.NS': {'shares': 10.0, 'entry_date': '2026-11-05', 'entry_price': 100.0,
+                   'cost_basis': 1002.0, 'last_price': 100.0},
+        'NEW.NS': {'shares': 5.0, 'entry_date': '2026-11-23', 'entry_price': 40.0,
+                   'cost_basis': 201.0, 'last_price': 40.0}}
+    # 4 more AAA bought after the ex-date are already on the new basis
+    book['trades'] = [{'date': '2026-11-05', 'symbol': 'AAA.NS', 'side': 'BUY', 'shares': 6.0},
+                      {'date': '2026-11-24', 'symbol': 'AAA.NS', 'side': 'BUY', 'shares': 4.0}]
+    events = [{'symbol': 'AAA.NS', 'ex_date': '2026-11-23', 'factor': 0.5},
+              {'symbol': 'NEW.NS', 'ex_date': '2026-11-23', 'factor': 0.5},   # bought that day
+              {'symbol': 'AAA.NS', 'ex_date': '2026-12-01', 'factor': 0.5}]   # not yet
+    done = pb.apply_corporate_actions(book, events, d('2026-11-25'))
+    a = book['holdings']['AAA.NS']
+    assert [e['ex_date'] for e in done] == ['2026-11-23']
+    assert a['shares'] == 6 / 0.5 + 4 and a['entry_price'] == 50.0
+    assert a['last_price'] == 50.0 and a['cost_basis'] == 1002.0
+    assert book['holdings']['NEW.NS']['shares'] == 5.0
+    assert pb.apply_corporate_actions(book, events, d('2026-11-25')) == []   # once only
+    assert a['shares'] == 16.0
+
+
+def test_run_book_applies_a_split_before_marking(market, tmp_path):
+    step(market, tmp_path, d('2026-11-03'))
+    before = step(market, tmp_path, d('2026-11-09'))
+    # S00 gives 1:1 bonus shares on 2026-11-10: its prices halve from then on
+    f = market / "S00.parquet"
+    df = pd.read_parquet(f)
+    df.loc[df.index >= '2026-11-10', ['Open', 'Close']] /= 2
+    df.to_parquet(f)
+    (market / "_corporate_actions.json").write_text(
+        '[{"symbol": "S00.NS", "ex_date": "2026-11-10", "factor": 0.5}]')
+    r = step(market, tmp_path, d('2026-11-10'))
+    assert [e['symbol'] for e in r['corporate_actions']] == ['S00.NS']
+    assert r['nav'] == pytest.approx(before['nav'])
+    assert step(market, tmp_path, d('2026-11-10'))['corporate_actions'] == []

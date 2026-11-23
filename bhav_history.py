@@ -35,6 +35,9 @@ SERIES_KEPT = ('EQ', 'BE', 'BZ')
 WATCH_SERIES = ('BE', 'BZ')          # trade-for-trade: NSE's watch list
 UDIFF_FROM = date(2024, 7, 8)
 COLUMNS = ['date', 'symbol', 'series', 'open', 'close', 'prevclose', 'value']
+# Also read for the daily price files (official_prices.py); the lab's
+# compact store keeps COLUMNS only.
+EXTRA = ['high', 'low', 'volume']
 
 _HEADERS = {
     'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
@@ -53,8 +56,10 @@ def urls_for(d: date) -> List[str]:
     return [new, old] if d >= UDIFF_FROM else [old, new]
 
 
-def parse_bhav(raw: bytes, d: date) -> pd.DataFrame:
-    """Either archive format -> rows of COLUMNS for series EQ/BE/BZ."""
+def parse_bhav(raw: bytes, d: date, extra: bool = False) -> pd.DataFrame:
+    """Either archive format -> rows of COLUMNS for series EQ/BE/BZ
+    (plus EXTRA: high, low, traded quantity, when `extra`)."""
+    cols = COLUMNS + (EXTRA if extra else [])
     with zipfile.ZipFile(io.BytesIO(raw)) as z:
         df = pd.read_csv(z.open(z.namelist()[0]))
     df.columns = [str(c).strip() for c in df.columns]
@@ -62,27 +67,34 @@ def parse_bhav(raw: bytes, d: date) -> pd.DataFrame:
         df = df.rename(columns={'TckrSymb': 'symbol', 'SctySrs': 'series',
                                 'OpnPric': 'open', 'ClsPric': 'close',
                                 'PrvsClsgPric': 'prevclose',
-                                'TtlTrfVal': 'value'})
+                                'TtlTrfVal': 'value', 'HghPric': 'high',
+                                'LwPric': 'low', 'TtlTradgVol': 'volume'})
     else:                                              # older format
         df = df.rename(columns={'SYMBOL': 'symbol', 'SERIES': 'series',
                                 'OPEN': 'open', 'CLOSE': 'close',
-                                'PREVCLOSE': 'prevclose', 'TOTTRDVAL': 'value'})
+                                'PREVCLOSE': 'prevclose', 'TOTTRDVAL': 'value',
+                                'HIGH': 'high', 'LOW': 'low',
+                                'TOTTRDQTY': 'volume'})
     need = ['symbol', 'series', 'open', 'close', 'prevclose', 'value']
     if not all(c in df.columns for c in need):
-        return pd.DataFrame(columns=COLUMNS)
-    df = df[need].copy()
+        return pd.DataFrame(columns=cols)
+    for c in cols[len(COLUMNS):]:
+        if c not in df.columns:
+            df[c] = np.nan
+    df = df[need + cols[len(COLUMNS):]].copy()
     df['symbol'] = df['symbol'].astype(str).str.strip().str.upper()
     df['series'] = df['series'].astype(str).str.strip().str.upper()
     df = df[df['series'].isin(SERIES_KEPT)]
-    for c in ('open', 'close', 'prevclose', 'value'):
+    for c in ['open', 'close', 'prevclose', 'value'] + cols[len(COLUMNS):]:
         df[c] = pd.to_numeric(df[c], errors='coerce')
     df = df[df['close'] > 0]
     df.insert(0, 'date', pd.Timestamp(d))
     # a symbol trades in one of EQ/BE/BZ on a given day; keep one row
-    return df.drop_duplicates('symbol', keep='first')[COLUMNS]
+    return df.drop_duplicates('symbol', keep='first')[cols]
 
 
-def fetch_day(d: date, get: Callable = None, tries: int = 3):
+def fetch_day(d: date, get: Callable = None, tries: int = 3,
+              extra: bool = False):
     """Rows for one day, an empty frame for a holiday (404 everywhere),
     or None if the download kept failing (retry next time)."""
     get = get or (lambda u: requests.get(u, headers=_HEADERS, timeout=30))
@@ -99,11 +111,12 @@ def fetch_day(d: date, get: Callable = None, tries: int = 3):
                 break
             if r.status_code == 200 and r.content[:2] == b'PK':
                 try:
-                    return parse_bhav(r.content, d)
+                    return parse_bhav(r.content, d, extra)
                 except Exception:
                     break
             time.sleep(1 + k)
-    return pd.DataFrame(columns=COLUMNS) if missing == len(urls_for(d)) else None
+    cols = COLUMNS + (EXTRA if extra else [])
+    return pd.DataFrame(columns=cols) if missing == len(urls_for(d)) else None
 
 
 def _year_file(y: int) -> Path:

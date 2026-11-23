@@ -150,6 +150,7 @@ def portfolio_section():
                  for h in book.get('holdings', [])]
     out = (f"<p style='font-size:14px;margin:4px 0'>{status}<br>{perf}</p>")
     out += data_check_line(book.get('data_check'))
+    out += split_line(book.get('corporate_actions'))
     out += market_health_line()
     soon = book.get('results_soon') or []
     if soon:
@@ -190,6 +191,18 @@ def market_health_line():
         return de.lights_summary(d) if d.get('as_of') == today else ""
     except Exception:
         return ""
+
+
+def split_line(events):
+    """Holdings whose shares were split or given bonus shares today."""
+    if not events:
+        return ""
+    parts = [f"<b>{e['symbol'].replace('.NS', '')}</b>: "
+             f"{e['shares_before']:,.0f} → {e['shares_after']:,.0f} shares"
+             for e in events]
+    return ("<p style='font-size:13px;margin:4px 0;color:#1a5fb4'>🔁 Split or "
+            "bonus shares: " + "; ".join(parts) + ". The price dropped by the "
+            "same ratio, so the value is unchanged.</p>")
 
 
 def data_check_line(dc):

@@ -1,36 +1,36 @@
 # Factor Lab: ten-year test of the portfolio rules
 
-_Generated 2026-11-13 by factor_lab.py. Period 2016-11-08 to 2026-11-12, 3274 stocks from NSE's daily bhav copies, including those that later collapsed or were delisted (no survivorship bias). Same rules as the live paper portfolio: top 15 (max 4 per industry), monthly replacement with a top-30 buffer, trend gate, 0.22% cost per side._
+_Generated 2026-11-23 by factor_lab.py. Period 2016-11-17 to 2026-11-23, 3279 stocks from NSE's daily bhav copies, including those that later collapsed or were delisted (no survivorship bias). Same rules as the live paper portfolio: top 15 (max 4 per industry), monthly replacement with a top-30 buffer, trend gate, 0.22% cost per side._
 
 Price returns only, for the strategy and NIFTY alike. After-tax figures are estimates: strategy gains taxed at 20% each year, NIFTY held throughout and taxed 12.5% once at the end.
 
 | Variant | CAGR | After tax | NIFTY | NIFTY after tax | Excess | Max fall | Sharpe | Turnover/yr | Months beating NIFTY | Chance it's skill |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Live rule with 20 stocks instead of 15 | 13.97% | 11.33% | 11.46% | 10.5% | **+2.51%** | -39.3% | 0.77 | 184% | 55.4% | 48.6% |
-| Live rule, reviewed every 2 weeks instead of monthly | 13.54% | 11.03% | 11.46% | 10.5% | **+2.08%** | -35.3% | 0.76 | 235% | 50.4% | 44.4% |
-| Residual momentum, skipping watch-list stocks (live from 2026-11-10) | 13.32% | 10.82% | 11.46% | 10.5% | **+1.87%** | -32.2% | 0.76 | 218% | 52.1% | 42.3% |
-| Residual momentum, watch-list stocks allowed | 11.89% | 9.66% | 11.46% | 10.5% | **+0.44%** | -32.2% | 0.7 | 218% | 50.4% | 32.3% |
-| Plain momentum 12-1 without the trend gate | 11.1% | 9.02% | 11.46% | 10.5% | **-0.35%** | -42.4% | 0.56 | 170% | 52.1% | 35.0% |
-| Plain momentum 12-1, skipping watch-list stocks | 11.03% | 8.94% | 11.46% | 10.5% | **-0.43%** | -37.6% | 0.58 | 201% | 52.1% | 30.9% |
-| Plain momentum 12-1 (live until 2026-11-09) | 10.08% | 8.19% | 11.46% | 10.5% | **-1.37%** | -36.6% | 0.55 | 200% | 51.2% | 25.0% |
-| Live rule with 25 stocks instead of 15 | 9.32% | 7.45% | 11.46% | 10.5% | **-2.13%** | -35.6% | 0.57 | 172% | 44.6% | 18.1% |
-| Live rule, blended with low volatility (steadier stocks) | 8.95% | 7.23% | 11.46% | 10.5% | **-2.51%** | -31.2% | 0.61 | 197% | 49.6% | 11.7% |
+| Live rule with 20 stocks instead of 15 | 14.36% | 11.65% | 12.09% | 11.1% | **+2.27%** | -39.7% | 0.8 | 182% | 56.2% | 48.3% |
+| Residual momentum, skipping watch-list stocks (live from 2026-11-10) | 13.7% | 11.13% | 12.09% | 11.1% | **+1.6%** | -32.2% | 0.79 | 214% | 52.1% | 41.8% |
+| Live rule, reviewed every 2 weeks instead of monthly | 12.42% | 10.09% | 12.09% | 11.1% | **+0.32%** | -29.7% | 0.74 | 233% | 54.5% | 32.0% |
+| Plain momentum 12-1, skipping watch-list stocks | 12.16% | 9.88% | 12.09% | 11.1% | **+0.07%** | -37.9% | 0.63 | 196% | 53.7% | 35.5% |
+| Residual momentum, watch-list stocks allowed | 12.12% | 9.82% | 12.09% | 11.1% | **+0.03%** | -32.3% | 0.72 | 215% | 50.4% | 30.9% |
+| Plain momentum 12-1 without the trend gate | 12.07% | 9.83% | 12.09% | 11.1% | **-0.02%** | -43.0% | 0.59 | 171% | 52.9% | 38.6% |
+| Plain momentum 12-1 (live until 2026-11-09) | 10.97% | 8.89% | 12.09% | 11.1% | **-1.12%** | -36.6% | 0.59 | 195% | 51.2% | 27.8% |
+| Live rule, blended with low volatility (steadier stocks) | 9.59% | 7.73% | 12.09% | 11.1% | **-2.5%** | -31.5% | 0.65 | 194% | 50.4% | 12.6% |
+| Live rule with 25 stocks instead of 15 | 9.57% | 7.64% | 12.09% | 11.1% | **-2.52%** | -35.1% | 0.59 | 169% | 43.8% | 17.0% |
 
-**Survivorship bias, measured:** plain momentum tested the old way, on today's NIFTY 500 only (501 stocks), returned 20.84% a year (worst fall -38.7%), against 10.08% here. The old test overstated the yearly return by 10.8 points.
+**Survivorship bias, measured:** plain momentum tested the old way, on today's NIFTY 500 only (501 stocks), returned 22.19% a year (worst fall -39.2%), against 10.97% here. The old test overstated the yearly return by 11.2 points.
 
 ## Risk detail
 
 | Variant | Sortino | Return / worst fall | Worst 12 months | Longest time below a past peak | 3-year periods that beat NIFTY | Edge, first half | Edge, second half |
 |---|---|---|---|---|---|---|---|
-| Live rule with 20 stocks instead of 15 | 0.87 | 0.36 | -25.2% | 29 months | 64.7% | 0.14% | 4.76% |
-| Live rule, reviewed every 2 weeks instead of monthly | 0.91 | 0.38 | -29.9% | 31 months | 68.2% | 0.46% | 3.61% |
-| Residual momentum, skipping watch-list stocks (live from 2026-11-10) | 0.89 | 0.41 | -27.6% | 29 months | 63.5% | -2.8% | 6.37% |
-| Residual momentum, watch-list stocks allowed | 0.82 | 0.37 | -27.6% | 31 months | 49.4% | -3.48% | 4.19% |
-| Plain momentum 12-1 without the trend gate | 0.66 | 0.26 | -30.6% | 36 months | 35.3% | -2.95% | 2.1% |
-| Plain momentum 12-1, skipping watch-list stocks | 0.67 | 0.29 | -28.1% | 31 months | 49.4% | -5.34% | 4.33% |
-| Plain momentum 12-1 (live until 2026-11-09) | 0.64 | 0.28 | -28.0% | 32 months | 40.0% | -5.46% | 2.55% |
-| Live rule with 25 stocks instead of 15 | 0.64 | 0.26 | -26.3% | 33 months | 54.1% | -4.0% | -0.38% |
-| Live rule, blended with low volatility (steadier stocks) | 0.69 | 0.29 | -22.5% | 27 months | 21.2% | -2.25% | -2.74% |
+| Live rule with 20 stocks instead of 15 | 0.9 | 0.36 | -25.5% | 29 months | 64.7% | 0.19% | 4.23% |
+| Residual momentum, skipping watch-list stocks (live from 2026-11-10) | 0.93 | 0.43 | -27.6% | 29 months | 63.5% | -2.98% | 6.02% |
+| Live rule, reviewed every 2 weeks instead of monthly | 0.88 | 0.42 | -26.0% | 32 months | 50.6% | -2.74% | 3.24% |
+| Plain momentum 12-1, skipping watch-list stocks | 0.73 | 0.32 | -28.0% | 39 months | 50.6% | -4.71% | 4.69% |
+| Residual momentum, watch-list stocks allowed | 0.85 | 0.38 | -27.7% | 31 months | 49.4% | -3.71% | 3.6% |
+| Plain momentum 12-1 without the trend gate | 0.71 | 0.28 | -29.9% | 37 months | 37.6% | -2.13% | 1.97% |
+| Plain momentum 12-1 (live until 2026-11-09) | 0.69 | 0.3 | -27.9% | 31 months | 44.7% | -4.86% | 2.45% |
+| Live rule, blended with low volatility (steadier stocks) | 0.75 | 0.3 | -22.4% | 27 months | 22.4% | -1.67% | -3.25% |
+| Live rule with 25 stocks instead of 15 | 0.66 | 0.27 | -25.9% | 33 months | 54.1% | -4.18% | -0.97% |
 
 _An edge that shows up in only one half of the period is more likely luck or a passing market phase. 'Steadier stocks' uses low price volatility as a stand-in for quality: profit and debt history isn't free for ten years, so real quality is graded live instead._
 
@@ -40,15 +40,15 @@ _"Chance it's skill" is the deflated Sharpe ratio of the monthly gap to NIFTY: t
 
 | Variant | 2016 | 2017 | 2018 | 2019 | 2020 | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Residual momentum, skipping watch-list stocks (live from 2026-11-10) | -7.6 / -4.2 | 30.7 / 28.6 | -6.6 / 3.2 | -5.8 / 12.0 | 18.0 / 14.9 | 47.4 / 24.1 | -4.1 / 4.3 | 35.9 / 20.0 | 36.6 / 8.8 | -1.2 / 10.5 | 7.5 / -3.2 |
-| Live rule with 20 stocks instead of 15 | -8.8 / -4.2 | 37.4 / 28.6 | -8.9 / 3.2 | -3.5 / 12.0 | 24.3 / 14.9 | 51.3 / 24.1 | 11.3 / 4.3 | 9.4 / 20.0 | 39.8 / 8.8 | -3.7 / 10.5 | 9.0 / -3.2 |
-| Live rule with 25 stocks instead of 15 | -8.6 / -4.2 | 31.1 / 28.6 | -18.0 / 3.2 | -1.1 / 12.0 | 22.7 / 14.9 | 42.0 / 24.1 | 9.0 / 4.3 | 9.8 / 20.0 | 27.6 / 8.8 | -8.4 / 10.5 | 3.0 / -3.2 |
-| Live rule, reviewed every 2 weeks instead of monthly | -7.3 / -4.2 | 39.8 / 28.6 | -15.1 / 3.2 | -4.5 / 12.0 | 18.8 / 14.9 | 62.3 / 24.1 | -13.8 / 4.3 | 38.6 / 20.0 | 38.8 / 8.8 | -1.9 / 10.5 | 8.2 / -3.2 |
-| Live rule, blended with low volatility (steadier stocks) | -6.6 / -4.2 | 28.7 / 28.6 | -4.4 / 3.2 | 5.0 / 12.0 | 22.6 / 14.9 | 25.9 / 24.1 | -18.4 / 4.3 | 21.9 / 20.0 | 29.1 / 8.8 | -5.4 / 10.5 | 4.4 / -3.2 |
-| Residual momentum, watch-list stocks allowed | -7.6 / -4.2 | 30.7 / 28.6 | -4.5 / 3.2 | -5.9 / 12.0 | 16.8 / 14.9 | 41.2 / 24.1 | -9.8 / 4.3 | 35.5 / 20.0 | 40.5 / 8.8 | -4.6 / 10.5 | 5.0 / -3.2 |
-| Plain momentum 12-1, skipping watch-list stocks | -8.9 / -4.2 | 45.6 / 28.6 | -19.2 / 3.2 | -4.2 / 12.0 | 14.8 / 14.9 | 29.6 / 24.1 | 1.6 / 4.3 | 24.4 / 20.0 | 38.7 / 8.8 | -9.7 / 10.5 | 18.0 / -3.2 |
-| Plain momentum 12-1 (live until 2026-11-09) | -8.9 / -4.2 | 45.6 / 28.6 | -17.6 / 3.2 | -4.1 / 12.0 | 15.4 / 14.9 | 26.1 / 24.1 | -3.2 / 4.3 | 27.1 / 20.0 | 37.8 / 8.8 | -12.2 / 10.5 | 15.1 / -3.2 |
-| Plain momentum 12-1 without the trend gate | -2.7 / -4.2 | 46.6 / 28.6 | -17.7 / 3.2 | 6.1 / 12.0 | 10.4 / 14.9 | 30.1 / 24.1 | -11.8 / 4.3 | 26.4 / 20.0 | 35.4 / 8.8 | -7.7 / 10.5 | 15.2 / -3.2 |
+| Residual momentum, skipping watch-list stocks (live from 2026-11-10) | -3.7 / 1.3 | 31.2 / 28.6 | -6.9 / 3.2 | -5.8 / 12.0 | 18.0 / 14.9 | 47.4 / 24.1 | -4.1 / 4.3 | 36.0 / 20.0 | 36.6 / 8.8 | -1.2 / 10.5 | 6.5 / -3.0 |
+| Live rule with 20 stocks instead of 15 | -4.3 / 1.3 | 36.9 / 28.6 | -8.4 / 3.2 | -3.7 / 12.0 | 25.7 / 14.9 | 50.2 / 24.1 | 11.3 / 4.3 | 9.2 / 20.0 | 39.8 / 8.8 | -3.7 / 10.5 | 7.4 / -3.0 |
+| Live rule with 25 stocks instead of 15 | -4.0 / 1.3 | 30.0 / 28.6 | -17.9 / 3.2 | -0.9 / 12.0 | 21.8 / 14.9 | 40.9 / 24.1 | 10.2 / 4.3 | 8.9 / 20.0 | 27.8 / 8.8 | -8.4 / 10.5 | 2.1 / -3.0 |
+| Live rule, reviewed every 2 weeks instead of monthly | -3.6 / 1.3 | 50.7 / 28.6 | -16.4 / 3.2 | -0.1 / 12.0 | 13.3 / 14.9 | 35.9 / 24.1 | -5.9 / 4.3 | 25.5 / 20.0 | 34.7 / 8.8 | 0.1 / 10.5 | 8.6 / -3.0 |
+| Live rule, blended with low volatility (steadier stocks) | -3.5 / 1.3 | 32.0 / 28.6 | -1.9 / 3.2 | 4.7 / 12.0 | 22.0 / 14.9 | 25.3 / 24.1 | -18.3 / 4.3 | 21.8 / 20.0 | 28.7 / 8.8 | -5.3 / 10.5 | 3.3 / -3.0 |
+| Residual momentum, watch-list stocks allowed | -3.7 / 1.3 | 31.2 / 28.6 | -4.8 / 3.2 | -5.9 / 12.0 | 16.7 / 14.9 | 41.2 / 24.1 | -9.8 / 4.3 | 35.5 / 20.0 | 40.5 / 8.8 | -4.6 / 10.5 | 2.8 / -3.0 |
+| Plain momentum 12-1, skipping watch-list stocks | -4.4 / 1.3 | 51.7 / 28.6 | -19.7 / 3.2 | -3.9 / 12.0 | 14.1 / 14.9 | 31.0 / 24.1 | 3.4 / 4.3 | 23.0 / 20.0 | 38.6 / 8.8 | -9.2 / 10.5 | 17.9 / -3.0 |
+| Plain momentum 12-1 (live until 2026-11-09) | -4.4 / 1.3 | 51.7 / 28.6 | -18.0 / 3.2 | -3.8 / 12.0 | 14.8 / 14.9 | 27.6 / 24.1 | -0.6 / 4.3 | 25.7 / 20.0 | 38.5 / 8.8 | -12.3 / 10.5 | 11.6 / -3.0 |
+| Plain momentum 12-1 without the trend gate | 0.2 / 1.3 | 52.7 / 28.6 | -18.3 / 3.2 | 5.8 / 12.0 | 12.8 / 14.9 | 31.0 / 24.1 | -14.1 / 4.3 | 30.0 / 20.0 | 36.7 / 8.8 | -7.4 / 10.5 | 13.2 / -3.0 |
 
 ## The trend gate on NIFTY itself (no survivorship bias)
 
@@ -56,8 +56,8 @@ Holding NIFTY fully while it is above its 200-day average and cutting back when 
 
 | | Yearly return | Worst fall |
 |---|---|---|
-| Gate: sell everything | 6.89% | -20.5% |
-| Gate: sell half | 9.09% | -27.3% |
-| NIFTY held throughout | 10.97% | -38.4% |
+| Gate: sell everything | 6.99% | -20.5% |
+| Gate: sell half | 9.18% | -27.3% |
+| NIFTY held throughout | 11.07% | -38.4% |
 
 The gate switched 2.6 times a year.

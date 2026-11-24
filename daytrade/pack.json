@@ -159,7 +159,7 @@
    },
    {
     "name": "Breadth",
-    "text": "47% of NIFTY 500 stocks are in an uptrend (mixed)."
+    "text": "49% of NIFTY 500 stocks are in an uptrend (mixed)."
    },
    {
     "name": "Price tag",
@@ -209,8 +209,8 @@
    },
    {
     "name": "US dollar index",
-    "last": 104.27,
-    "week_pct": 0.7,
+    "last": 104.21,
+    "week_pct": 0.64,
     "as_of": "2026-11-23"
    },
    {
@@ -221,27 +221,27 @@
    },
    {
     "name": "Crude oil (Brent)",
-    "last": 86.55,
-    "week_pct": -6.37,
+    "last": 86.43,
+    "week_pct": -6.5,
     "as_of": "2026-11-23"
    },
    {
     "name": "Gold",
-    "last": 3661.3,
-    "week_pct": -4.98,
+    "last": 3673.4,
+    "week_pct": -4.66,
     "as_of": "2026-11-23"
    },
    {
     "name": "Japan shares (Nikkei)",
-    "last": 59251.63,
-    "week_pct": -0.69,
+    "last": 59013.22,
+    "week_pct": -1.09,
     "as_of": "2026-11-24"
    },
    {
     "name": "Hong Kong shares (Hang Seng)",
-    "last": 22410.8,
-    "week_pct": -5.19,
-    "as_of": "2026-11-20"
+    "last": 22643.95,
+    "week_pct": -4.67,
+    "as_of": "2026-11-24"
    }
   ]
  },
@@ -423,9 +423,9 @@
    "close": 11203.0,
    "r1": 0.2,
    "r5": 1.11,
-   "r20": 15.13,
+   "r20": 23.79,
    "off_high": -3.1,
-   "vol_x": 1.4
+   "vol_x": 1.3
   },
   {
    "symbol": "MARUTI",
@@ -448,8 +448,8 @@
    "close": 4010.6,
    "r1": -2.07,
    "r5": -1.19,
-   "r20": -10.1,
-   "off_high": -31.2,
+   "r20": -6.43,
+   "off_high": -28.4,
    "vol_x": 0.5
   },
   {
@@ -514,9 +514,9 @@
    "close": 163.0,
    "r1": -8.43,
    "r5": -10.57,
-   "r20": -4.78,
-   "off_high": -27.8,
-   "vol_x": 6.6,
+   "r20": -2.79,
+   "off_high": -26.3,
+   "vol_x": 6.5,
    "news": [
     "2026-11-23: news: Analysts/Institutional Investor Meet/Con. Call Updates",
     "2026-11-23: news: Investor Presentation",
@@ -916,8 +916,8 @@
    "close": 1860.0,
    "r1": -1.32,
    "r5": -0.4,
-   "r20": 3.35,
-   "off_high": -9.7,
+   "r20": 6.41,
+   "off_high": -7.1,
    "vol_x": 0.7,
    "news": [
     "2026-11-21: news: Copy of Newspaper Publication"
@@ -1117,8 +1117,8 @@
    "close": 411.25,
    "r1": -1.86,
    "r5": -4.48,
-   "r20": -1.62,
-   "off_high": -47.2,
+   "r20": 0.91,
+   "off_high": -45.9,
    "vol_x": 0.6
   },
   {
@@ -1150,8 +1150,8 @@
    "close": 158.7,
    "r1": -2.85,
    "r5": -5.25,
-   "r20": 5.85,
-   "off_high": -27.6,
+   "r20": 9.49,
+   "off_high": -25.1,
    "vol_x": 0.8,
    "news": [
     "2026-11-20: action: INTERIM DIVIDEND - RE 1 PER SHARE",
@@ -1202,8 +1202,8 @@
    "close": 14184.0,
    "r1": -1.08,
    "r5": -4.36,
-   "r20": -4.52,
-   "off_high": -27.5,
+   "r20": -1.36,
+   "off_high": -25.1,
    "vol_x": 0.3
   },
   {
@@ -1212,8 +1212,8 @@
    "close": 605.3,
    "r1": -2.21,
    "r5": -4.74,
-   "r20": -16.87,
-   "off_high": -30.7,
+   "r20": -12.07,
+   "off_high": -26.7,
    "vol_x": 0.6
   },
   {
@@ -1440,8 +1440,8 @@
    "close": 1491.1,
    "r1": -1.62,
    "r5": 2.48,
-   "r20": -3.32,
-   "off_high": -18.9,
+   "r20": -0.29,
+   "off_high": -16.4,
    "vol_x": 0.7
   },
   {
@@ -1566,8 +1566,8 @@
    "close": 2152.3,
    "r1": -1.47,
    "r5": 7.37,
-   "r20": 15.42,
-   "off_high": -10.3,
+   "r20": 18.94,
+   "off_high": -7.6,
    "vol_x": 0.7
   },
   {
@@ -1652,9 +1652,9 @@
    "close": 331.3,
    "r1": 0.0,
    "r5": -2.72,
-   "r20": -12.16,
-   "off_high": -21.9,
-   "vol_x": 0.5
+   "r20": -9.67,
+   "off_high": -19.7,
+   "vol_x": 0.4
   },
   {
    "symbol": "LTM",
@@ -1901,8 +1901,8 @@
    "close": 2289.7,
    "r1": -2.2,
    "r5": -4.53,
-   "r20": -10.53,
-   "off_high": -27.6,
+   "r20": -7.62,
+   "off_high": -25.2,
    "vol_x": 0.7
   }
  ]

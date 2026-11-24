@@ -413,15 +413,15 @@
     "3d": {
       "n_trades": 199,
       "win_rate": 37.7,
-      "avg_ret": -1.19,
+      "avg_ret": -1.11,
       "median_ret": -0.87,
       "avg_win": 1.65,
-      "avg_loss": -2.9,
-      "sharpe": -3.02,
+      "avg_loss": -2.78,
+      "sharpe": -3.08,
       "best": 5.11,
-      "worst": -26.6,
+      "worst": -22.33,
       "avg_nifty": 0.18,
-      "avg_excess": -1.37,
+      "avg_excess": -1.29,
       "beat_nifty_rate": 38.7,
       "by_symbol": {
         "AARTIIND.NS": {
@@ -467,7 +467,7 @@
         "APARINDS.NS": {
           "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -9.2
+          "avg_ret": -7.79
         },
         "APOLLOHOSP.NS": {
           "n": 1,
@@ -497,7 +497,7 @@
         "AZAD.NS": {
           "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -6.43
+          "avg_ret": -4.99
         },
         "BAJAJ-AUTO.NS": {
           "n": 1,
@@ -637,7 +637,7 @@
         "HFCL.NS": {
           "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -6.57
+          "avg_ret": -5.34
         },
         "HINDALCO.NS": {
           "n": 4,
@@ -767,7 +767,7 @@
         "SYRMA.NS": {
           "n": 2,
           "win_rate": 50.0,
-          "avg_ret": -3.87
+          "avg_ret": -2.43
         },
         "TATACONSUM.NS": {
           "n": 1,
@@ -792,7 +792,7 @@
         "TDPOWERSYS.NS": {
           "n": 2,
           "win_rate": 50.0,
-          "avg_ret": -13.07
+          "avg_ret": -10.93
         },
         "TECHM.NS": {
           "n": 2,
@@ -819,15 +819,15 @@
     "5d": {
       "n_trades": 199,
       "win_rate": 39.7,
-      "avg_ret": -1.19,
+      "avg_ret": -1.11,
       "median_ret": -0.8,
       "avg_win": 2.28,
-      "avg_loss": -3.48,
-      "sharpe": -2.11,
+      "avg_loss": -3.34,
+      "sharpe": -2.08,
       "best": 12.52,
-      "worst": -21.66,
+      "worst": -17.1,
       "avg_nifty": 0.48,
-      "avg_excess": -1.67,
+      "avg_excess": -1.59,
       "beat_nifty_rate": 37.2,
       "by_symbol": {
         "AARTIIND.NS": {
@@ -873,7 +873,7 @@
         "APARINDS.NS": {
           "n": 2,
           "win_rate": 50.0,
-          "avg_ret": -7.61
+          "avg_ret": -6.2
         },
         "APOLLOHOSP.NS": {
           "n": 1,
@@ -903,7 +903,7 @@
         "AZAD.NS": {
           "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -6.06
+          "avg_ret": -4.6
         },
         "BAJAJ-AUTO.NS": {
           "n": 1,
@@ -1043,7 +1043,7 @@
         "HFCL.NS": {
           "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -9.29
+          "avg_ret": -8.03
         },
         "HINDALCO.NS": {
           "n": 4,
@@ -1173,7 +1173,7 @@
         "SYRMA.NS": {
           "n": 2,
           "win_rate": 50.0,
-          "avg_ret": -2.57
+          "avg_ret": -1.09
         },
         "TATACONSUM.NS": {
           "n": 1,
@@ -1198,7 +1198,7 @@
         "TDPOWERSYS.NS": {
           "n": 2,
           "win_rate": 50.0,
-          "avg_ret": -8.31
+          "avg_ret": -6.04
         },
         "TECHM.NS": {
           "n": 2,
@@ -1225,15 +1225,15 @@
     "10d": {
       "n_trades": 199,
       "win_rate": 43.7,
-      "avg_ret": -1.29,
+      "avg_ret": -1.21,
       "median_ret": -1.05,
       "avg_win": 3.22,
-      "avg_loss": -4.8,
-      "sharpe": -1.17,
+      "avg_loss": -4.66,
+      "sharpe": -1.14,
       "best": 18.87,
       "worst": -25.0,
       "avg_nifty": 1.25,
-      "avg_excess": -2.54,
+      "avg_excess": -2.47,
       "beat_nifty_rate": 32.7,
       "by_symbol": {
         "AARTIIND.NS": {
@@ -1279,7 +1279,7 @@
         "APARINDS.NS": {
           "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -9.36
+          "avg_ret": -7.97
         },
         "APOLLOHOSP.NS": {
           "n": 1,
@@ -1309,7 +1309,7 @@
         "AZAD.NS": {
           "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -11.18
+          "avg_ret": -9.8
         },
         "BAJAJ-AUTO.NS": {
           "n": 1,
@@ -1449,7 +1449,7 @@
         "HFCL.NS": {
           "n": 2,
           "win_rate": 0.0,
-          "avg_ret": -16.54
+          "avg_ret": -15.38
         },
         "HINDALCO.NS": {
           "n": 4,
@@ -1579,7 +1579,7 @@
         "SYRMA.NS": {
           "n": 2,
           "win_rate": 50.0,
-          "avg_ret": -3.41
+          "avg_ret": -1.96
         },
         "TATACONSUM.NS": {
           "n": 1,
@@ -1604,7 +1604,7 @@
         "TDPOWERSYS.NS": {
           "n": 2,
           "win_rate": 50.0,
-          "avg_ret": -8.4
+          "avg_ret": -6.04
         },
         "TECHM.NS": {
           "n": 2,

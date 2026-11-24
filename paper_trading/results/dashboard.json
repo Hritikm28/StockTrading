@@ -1023,11 +1023,11 @@
 ]
 },
 "breadth": {
-"pct_above_200dma": 47.0,
-"pct_above_50dma": 54.0,
+"pct_above_200dma": 49.0,
+"pct_above_50dma": 56.0,
 "pct_above_200dma_month_ago": 27.0,
-"new_highs": 7,
-"new_lows": 10,
+"new_highs": 8,
+"new_lows": 9,
 "advancers": 133,
 "decliners": 362,
 "n_stocks": 499,
@@ -1528,17 +1528,17 @@
 40.4,
 45.4,
 46.0,
-45.1,
-45.1,
-49.0,
+47.0,
+47.0,
 50.2,
-47.2,
-47.6,
-47.4,
-46.0,
+52.4,
+48.6,
+48.6,
 49.4,
-49.6,
-47.5
+47.2,
+50.0,
+50.0,
+48.7
 ]
 }
 },
@@ -3880,9 +3880,9 @@
 {
 "symbol": "DX-Y.NYB",
 "name": "US dollar index",
-"last": 104.27,
-"week": 0.7,
-"month": 2.42,
+"last": 104.21,
+"week": 0.64,
+"month": 2.36,
 "points": false,
 "as_of": "2026-11-23"
 },
@@ -3898,54 +3898,54 @@
 {
 "symbol": "BZ=F",
 "name": "Crude oil (Brent)",
-"last": 86.55,
-"week": -6.37,
-"month": -25.85,
+"last": 86.43,
+"week": -6.5,
+"month": -25.95,
 "points": false,
 "as_of": "2026-11-23"
 },
 {
 "symbol": "GC=F",
 "name": "Gold",
-"last": 3661.3,
-"week": -4.98,
-"month": -8.65,
+"last": 3673.4,
+"week": -4.66,
+"month": -8.35,
 "points": false,
 "as_of": "2026-11-23"
 },
 {
 "symbol": "^N225",
 "name": "Japan shares (Nikkei)",
-"last": 59251.63,
-"week": -0.69,
-"month": -5.81,
+"last": 59013.22,
+"week": -1.09,
+"month": -6.19,
 "points": false,
 "as_of": "2026-11-24"
 },
 {
 "symbol": "^HSI",
 "name": "Hong Kong shares (Hang Seng)",
-"last": 22410.8,
-"week": -5.19,
-"month": -2.28,
+"last": 22643.95,
+"week": -4.67,
+"month": -1.95,
 "points": false,
-"as_of": "2026-11-20"
+"as_of": "2026-11-24"
 }
 ],
 "us_vs_200dma_pct": -1.54,
 "us_vix": 26.62
 },
 "risk": {
-"nav": 954429.0,
+"nav": 959464.0,
 "invested_pct": 98.0,
 "beta": 0.75,
 "corr_nifty": 0.45,
 "vol_pct": 24.3,
 "nifty_vol_pct": 14.4,
-"var95_pct": 2.27,
-"var95_rupees": 21687.0,
-"bad_day_avg_pct": 3.01,
-"worst_day_pct": -4.14,
+"var95_pct": 2.28,
+"var95_rupees": 21847.0,
+"bad_day_avg_pct": 3.02,
+"worst_day_pct": -4.15,
 "worst_day": "2026-09-15",
 "avg_correlation": 0.25,
 "top_weight_pct": 7.6,
@@ -3979,12 +3979,12 @@
 "pct": 6.0
 }
 ],
-"if_nifty_falls_10_pct": -7.53,
+"if_nifty_falls_10_pct": -7.54,
 "replay_worst_week": {
 "from": "2026-03-09",
 "to": "2026-03-13",
 "nifty_pct": -5.31,
-"portfolio_pct": -3.5
+"portfolio_pct": -3.53
 },
 "volatility_percentile": 87.0,
 "momentum_percentile": 97.0,
@@ -4015,6 +4015,11 @@
 "pct_of_start": 0.07
 },
 {
+"symbol": "SYRMA",
+"rupees": -1379.0,
+"pct_of_start": -0.14
+},
+{
 "symbol": "BHEL",
 "rupees": -1468.0,
 "pct_of_start": -0.15
@@ -4025,14 +4030,14 @@
 "pct_of_start": -0.15
 },
 {
-"symbol": "SYRMA",
-"rupees": -2352.0,
-"pct_of_start": -0.24
-},
-{
 "symbol": "CHENNPETRO",
 "rupees": -3348.0,
 "pct_of_start": -0.33
+},
+{
+"symbol": "APARINDS",
+"rupees": -5018.0,
+"pct_of_start": -0.5
 },
 {
 "symbol": "WELCORP",
@@ -4040,29 +4045,24 @@
 "pct_of_start": -0.56
 },
 {
-"symbol": "APARINDS",
-"rupees": -5956.0,
-"pct_of_start": -0.6
-},
-{
 "symbol": "TDPOWERSYS",
-"rupees": -7382.0,
-"pct_of_start": -0.74
+"rupees": -5875.0,
+"pct_of_start": -0.59
 },
 {
 "symbol": "AZAD",
-"rupees": -8124.0,
-"pct_of_start": -0.81
+"rupees": -7219.0,
+"pct_of_start": -0.72
+},
+{
+"symbol": "HFCL",
+"rupees": -12374.0,
+"pct_of_start": -1.24
 },
 {
 "symbol": "STLTECH",
 "rupees": -13023.0,
 "pct_of_start": -1.3
-},
-{
-"symbol": "HFCL",
-"rupees": -13085.0,
-"pct_of_start": -1.31
 }
 ],
 "realised_rupees": 0.0,
@@ -4137,7 +4137,7 @@
 {
 "name": "Breadth",
 "status": "amber",
-"text": "47% of NIFTY 500 stocks are in an uptrend (mixed)."
+"text": "49% of NIFTY 500 stocks are in an uptrend (mixed)."
 },
 {
 "name": "Price tag",

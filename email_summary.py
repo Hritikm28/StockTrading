@@ -294,6 +294,15 @@ def scoreboard():
     )
 
 
+def day_trade_line():
+    """Today's result in the Claude day-trade test (day_trade_test.py)."""
+    try:
+        import day_trade_test as dt
+        return dt.daily_html(json.loads(dt.RESULTS_FILE.read_text()), today)
+    except Exception:
+        return ""
+
+
 def shadow_grade():
     """Grade of the untraded picks (shadow_grader.py): the live record only
     covers trades the gate allowed, so this is the honest edge check."""
@@ -325,6 +334,7 @@ html = f"""<html><body style='font-family:Segoe UI,Arial,sans-serif;color:#222'>
 </p>
 {status_banner()}
 {portfolio_section()}
+{day_trade_line()}
 {shadow_grade()}
 {scoreboard()}
 <p style='font-size:12px;color:#999;margin-top:20px'>

@@ -159,6 +159,17 @@ jobs:
         continue-on-error: true
         run: python market_dashboard.py || true
 
+      # The Claude day-trade test (day_trade_test.py, daytrade/MORNING.md):
+      # grade the picks a Claude session saved on the daily-picks branch this
+      # morning, then build the pack it reads tomorrow morning.
+      - name: Grade Claude's day-trade picks, build tomorrow's pack
+        timeout-minutes: 5
+        continue-on-error: true
+        run: |
+          git fetch --no-tags origin +refs/heads/daily-picks:refs/remotes/origin/daily-picks || true
+          python day_trade_test.py --grade || true
+          python day_trade_test.py --pack || true
+
       - name: Publish signals
         run: python publish_signals.py
 
@@ -205,6 +216,8 @@ jobs:
           git add paper_trading/results/shadow_report.md 2>/dev/null || true
           git add paper_trading/portfolio.json 2>/dev/null || true
           git add paper_trading/results/dashboard.json 2>/dev/null || true
+          git add paper_trading/results/day_trade_test.json 2>/dev/null || true
+          git add daytrade/pack.json 2>/dev/null || true
           # Alpha data cache (FII/DII flow history etc.) — commit to git, not
           # just actions/cache: the rolling 5d flow signal needs accumulated
           # history and cache eviction was silently zeroing the alpha.

@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-24",
+  "made_at": "2026-11-24T08:24:20+05:30",
+  "pack_as_of": "2026-11-23",
+  "market_view": "After Monday's sharp fall (Nifty -1.75%, banks -3.2%, metals -3.7%, IT +2%) and weak Asian markets this morning, expect a soft or flat open. Large oversold names and the day's relative-strength leaders are the best odds for an open-to-close gain.",
+  "picks": [
+    {"symbol": "AXISBANK", "reason": "Fell 4% on Monday in a bank-led sell-off described as profit booking, with no company-specific bad news; still up 14% over 20 days and only 4% below its high. Heavily sold large banks often recover during the following session.", "confidence": 2, "expected_move_pct": 1.2},
+    {"symbol": "COFORGE", "reason": "IT was the only sector to rise on Monday; Coforge closed at a 52-week high, up 2.7% on 1.6x normal volume and 6.6% over five days. Leaders at new highs on a down day tend to keep their strength.", "confidence": 2, "expected_move_pct": 1.0},
+    {"symbol": "LAURUSLABS", "reason": "Defensive pharma with strong momentum: up 3.3% on a falling day, 6.8% over five days and 15% over 20, 3% below its high. Defensive leaders tend to hold up if the market stays weak.", "confidence": 2, "expected_move_pct": 1.0}
+  ],
+  "sources": [
+    "https://www.kotakneo.com/news/market-news/sensex-nifty-close-lower-as-banking-stocks-weigh-on-markets/",
+    "https://www.marketcalls.in/futures-and-options/post-market-report-23-november-2026.html",
+    "https://univest.in/blogs/closing-bell-sensex-nifty-bank-nifty-23-november-2026"
+  ],
+  "note": "Made by the owner's main Claude session following daytrade/MORNING.md, because the scheduled morning session stopped without saving picks."
+}

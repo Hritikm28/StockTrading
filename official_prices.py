@@ -21,10 +21,12 @@ update() runs each evening after the Yahoo step:
      series) over the day's stored bar, for every stored stock NSE priced.
      Sessions missed in the last two weeks are caught up in order.
   2. On a split or bonus ex-date NSE quotes the previous close on the new
-     basis. When that differs from the last close, the stored history
-     before the ex-date is rescaled by the same factor, and the event is
-     added to CORP_FILE for the paper book
-     (portfolio_book.apply_corporate_actions).
+     basis. When that differs from NSE's own close of the session before
+     (weekends included: NSE trades on Diwali even on a Sunday), the stored
+     history before the ex-date is rescaled by the same factor, and the
+     event is added to CORP_FILE for the paper book
+     (portfolio_book.apply_corporate_actions). Days are processed once, in
+     order, never an earlier one after a later one.
   3. heal() looks for one-day moves in the stored history too big to be
      real and asks NSE's bhav copy for that day whether a split explains
      them. That repairs breaks already in the files.
@@ -48,6 +50,9 @@ INDEX_FILES    = {'NIFTY50', 'NIFTYBANK', 'INDIAVIX', 'NIFTY500MOM50'}
 # NSE's previous close equals its last close to the paisa except on an
 # ex-date, so any gap above this is a corporate action.
 TOL            = 0.02
+# heal() compares with our stored bars, which can miss a session NSE had,
+# so it only acts on big corrections; every bonus up to 1:10 is bigger.
+HEAL_TOL       = 0.08
 CATCH_UP_DAYS  = 14       # calendar days of missed sessions to catch up
 FIRST_RUN_DAYS = 7        # a fresh state rewrites about the last week
 STALE_DAYS     = 10       # files with no bar this recent are left to Yahoo
@@ -104,9 +109,10 @@ def load_events(data_dir=DATA_DIR) -> List[Dict]:
     return _load_json(Path(data_dir) / CORP_FILE, [])
 
 
-def _record_events(data_dir: Path, new: List[Dict], today: date):
-    seen = {(e['symbol'], e['ex_date']): e for e in load_events(data_dir)}
-    for e in new:
+def _record_events(data_dir: Path, events: List[Dict], today: date):
+    """Write the full list of events (the file is replaced, not merged)."""
+    seen = {}
+    for e in events:
         seen.setdefault((e['symbol'], e['ex_date']), e)
     cutoff = (today - timedelta(days=EVENT_DAYS)).isoformat()
     keep = sorted((e for e in seen.values() if e['ex_date'] >= cutoff),
@@ -153,45 +159,36 @@ def apply_session(day: date, rows: pd.DataFrame,
     """Write `day`'s official bars into `frames` (in place), rescaling the
     history before `day` where NSE's previous close shows a split or bonus.
 
-    `prev_close`: NSE's own closes on the previous session. With them, an
-    event must show in NSE's numbers alone; without (a first run), the last
-    stored close stands in, if it is from the previous session.
+    `prev_close`: NSE's own closes on the session before `day`. An event is
+    only ever read from NSE's numbers: the previous close it quotes against
+    the close it published. Without them nothing is detected. Our stored
+    previous bar can be a different session: on 2026-11-09 NSE's previous
+    close was the Sunday Diwali (Muhurat) session, which Yahoo doesn't
+    carry, and comparing with the stored Friday close made 93 false events.
     Returns (events, symbols changed)."""
     ts = pd.Timestamp(day)
     by = rows.drop_duplicates('symbol').set_index('symbol')
     recent = ts - pd.Timedelta(days=STALE_DAYS)
-    mine = []
-    lasts = Counter()
+    events, changed = [], set()
     for s, df in frames.items():
         if s not in by.index:
             continue
-        before = df.index[df.index < ts]
-        if not len(before) or before[-1] < recent:
-            continue                    # stale file: Yahoo must fill it first
-        mine.append(s)
-        lasts[before[-1]] += 1
-    prev_day = lasts.most_common(1)[0][0] if lasts else None
-
-    events, changed = [], set()
-    for s in mine:
-        r, df = by.loc[s], frames[s]
-        a = _pos(r['prevclose'])
         before = df[df.index < ts]
-        last_day, last = before.index[-1], float(before['Close'].iloc[-1])
+        if not len(before) or before.index[-1] < recent:
+            continue                    # stale file: Yahoo must fill it first
+        r = by.loc[s]
+        a = _pos(r['prevclose'])
         c = _pos((prev_close or {}).get(s))
-        factor, raw = None, False
-        if a and c:
-            if abs(a / c - 1) > TOL:
-                factor = a / c
-                # still on the old basis, unless Yahoo re-sent it adjusted
-                raw = abs(np.log(last / c)) < abs(np.log(last / a))
-        elif a and last_day == prev_day and abs(a / last - 1) > TOL:
-            factor, raw = a / last, True
-        if factor is not None:
+        if a and c and abs(a / c - 1) > TOL:
+            factor = a / c
+            last = float(before['Close'].iloc[-1])
+            # still on the old basis, unless Yahoo re-sent it adjusted
+            raw = bool(abs(np.log(last / c)) < abs(np.log(last / a)))
             if raw:
                 df = rescale(df, ts, factor)
             events.append({'symbol': f'{s}.NS', 'ex_date': day.isoformat(),
-                           'factor': round(factor, 6)})
+                           'factor': round(factor, 6), 'source': 'daily',
+                           'rescaled': raw})
         bar = pd.DataFrame([_bar(r)], index=[ts]).reindex(columns=df.columns)
         frames[s] = pd.concat([df[df.index != ts], bar]).sort_index()
         changed.add(s)
@@ -207,7 +204,10 @@ def heal(frames: Dict[str, pd.DataFrame], fetch: Callable[[date], object],
     The test uses ratios, so it holds whatever basis the stored prices are
     on: NSE's move that day is close / previous close, ours is close /
     stored previous close, and their ratio is the correction (1 for a real
-    move). `checked` ('SYM:date') remembers moves already settled."""
+    move). The stored previous bar can miss a session NSE had (a Muhurat
+    session), which puts that session's move into the ratio, so only big
+    corrections (HEAL_TOL) count. `checked` ('SYM:date') remembers moves
+    already settled."""
     counts = Counter(d for df in frames.values()
                      for d in df.index[-(sessions + 1):])
     need = max(1, len(frames) // 2)
@@ -245,12 +245,13 @@ def heal(frames: Dict[str, pd.DataFrame], fetch: Callable[[date], object],
         if not (a and cd):
             continue
         k = float(df.at[d, 'Close']) / float(df.at[p, 'Close']) * a / cd
-        if abs(k - 1) > TOL:
+        if abs(k - 1) > HEAL_TOL:
             frames[s] = rescale(df, d, k)
             changed.add(s)
             events.append({'symbol': f'{s}.NS',
                            'ex_date': d.date().isoformat(),
-                           'factor': round(k, 6)})
+                           'factor': round(k, 6), 'source': 'history',
+                           'rescaled': True})
     return events, changed
 
 
@@ -258,16 +259,79 @@ def heal(frames: Dict[str, pd.DataFrame], fetch: Callable[[date], object],
 # Daily entry point
 # ---------------------------------------------------------------------------
 def _follows(prev: Optional[str], d: date, done: Set[str]) -> bool:
-    """`prev` is the session just before `d`: every weekday between them
-    was a holiday already processed."""
+    """`prev` is the session just before `d`: every day between them was
+    processed and had no session."""
     if not prev or prev >= d.isoformat():
         return False
     x = date.fromisoformat(prev) + timedelta(days=1)
     while x < d:
-        if x.weekday() < 5 and x.isoformat() not in done:
+        if x.isoformat() not in done:
             return False
         x += timedelta(days=1)
     return True
+
+
+def _session_before(d: date, fetch: Callable, cache: Dict) -> Optional[pd.DataFrame]:
+    """NSE's rows for the last session before `d`, weekends included (NSE
+    trades on Diwali even on a Sunday). None if a download failed."""
+    for i in range(1, 8):
+        x = d - timedelta(days=i)
+        if x not in cache:
+            cache[x] = fetch(x)
+        rows = cache[x]
+        if rows is None:
+            return None
+        if len(rows):
+            return rows
+    return None
+
+
+def _closes(rows: pd.DataFrame) -> Dict[str, float]:
+    return {s: round(float(c), 4) for s, c in zip(rows['symbol'], rows['close'])}
+
+
+def check_old_events(events: List[Dict], frames: Dict[str, pd.DataFrame],
+                     fetch: Callable, cache: Dict,
+                     healed: Set[str] = frozenset()) -> Tuple[List[Dict], List[Dict], Set[str]]:
+    """Events recorded before the 2026-11-24 fix carry no 'source'. Check
+    each against NSE's own numbers; undo the stored rescale of those NSE
+    doesn't confirm, except repairs heal() made (TRENT), which are on its
+    list of moves it settled (`healed`, 'SYM:date').
+    Returns (events kept, events undone, symbols changed)."""
+    keep, undone, changed = [], [], set()
+    for e in events:
+        if e.get('source'):
+            keep.append(e)
+            continue
+        f = float(e['factor'])
+        d = date.fromisoformat(e['ex_date'])
+        if d not in cache:
+            cache[d] = fetch(d)
+        s = e['symbol'].replace('.NS', '')
+        rows, a, c = cache[d], None, None
+        if rows is None:
+            keep.append(e)                  # can't tell yet: ask next run
+            continue
+        if len(rows):                       # (no session that day: no event)
+            prev = _session_before(d, fetch, cache)
+            if prev is None:
+                keep.append(e)
+                continue
+            a = rows.loc[rows['symbol'] == s, 'prevclose']
+            c = prev.loc[prev['symbol'] == s, 'close']
+            a = _pos(a.iloc[0]) if len(a) else None
+            c = _pos(c.iloc[0]) if len(c) else None
+        if a and c and abs(a / c - 1) > TOL:
+            keep.append({**e, 'source': 'daily', 'rescaled': True})
+            continue
+        if f"{s}:{e['ex_date']}" in healed:     # heal() repaired a break here
+            keep.append({**e, 'source': 'history', 'rescaled': True})
+            continue
+        if s in frames:
+            frames[s] = rescale(frames[s], pd.Timestamp(d), 1 / f)
+            changed.add(s)
+        undone.append(e)
+    return keep, undone, changed
 
 
 def update(upto: date, data_dir=DATA_DIR, fetch: Callable = None,
@@ -283,40 +347,53 @@ def update(upto: date, data_dir=DATA_DIR, fetch: Callable = None,
     frames = load_frames(data_dir)
     if not frames:
         return []
+    cache: Dict[date, Optional[pd.DataFrame]] = {}
+    checked = set(state.get('checked', []))
 
-    back = CATCH_UP_DAYS if done else FIRST_RUN_DAYS
-    days = [upto - timedelta(days=i) for i in range(back, -1, -1)]
-    days = [d for d in days if d.weekday() < 5 and d.isoformat() not in done]
-    events, changed, written = [], set(), []
+    recorded, undone, changed = check_old_events(load_events(data_dir), frames,
+                                                 fetch, cache, checked)
+    # Only days after the last one processed, in order, weekends included:
+    # an earlier day is never processed after a later one.
+    if done:
+        start = max(date.fromisoformat(max(done)) + timedelta(days=1),
+                    upto - timedelta(days=CATCH_UP_DAYS))
+    else:
+        start = upto - timedelta(days=FIRST_RUN_DAYS)
+    days = [start + timedelta(days=i) for i in range((upto - start).days + 1)]
+    events, written = [], []
     for d in days:
-        rows = fetch(d)
+        rows = cache[d] if d in cache else fetch(d)
         if rows is None:
             if verbose:
                 print(f"  NSE prices for {d} not available yet; retrying next run")
             break                       # keep sessions in order
-        if len(rows):
-            prev = (last.get('close')
-                    if _follows(last.get('date'), d, done) else None)
-            ev, ch = apply_session(d, rows, frames, prev)
-            events += ev
-            changed |= ch
-            written.append(d.isoformat())
-            last = {'date': d.isoformat(),
-                    'close': {s: round(float(c), 4)
-                              for s, c in zip(rows['symbol'], rows['close'])}}
+        if not len(rows):
+            if d == upto:
+                break                   # maybe not published yet: ask again
+            done.add(d.isoformat())     # no session that day
+            continue
+        if _follows(last.get('date'), d, done):
+            prev = last.get('close')
+        else:
+            p = _session_before(d, fetch, cache)
+            prev = _closes(p) if p is not None else None
+        ev, ch = apply_session(d, rows, frames, prev)
+        events += ev
+        changed |= ch
+        written.append(d.isoformat())
+        last = {'date': d.isoformat(), 'close': _closes(rows)}
         done.add(d.isoformat())
 
-    checked = set(state.get('checked', []))
     ev, ch = heal(frames, fetch, checked, heal_fetches)
     events += ev
     changed |= ch
 
     for s in changed:
         frames[s].to_parquet(data_dir / f"{s}.parquet")
-    state = {'done': sorted(done)[-60:], 'last': last,
+    state = {'done': sorted(done)[-90:], 'last': last,
              'checked': sorted(checked, key=lambda k: k.rsplit(':', 1)[-1])[-5000:]}
     (data_dir / STATE_FILE).write_text(json.dumps(state))
-    _record_events(data_dir, events, upto)
+    _record_events(data_dir, recorded + events, upto)
     if verbose:
         print(f"  NSE official prices: {len(written)} session(s) written "
               f"({', '.join(written) or 'all current'}); "
@@ -324,6 +401,9 @@ def update(upto: date, data_dir=DATA_DIR, fetch: Callable = None,
         for e in events:
             print(f"    split/bonus: {e['symbol']} ex {e['ex_date']}, "
                   f"earlier prices x{e['factor']:.4f}")
+        if undone:
+            print(f"    undid {len(undone)} event(s) NSE doesn't confirm: "
+                  + ", ".join(f"{e['symbol']} {e['ex_date']}" for e in undone))
     return events
 
 

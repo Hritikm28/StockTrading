@@ -18,9 +18,9 @@
    "last_price": 2152.8
   },
   "TDPOWERSYS.NS": {
-   "shares": 86.43719800515836,
+   "shares": 88.92674972706514,
    "entry_date": "2026-11-05",
-   "entry_price": 774.56,
+   "entry_price": 732.2,
    "cost_basis": 59702.47437999261,
    "last_price": 605.3
   },
@@ -32,16 +32,16 @@
    "last_price": 1979.2
   },
   "APARINDS.NS": {
-   "shares": 3.9919899615396184,
+   "shares": 4.058130542007719,
    "entry_date": "2026-11-05",
-   "entry_price": 16684.66,
+   "entry_price": 16150.0,
    "cost_basis": 62578.1976461883,
    "last_price": 14184.0
   },
   "SYRMA.NS": {
-   "shares": 41.914636804323784,
+   "shares": 42.56764936133362,
    "entry_date": "2026-11-05",
-   "entry_price": 1598.54,
+   "entry_price": 1550.0,
    "cost_basis": 64851.39653145055,
    "last_price": 1491.1
   },
@@ -53,9 +53,9 @@
    "last_price": 2370.7
   },
   "AZAD.NS": {
-   "shares": 24.382233875594906,
+   "shares": 24.77764753340883,
    "entry_date": "2026-11-05",
-   "entry_price": 2734.94,
+   "entry_price": 2649.0,
    "cost_basis": 63952.35531183046,
    "last_price": 2289.7
   },
@@ -102,9 +102,9 @@
    "last_price": 590.8
   },
   "HFCL.NS": {
-   "shares": 297.592042715769,
+   "shares": 301.57101975144906,
    "entry_date": "2026-11-05",
-   "entry_price": 231.84,
+   "entry_price": 225.6,
    "cost_basis": 66234.623982438,
    "last_price": 178.6
   }
@@ -218,7 +218,7 @@
   },
   {
    "date": "2026-11-23",
-   "nav": 954429.1,
+   "nav": 959463.89,
    "cash": 23045.5,
    "n_holdings": 15,
    "nifty": 25349.65,
@@ -509,35 +509,45 @@
    "ex_date": "2026-11-09",
    "factor": 1.033106,
    "shares_before": 4.0581,
-   "shares_after": 3.992
+   "shares_after": 3.992,
+   "reverted": true,
+   "note": "false event: NSE's previous close on 2026-11-09 was the Sunday Muhurat session, not a split; shares restored 2026-11-24"
   },
   {
    "symbol": "AZAD.NS",
    "ex_date": "2026-11-09",
    "factor": 1.032443,
    "shares_before": 24.7776,
-   "shares_after": 24.3822
+   "shares_after": 24.3822,
+   "reverted": true,
+   "note": "false event: NSE's previous close on 2026-11-09 was the Sunday Muhurat session, not a split; shares restored 2026-11-24"
   },
   {
    "symbol": "HFCL.NS",
    "ex_date": "2026-11-09",
    "factor": 1.027675,
    "shares_before": 301.571,
-   "shares_after": 297.592
+   "shares_after": 297.592,
+   "reverted": true,
+   "note": "false event: NSE's previous close on 2026-11-09 was the Sunday Muhurat session, not a split; shares restored 2026-11-24"
   },
   {
    "symbol": "SYRMA.NS",
    "ex_date": "2026-11-09",
    "factor": 1.031316,
    "shares_before": 42.5676,
-   "shares_after": 41.9146
+   "shares_after": 41.9146,
+   "reverted": true,
+   "note": "false event: NSE's previous close on 2026-11-09 was the Sunday Muhurat session, not a split; shares restored 2026-11-24"
   },
   {
    "symbol": "TDPOWERSYS.NS",
    "ex_date": "2026-11-09",
    "factor": 1.057849,
    "shares_before": 88.9267,
-   "shares_after": 86.4372
+   "shares_after": 86.4372,
+   "reverted": true,
+   "note": "false event: NSE's previous close on 2026-11-09 was the Sunday Muhurat session, not a split; shares restored 2026-11-24"
   }
  ]
 }

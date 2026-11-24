@@ -129,7 +129,7 @@ def _voting() -> List[str]:
 
 
 def build(book: Dict, summary: Dict, shadow: Dict, dash: Dict = None,
-          voting: List[str] = None) -> Tuple[str, str]:
+          voting: List[str] = None, daytrade: Dict = None) -> Tuple[str, str]:
     dash = dash or {}
     nav = sorted(book.get('nav', []), key=lambda p: p['date'])
     if not nav:
@@ -298,6 +298,14 @@ def build(book: Dict, summary: Dict, shadow: Dict, dash: Dict = None,
                  f"invests about {_inr(plan['invested'])}. To hold at least one "
                  f"share of every stock you'd need about "
                  f"{_inr(plan['min_capital'])}.</p>"]
+
+    # 7b. Claude's day-trade test (a separate experiment)
+    try:
+        import day_trade_test as dt
+        html.append(dt.weekly_html(daytrade if daytrade is not None
+                                   else _load(dt.RESULTS_FILE)))
+    except Exception:
+        pass
 
     # 8. Edge check
     if shadow.get('verdict'):

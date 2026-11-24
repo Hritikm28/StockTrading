@@ -39,6 +39,31 @@ LTCG_EXEMPT = 125_000.0
 LONG_TERM_DAYS = 365
 
 
+# Same-day (intraday) trades, bought and sold in one session through a
+# discount broker's intraday product, at 2026 rates: brokerage 0.03% or
+# Rs 20 an order, whichever is less; STT 0.025% on the sale only; stamp
+# duty 0.003% on the purchase only; the exchange and SEBI fees above; GST
+# on brokerage and fees; and slippage at the open and near the close, which
+# is smaller than for delivery orders in the liquid stocks these trades use.
+# About 0.2% for the round trip on Rs 1 lakh, before tax.
+INTRADAY_BROKERAGE_PCT = 0.03
+INTRADAY_BROKERAGE_CAP = 20.0
+INTRADAY_STT_PCT = 0.025
+INTRADAY_STAMP_PCT = 0.003
+INTRADAY_SLIPPAGE_PCT = 0.05
+
+
+def intraday_cost(value: float) -> float:
+    """Rupees it costs to buy `value` of a stock and sell it the same day."""
+    if value <= 0:
+        return 0.0
+    brokerage = min(value * INTRADAY_BROKERAGE_PCT / 100, INTRADAY_BROKERAGE_CAP)
+    fees = value * (EXCHANGE_PCT + SEBI_PCT) / 100
+    return (2 * (brokerage + fees) * (1 + GST_RATE)
+            + value * (INTRADAY_STT_PCT + INTRADAY_STAMP_PCT
+                       + 2 * INTRADAY_SLIPPAGE_PCT) / 100)
+
+
 def buy_cost(value: float) -> float:
     """Rupees paid on top of `value` to buy it."""
     return max(value, 0.0) * BUY_RATE

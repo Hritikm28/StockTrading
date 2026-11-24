@@ -26,7 +26,7 @@ jobs:
           import official_prices as op
           from market_calendar import latest_session
           d = '/tmp/stocks'
-          syms = ['APARINDS', 'AZAD', 'HFCL', 'ABSLAMC', 'AEGISVOPAK', 'TDPOWERSYS', 'TRENT', 'RELIANCE']
+          syms = ['APARINDS', 'AZAD', 'HFCL', 'FINCABLES', 'RRKABEL', 'TDPOWERSYS', 'TRENT', 'RELIANCE']
           def show(tag):
               f = op.load_frames(d)
               for s in syms:

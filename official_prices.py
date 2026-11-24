@@ -291,10 +291,12 @@ def _closes(rows: pd.DataFrame) -> Dict[str, float]:
 
 
 def check_old_events(events: List[Dict], frames: Dict[str, pd.DataFrame],
-                     fetch: Callable, cache: Dict) -> Tuple[List[Dict], List[Dict], Set[str]]:
+                     fetch: Callable, cache: Dict,
+                     healed: Set[str] = frozenset()) -> Tuple[List[Dict], List[Dict], Set[str]]:
     """Events recorded before the 2026-11-24 fix carry no 'source'. Check
     each against NSE's own numbers; undo the stored rescale of those NSE
-    doesn't confirm, except big ones, which came from heal() (TRENT).
+    doesn't confirm, except repairs heal() made (TRENT), which are on its
+    list of moves it settled (`healed`, 'SYM:date').
     Returns (events kept, events undone, symbols changed)."""
     keep, undone, changed = [], [], set()
     for e in events:
@@ -322,7 +324,7 @@ def check_old_events(events: List[Dict], frames: Dict[str, pd.DataFrame],
         if a and c and abs(a / c - 1) > TOL:
             keep.append({**e, 'source': 'daily', 'rescaled': True})
             continue
-        if abs(f - 1) >= HEAL_TOL:      # a repair by heal() (TRENT), not an event
+        if f"{s}:{e['ex_date']}" in healed:     # heal() repaired a break here
             keep.append({**e, 'source': 'history', 'rescaled': True})
             continue
         if s in frames:
@@ -346,9 +348,10 @@ def update(upto: date, data_dir=DATA_DIR, fetch: Callable = None,
     if not frames:
         return []
     cache: Dict[date, Optional[pd.DataFrame]] = {}
+    checked = set(state.get('checked', []))
 
     recorded, undone, changed = check_old_events(load_events(data_dir), frames,
-                                                 fetch, cache)
+                                                 fetch, cache, checked)
     # Only days after the last one processed, in order, weekends included:
     # an earlier day is never processed after a later one.
     if done:
@@ -381,7 +384,6 @@ def update(upto: date, data_dir=DATA_DIR, fetch: Callable = None,
         last = {'date': d.isoformat(), 'close': _closes(rows)}
         done.add(d.isoformat())
 
-    checked = set(state.get('checked', []))
     ev, ch = heal(frames, fetch, checked, heal_fetches)
     events += ev
     changed |= ch

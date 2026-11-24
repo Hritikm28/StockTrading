@@ -212,20 +212,28 @@ def test_old_unconfirmed_events_are_undone(data):
     store(data, 'AAA', np.where(pre, 103.0, 104.0), days)
     store(data, 'TRENT', np.full(len(days), 40.0), days)
     store(data, 'CCC', np.where(pre, 50.0, 51.0), days)   # rescaled correctly
+    # FIN jumped 20% in the Sunday session: big, but just as false
+    store(data, 'FIN', np.where(pre, 120.0, 121.0), days)
     (data / op.CORP_FILE).write_text(json.dumps([
         {'symbol': 'TRENT.NS', 'ex_date': '2026-01-01', 'factor': 0.666667},
         {'symbol': 'AAA.NS', 'ex_date': '2026-11-09', 'factor': 1.03},
+        {'symbol': 'FIN.NS', 'ex_date': '2026-11-09', 'factor': 1.2},
         {'symbol': 'CCC.NS', 'ex_date': '2026-11-09', 'factor': 0.5}]))
-    seed_state(data, P, {'AAA': 104.0, 'TRENT': 40.0, 'CCC': 51.0})
+    seed_state(data, P, {'AAA': 104.0, 'TRENT': 40.0, 'CCC': 51.0, 'FIN': 121.0})
+    st = json.loads((data / op.STATE_FILE).read_text())
+    (data / op.STATE_FILE).write_text(json.dumps({**st, 'checked': ['TRENT:2026-01-01']}))
     sun, mon = date(2026, 11, 8), date(2026, 11, 9)
-    feed = Feed({sun: bhav(sun, {'AAA': (103.0, 100.0), 'CCC': (100.0, 100.0)}),
-                 mon: bhav(mon, {'AAA': (104.0, 103.0), 'CCC': (51.0, 50.0)})})
+    feed = Feed({sun: bhav(sun, {'AAA': (103.0, 100.0), 'CCC': (100.0, 100.0),
+                                 'FIN': (120.0, 100.0)}),
+                 mon: bhav(mon, {'AAA': (104.0, 103.0), 'CCC': (51.0, 50.0),
+                                 'FIN': (121.0, 120.0)})})
     op.update(P, data, fetch=feed, verbose=False)
     kept = {e['symbol']: e for e in op.load_events(data)}
     assert set(kept) == {'TRENT.NS', 'CCC.NS'}
     assert kept['TRENT.NS']['source'] == 'history' and kept['CCC.NS']['source'] == 'daily'
     a = read(data, 'AAA')
     assert a.loc['2026-11-06', 'Close'] == pytest.approx(100.0)   # x1.03 undone
+    assert read(data, 'FIN').loc['2026-11-06', 'Close'] == pytest.approx(100.0)
     assert a.loc['2026-11-09', 'Close'] == 104.0
     assert read(data, 'CCC').loc['2026-11-06', 'Close'] == 50.0  # left alone
     # settled: the next run asks NSE nothing about them

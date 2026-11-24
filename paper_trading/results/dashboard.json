@@ -1,5 +1,5 @@
 {
-"as_of": "2026-11-23",
+"as_of": "2026-11-24",
 "errors": [],
 "trend_vs_200dma": 5.63,
 "series_nifty": {
@@ -1025,15 +1025,14 @@
 "breadth": {
 "pct_above_200dma": 49.0,
 "pct_above_50dma": 56.0,
-"pct_above_200dma_month_ago": 27.0,
+"pct_above_200dma_month_ago": 30.0,
 "new_highs": 8,
 "new_lows": 9,
-"advancers": 133,
-"decliners": 362,
+"advancers": 0,
+"decliners": 0,
 "n_stocks": 499,
 "series": {
 "dates": [
-"2025-11-18",
 "2025-11-19",
 "2025-11-20",
 "2025-11-21",
@@ -1284,10 +1283,10 @@
 "2026-11-18",
 "2026-11-19",
 "2026-11-20",
-"2026-11-23"
+"2026-11-23",
+"2026-11-24"
 ],
 "values": [
-62.5,
 62.1,
 61.2,
 56.8,
@@ -1538,6 +1537,7 @@
 47.2,
 50.0,
 50.0,
+48.7,
 48.7
 ]
 }
@@ -3844,96 +3844,96 @@
 {
 "symbol": "^GSPC",
 "name": "US shares (S&P 500)",
-"last": 7237.17,
-"week": -2.42,
-"month": -5.07,
+"last": 7201.09,
+"week": -1.9,
+"month": -6.2,
 "points": false,
-"as_of": "2026-11-23"
+"as_of": "2026-11-24"
 },
 {
 "symbol": "^IXIC",
 "name": "US tech shares (Nasdaq)",
-"last": 24089.56,
-"week": -1.71,
-"month": -7.19,
+"last": 23733.54,
+"week": -2.45,
+"month": -9.31,
 "points": false,
-"as_of": "2026-11-23"
+"as_of": "2026-11-24"
 },
 {
 "symbol": "^VIX",
 "name": "US fear gauge (VIX)",
-"last": 26.62,
-"week": 3.71,
-"month": 7.17,
+"last": 26.36,
+"week": 0.9,
+"month": 7.97,
 "points": true,
-"as_of": "2026-11-23"
+"as_of": "2026-11-24"
 },
 {
 "symbol": "^TNX",
 "name": "US 10-year interest rate",
-"last": 4.92,
+"last": 4.9,
 "week": -0.2,
-"month": -0.07,
+"month": -0.08,
 "points": true,
-"as_of": "2026-11-23"
+"as_of": "2026-11-24"
 },
 {
 "symbol": "DX-Y.NYB",
 "name": "US dollar index",
-"last": 104.21,
-"week": 0.64,
-"month": 2.36,
+"last": 103.85,
+"week": 0.35,
+"month": 1.85,
 "points": false,
-"as_of": "2026-11-23"
+"as_of": "2026-11-24"
 },
 {
 "symbol": "INR=X",
 "name": "Rupees per US dollar",
-"last": 92.67,
-"week": -1.66,
+"last": 92.9,
+"week": -1.13,
 "month": -2.15,
 "points": false,
-"as_of": "2026-11-23"
+"as_of": "2026-11-24"
 },
 {
 "symbol": "BZ=F",
 "name": "Crude oil (Brent)",
-"last": 86.43,
-"week": -6.5,
-"month": -25.95,
+"last": 88.42,
+"week": -5.07,
+"month": -23.65,
 "points": false,
-"as_of": "2026-11-23"
+"as_of": "2026-11-24"
 },
 {
 "symbol": "GC=F",
 "name": "Gold",
-"last": 3673.4,
-"week": -4.66,
-"month": -8.35,
+"last": 3563.1,
+"week": -7.79,
+"month": -11.77,
 "points": false,
-"as_of": "2026-11-23"
+"as_of": "2026-11-24"
 },
 {
 "symbol": "^N225",
 "name": "Japan shares (Nikkei)",
-"last": 59013.22,
-"week": -1.09,
-"month": -6.19,
+"last": 56436.65,
+"week": -7.7,
+"month": -12.67,
 "points": false,
-"as_of": "2026-11-24"
+"as_of": "2026-11-20"
 },
 {
 "symbol": "^HSI",
 "name": "Hong Kong shares (Hang Seng)",
-"last": 22643.95,
-"week": -4.67,
-"month": -1.95,
+"last": 22383.74,
+"week": -5.77,
+"month": -3.07,
 "points": false,
-"as_of": "2026-11-24"
+"as_of": "2026-11-23"
 }
 ],
-"us_vs_200dma_pct": -1.54,
-"us_vix": 26.62
+"us_vs_200dma_pct": -2.04,
+"us_vix": 26.36
 },
 "risk": {
 "nav": 959464.0,
@@ -3941,7 +3941,7 @@
 "beta": 0.75,
 "corr_nifty": 0.45,
 "vol_pct": 24.3,
-"nifty_vol_pct": 14.4,
+"nifty_vol_pct": 14.5,
 "var95_pct": 2.28,
 "var95_rupees": 21847.0,
 "bad_day_avg_pct": 3.02,
@@ -3979,7 +3979,7 @@
 "pct": 6.0
 }
 ],
-"if_nifty_falls_10_pct": -7.54,
+"if_nifty_falls_10_pct": -7.53,
 "replay_worst_week": {
 "from": "2026-03-09",
 "to": "2026-03-13",
@@ -4118,12 +4118,6 @@
 "symbol": "ATHERENERG",
 "text": "Alteration Of Capital and Fund Raising-XBRL",
 "link": "https://nsearchives.nseindia.com/corporate/xbrl/ALTERATION_OF_CAPITAL_AND_FUND_RAISING_24448_WebXMLFile_20261117_090016383.xml"
-},
-{
-"date": "2026-11-16",
-"symbol": "BHEL",
-"text": "Record Date Updates",
-"link": "https://nsearchives.nseindia.com/content/debt/WDM/BHELCORPFIN_16112026102036_BHEL_CP-Record_Date__Dec_2026.pdf"
 }
 ],
 "upcoming": []
@@ -4162,7 +4156,7 @@
 {
 "name": "World",
 "status": "red",
-"text": "US shares are 1.5% below their 200-day average; the US fear gauge is 26.6."
+"text": "US shares are 2.0% below their 200-day average; the US fear gauge is 26.4."
 }
 ]
 }

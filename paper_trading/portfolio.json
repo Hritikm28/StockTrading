@@ -223,6 +223,14 @@
    "n_holdings": 15,
    "nifty": 25349.65,
    "momfund": 53574.9
+  },
+  {
+   "date": "2026-11-24",
+   "nav": 959463.89,
+   "cash": 23045.5,
+   "n_holdings": 15,
+   "nifty": 25349.65,
+   "momfund": 53574.9
   }
  ],
  "trades": [
@@ -499,7 +507,7 @@
  ],
  "exposure": 1.0,
  "day_open": {
-  "date": "2026-11-23",
+  "date": "2026-11-24",
   "exposure": 1.0,
   "last_rebalance": "2026-11"
  },

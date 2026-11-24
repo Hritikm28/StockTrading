@@ -102,9 +102,22 @@ def test_grade_all_grades_new_days_once_and_counts_a_missed_day():
     calls.clear()
     days = dt.grade_all(date(2026, 11, 26), picks, fetch, UNI, days)
     assert [d['status'] for d in days] == ['scored', 'missed'] and calls == [date(2026, 11, 26)]
-    # a holiday adds nothing; a failed download is retried the next night
+    # tonight's empty file may be late: nothing settled yet
     assert len(dt.grade_all(date(2026, 11, 27), picks, fetch, UNI, days)) == 2
+    # a failed download is retried the next night
     assert len(dt.grade_all(date(2026, 11, 30), picks, fetch, UNI, days)) == 2
+
+
+def test_picks_on_a_holiday_are_settled_as_a_holiday_and_not_scored():
+    picks = {'2026-11-24': (doc('AAA', 'BBB', 'CCC'), '2026-11-24T08:24:00+05:30')}
+    holiday = lambda d: pd.DataFrame() if d == date(2026, 11, 24) else TODAY
+    days = dt.grade_all(date(2026, 11, 24), picks, holiday, UNI, [])
+    assert days == []                                   # same night: wait
+    days = dt.grade_all(date(2026, 11, 25), picks, holiday, UNI, days)
+    assert [(d['date'], d['status']) for d in days] == [('2026-11-24', 'holiday'),
+                                                        ('2026-11-25', 'missed')]
+    s = dt.scorecard(days)
+    assert s['days_scored'] == 0 and s['days_missed'] == 1
 
 
 def test_nothing_is_counted_before_the_first_picks():

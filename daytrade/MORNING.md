@@ -16,6 +16,10 @@ more after costs, which are about 0.2% for the round trip.
 Run `TZ=Asia/Kolkata date`.
 
 - If it is a Saturday or Sunday, stop. Do nothing else.
+- If NSE is closed today for a trading holiday, stop. Check with one web
+  search for this year's NSE holiday list (for example, 2026-11-24 Guru
+  Nanak Jayanti and 2026-12-25 Christmas). Picks on a holiday aren't
+  graded.
 - If it is 09:10 IST or later, stop. Picks saved after 09:15 are not counted.
 - Otherwise today's date (IST, `YYYY-MM-DD`) is the date of your picks.
   Aim to be finished within about 20 minutes, and by 09:05 at the latest.

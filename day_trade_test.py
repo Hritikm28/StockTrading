@@ -278,7 +278,8 @@ def grade_all(today: date, picks: Dict[str, Tuple[Dict, Optional[str]]],
               universe: List[str], old: List[Dict]) -> List[Dict]:
     """Grade every picks day not graded yet, and record `today` as missed
     if it was a trading day without picks (once the test has started)."""
-    done = {d['date']: d for d in old if d.get('status') in ('scored', 'late', 'missed')}
+    done = {d['date']: d for d in old
+            if d.get('status') in ('scored', 'late', 'missed', 'holiday')}
     todo = sorted(d for d in picks if d not in done and d <= today.isoformat())
     start = min(list(picks) + list(done), default=None)
     if start and today.isoformat() >= start and today.isoformat() not in done \
@@ -286,8 +287,14 @@ def grade_all(today: date, picks: Dict[str, Tuple[Dict, Optional[str]]],
         todo.append(today.isoformat())
     for day in todo:
         rows = fetch(date.fromisoformat(day))
-        if rows is None or not len(rows):
-            continue          # failed (retry tomorrow) or a holiday
+        if rows is None:
+            continue          # download failed: retry tomorrow
+        if not len(rows):
+            # NSE closed (2026-11-24, Guru Nanak Jayanti). Tonight's file may
+            # just not be out yet, so only an earlier day is settled.
+            if day < today.isoformat():
+                done[day] = {'date': day, 'status': 'holiday'}
+            continue
         doc, made_at = picks.get(day, (None, None))
         done[day] = grade_day(date.fromisoformat(day), doc, made_at, rows, universe)
     return sorted(done.values(), key=lambda d: d['date'])

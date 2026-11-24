@@ -1,0 +1,13 @@
+{
+ "about": "The Claude day-trade test, started 2026-11-24 at the owner's request: can\nClaude, researching the market each morning, pick stocks that beat random\npicks within one trading day? Practice only: nothing is bought.",
+ "days": [],
+ "summary": {
+  "days_scored": 0,
+  "days_missed": 0,
+  "since": null,
+  "hit_pct": 1.0,
+  "cost_pct": 0.182,
+  "verdict": "NOT_STARTED",
+  "verdict_text": "No picks graded yet."
+ }
+}

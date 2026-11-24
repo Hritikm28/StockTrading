@@ -1,0 +1,1909 @@
+{
+ "as_of": "2026-11-23",
+ "about": "Facts up to the close of as_of. r1/r5/r20: % change over 1, 5 and 20 trading days; off_high: % below the 52-week high; vol_x: last day's volume over its 20-day average; news: NSE filings of the last few days; results_on: a board meeting for results is due.",
+ "universe": [
+  "HDFCBANK",
+  "RELIANCE",
+  "ICICIBANK",
+  "BSE",
+  "BHARTIARTL",
+  "INFY",
+  "SBIN",
+  "AXISBANK",
+  "KOTAKBANK",
+  "BAJFINANCE",
+  "TCS",
+  "ETERNAL",
+  "LT",
+  "M&M",
+  "MCX",
+  "DIVISLAB",
+  "MARUTI",
+  "NETWEB",
+  "PAYTM",
+  "SHRIRAMFIN",
+  "ATHERENERG",
+  "GROWW",
+  "IDEA",
+  "TATASTEEL",
+  "CUPID",
+  "ITC",
+  "COFORGE",
+  "TECHM",
+  "HCLTECH",
+  "ADANIPORTS",
+  "LAURUSLABS",
+  "APOLLOHOSP",
+  "HINDALCO",
+  "KALYANKJIL",
+  "ADANIPOWER",
+  "BEL",
+  "DIXON",
+  "ADANIENT",
+  "HAL",
+  "BHEL",
+  "MEESHO",
+  "WELCORP",
+  "LENSKART",
+  "TITAN",
+  "INDIGO",
+  "EICHERMOT",
+  "POWERINDIA",
+  "BAJAJ-AUTO",
+  "TVSMOTOR",
+  "SWIGGY",
+  "COALINDIA",
+  "ULTRACEMCO",
+  "POLICYBZR",
+  "TMCV",
+  "LICI",
+  "HEROMOTOCO",
+  "POLYCAB",
+  "GVT&D",
+  "SUNPHARMA",
+  "POWERGRID",
+  "PERSISTENT",
+  "CHOLAFIN",
+  "PINELABS",
+  "JIOFIN",
+  "PFC",
+  "NTPC",
+  "SOLARINDS",
+  "MAXHEALTH",
+  "KAYNES",
+  "INDHOTEL",
+  "VEDL",
+  "HINDUNILVR",
+  "TMPV",
+  "SAIL",
+  "VAML",
+  "ONGC",
+  "SUZLON",
+  "HINDCOPPER",
+  "TRENT",
+  "WIPRO",
+  "ASHOKLEY",
+  "CUMMINSIND",
+  "HINDZINC",
+  "JSWSTEEL",
+  "APARINDS",
+  "TDPOWERSYS",
+  "GRASIM",
+  "ADANIGREEN",
+  "CGPOWER",
+  "CHENNPETRO",
+  "DRREDDY",
+  "UNIONBANK",
+  "PNB",
+  "OFSS",
+  "DLF",
+  "VBL",
+  "CANBK",
+  "ADANIENSOL",
+  "FEDERALBNK",
+  "BANKBARODA",
+  "INDUSINDBK",
+  "BHARATFORG",
+  "YESBANK",
+  "IFCI",
+  "NESTLEIND",
+  "SYRMA",
+  "OLAELEC",
+  "MUTHOOTFIN",
+  "BANDHANBNK",
+  "MOTHERSON",
+  "ANGELONE",
+  "HDFCAMC",
+  "NATIONALUM",
+  "SBILIFE",
+  "NAUKRI",
+  "ASIANPAINT",
+  "LICHSGFIN",
+  "WOCKPHARMA",
+  "DATAPATTNS",
+  "INDUSTOWER",
+  "ZYDUSLIFE",
+  "KEI",
+  "AUROPHARMA",
+  "SONACOMS",
+  "HDFCLIFE",
+  "REDINGTON",
+  "LTM",
+  "TORNTPHARM",
+  "TATAPOWER",
+  "DMART",
+  "WAAREEENER",
+  "BAJAJFINSV",
+  "AUBANK",
+  "ABB",
+  "LODHA",
+  "CIPLA",
+  "IDFCFIRSTB",
+  "HINDPETRO",
+  "CDSL",
+  "RECLTD",
+  "TATACONSUM",
+  "NYKAA",
+  "MARICO",
+  "RBLBANK",
+  "LUPIN",
+  "CGCL",
+  "ENRIN",
+  "AZAD"
+ ],
+ "market": {
+  "lights": [
+   {
+    "name": "Trend",
+    "text": "NIFTY is 5.6% above its 200-day average."
+   },
+   {
+    "name": "Breadth",
+    "text": "47% of NIFTY 500 stocks are in an uptrend (mixed)."
+   },
+   {
+    "name": "Price tag",
+    "text": "NIFTY costs 20.6 times its yearly profits, pricier than on 17% of days since 2021 (cheaper than usual)."
+   },
+   {
+    "name": "Fear",
+    "text": "The fear gauge (India VIX) is 17.7: a little nervous."
+   },
+   {
+    "name": "Foreign money",
+    "text": "Foreign investors bought a net \u20b9117,531 crore of shares over the last 20 trading days."
+   },
+   {
+    "name": "Foreign bets",
+    "text": "20% of foreign investors' index-futures bets are on the market rising (it was 10% a month ago)."
+   },
+   {
+    "name": "World",
+    "text": "US shares are 1.5% below their 200-day average; the US fear gauge is 26.6."
+   }
+  ],
+  "global": [
+   {
+    "name": "US shares (S&P 500)",
+    "last": 7237.17,
+    "week_pct": -2.42,
+    "as_of": "2026-11-23"
+   },
+   {
+    "name": "US tech shares (Nasdaq)",
+    "last": 24089.56,
+    "week_pct": -1.71,
+    "as_of": "2026-11-23"
+   },
+   {
+    "name": "US fear gauge (VIX)",
+    "last": 26.62,
+    "week_pct": 3.71,
+    "as_of": "2026-11-23"
+   },
+   {
+    "name": "US 10-year interest rate",
+    "last": 4.92,
+    "week_pct": -0.2,
+    "as_of": "2026-11-23"
+   },
+   {
+    "name": "US dollar index",
+    "last": 104.27,
+    "week_pct": 0.7,
+    "as_of": "2026-11-23"
+   },
+   {
+    "name": "Rupees per US dollar",
+    "last": 92.67,
+    "week_pct": -1.66,
+    "as_of": "2026-11-23"
+   },
+   {
+    "name": "Crude oil (Brent)",
+    "last": 86.55,
+    "week_pct": -6.37,
+    "as_of": "2026-11-23"
+   },
+   {
+    "name": "Gold",
+    "last": 3661.3,
+    "week_pct": -4.98,
+    "as_of": "2026-11-23"
+   },
+   {
+    "name": "Japan shares (Nikkei)",
+    "last": 59251.63,
+    "week_pct": -0.69,
+    "as_of": "2026-11-24"
+   },
+   {
+    "name": "Hong Kong shares (Hang Seng)",
+    "last": 22410.8,
+    "week_pct": -5.19,
+    "as_of": "2026-11-20"
+   }
+  ]
+ },
+ "stocks": [
+  {
+   "symbol": "HDFCBANK",
+   "industry": "Financial Services",
+   "close": 817.8,
+   "r1": -3.33,
+   "r5": 0.16,
+   "r20": 18.04,
+   "off_high": -19.0,
+   "vol_x": 1.4
+  },
+  {
+   "symbol": "RELIANCE",
+   "industry": "Oil Gas & Consumable Fuels",
+   "close": 1351.0,
+   "r1": -1.92,
+   "r5": 0.46,
+   "r20": 13.53,
+   "off_high": -15.2,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "ICICIBANK",
+   "industry": "Financial Services",
+   "close": 1585.5,
+   "r1": -3.32,
+   "r5": 0.03,
+   "r20": 13.72,
+   "off_high": -3.3,
+   "vol_x": 1.3,
+   "news": [
+    "2026-11-20: news: ESOP/ESOS/ESPS",
+    "2026-11-20: news: Alteration Of Capital and Fund Raising-XBRL"
+   ]
+  },
+  {
+   "symbol": "BSE",
+   "industry": "Financial Services",
+   "close": 3757.0,
+   "r1": -0.63,
+   "r5": -3.35,
+   "r20": 16.29,
+   "off_high": -14.7,
+   "vol_x": 0.6,
+   "news": [
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-20: news: Analyst/Investor Meet Para A-XBRL"
+   ]
+  },
+  {
+   "symbol": "BHARTIARTL",
+   "industry": "Telecommunication",
+   "close": 2128.5,
+   "r1": -1.54,
+   "r5": -1.16,
+   "r20": 12.49,
+   "off_high": -1.5,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "INFY",
+   "industry": "Information Technology",
+   "close": 1103.4,
+   "r1": 0.49,
+   "r5": -3.64,
+   "r20": -4.37,
+   "off_high": -34.7,
+   "vol_x": 1.0
+  },
+  {
+   "symbol": "SBIN",
+   "industry": "Financial Services",
+   "close": 1132.65,
+   "r1": -2.79,
+   "r5": 3.87,
+   "r20": 18.16,
+   "off_high": -7.7,
+   "vol_x": 0.8
+  },
+  {
+   "symbol": "AXISBANK",
+   "industry": "Financial Services",
+   "close": 1388.6,
+   "r1": -3.97,
+   "r5": 3.44,
+   "r20": 14.05,
+   "off_high": -4.0,
+   "vol_x": 1.5,
+   "news": [
+    "2026-11-20: news: Record Date Updates",
+    "2026-11-20: news: Record Date Updates",
+    "2026-11-20: news: Record Date Updates",
+    "2026-11-23: news: Confirmation of Redemption/Payment of Interest and Principal"
+   ]
+  },
+  {
+   "symbol": "KOTAKBANK",
+   "industry": "Financial Services",
+   "close": 502.85,
+   "r1": -2.51,
+   "r5": 1.75,
+   "r20": 16.81,
+   "off_high": -2.5,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "BAJFINANCE",
+   "industry": "Financial Services",
+   "close": 1095.5,
+   "r1": -2.36,
+   "r5": -1.31,
+   "r20": 17.93,
+   "off_high": -5.5,
+   "vol_x": 1.0
+  },
+  {
+   "symbol": "TCS",
+   "industry": "Information Technology",
+   "close": 2460.0,
+   "r1": 3.53,
+   "r5": 2.29,
+   "r20": -2.77,
+   "off_high": -26.0,
+   "vol_x": 2.1
+  },
+  {
+   "symbol": "ETERNAL",
+   "industry": "Consumer Services",
+   "close": 362.1,
+   "r1": -0.52,
+   "r5": -2.43,
+   "r20": 11.23,
+   "off_high": -3.5,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "LT",
+   "industry": "Construction",
+   "close": 4099.9,
+   "r1": -2.59,
+   "r5": -0.97,
+   "r20": 12.42,
+   "off_high": -7.2,
+   "vol_x": 0.5,
+   "news": [
+    "2026-11-23: news: Bagging/Receiving of orders/contracts",
+    "2026-11-23: news: Bagging/Receiving of orders/contracts (Sub-para 4-Para B)"
+   ]
+  },
+  {
+   "symbol": "M&M",
+   "industry": "Automobile and Auto Components",
+   "close": 3487.4,
+   "r1": -1.62,
+   "r5": 4.44,
+   "r20": 21.89,
+   "off_high": -8.3,
+   "vol_x": 0.9,
+   "news": [
+    "2026-11-20: news: Copy of Newspaper Publication"
+   ]
+  },
+  {
+   "symbol": "MCX",
+   "industry": "Financial Services",
+   "close": 3581.6,
+   "r1": 1.32,
+   "r5": -3.97,
+   "r20": 15.1,
+   "off_high": -4.0,
+   "vol_x": 0.8
+  },
+  {
+   "symbol": "DIVISLAB",
+   "industry": "Healthcare",
+   "close": 11203.0,
+   "r1": 0.2,
+   "r5": 1.11,
+   "r20": 15.13,
+   "off_high": -3.1,
+   "vol_x": 1.4
+  },
+  {
+   "symbol": "MARUTI",
+   "industry": "Automobile and Auto Components",
+   "close": 14010.0,
+   "r1": -0.01,
+   "r5": 11.45,
+   "r20": 24.76,
+   "off_high": -19.0,
+   "vol_x": 1.8,
+   "news": [
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-20: news: Analyst/Investor Meet Para A-XBRL",
+    "2026-11-22: news: General Updates"
+   ]
+  },
+  {
+   "symbol": "NETWEB",
+   "industry": "Information Technology",
+   "close": 4010.6,
+   "r1": -2.07,
+   "r5": -1.19,
+   "r20": -10.1,
+   "off_high": -31.2,
+   "vol_x": 0.5
+  },
+  {
+   "symbol": "PAYTM",
+   "industry": "Financial Services",
+   "close": 1730.6,
+   "r1": -0.54,
+   "r5": -8.47,
+   "r20": 4.59,
+   "off_high": -10.8,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "SHRIRAMFIN",
+   "industry": "Financial Services",
+   "close": 995.9,
+   "r1": 2.46,
+   "r5": 1.79,
+   "r20": 20.72,
+   "off_high": -12.7,
+   "vol_x": 1.5,
+   "news": [
+    "2026-11-20: news: Analyst/Investor Meet Para A-XBRL",
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-23: news: Analyst/Investor Meet Para A-XBRL",
+    "2026-11-23: news: Analysts/Institutional Investor Meet/Con. Call Updates"
+   ]
+  },
+  {
+   "symbol": "ATHERENERG",
+   "industry": "Automobile and Auto Components",
+   "close": 1979.2,
+   "r1": 2.26,
+   "r5": 2.04,
+   "r20": 43.42,
+   "off_high": 0.0,
+   "vol_x": 0.4
+  },
+  {
+   "symbol": "GROWW",
+   "industry": "Financial Services",
+   "close": 216.46,
+   "r1": -3.61,
+   "r5": -3.76,
+   "r20": 19.25,
+   "off_high": -4.9,
+   "vol_x": 1.6
+  },
+  {
+   "symbol": "IDEA",
+   "industry": "Telecommunication",
+   "close": 11.91,
+   "r1": -1.98,
+   "r5": -4.95,
+   "r20": -0.33,
+   "off_high": -23.7,
+   "vol_x": 1.0
+  },
+  {
+   "symbol": "TATASTEEL",
+   "industry": "Metals & Mining",
+   "close": 163.0,
+   "r1": -8.43,
+   "r5": -10.57,
+   "r20": -4.78,
+   "off_high": -27.8,
+   "vol_x": 6.6,
+   "news": [
+    "2026-11-23: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-23: news: Investor Presentation",
+    "2026-11-23: news: Press Release",
+    "2026-11-23: news: Disclosure Under Regulation 51"
+   ]
+  },
+  {
+   "symbol": "CUPID",
+   "industry": "Fast Moving Consumer Goods",
+   "close": 362.15,
+   "r1": -0.96,
+   "r5": 0.07,
+   "r20": 15.32,
+   "off_high": -5.9,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "ITC",
+   "industry": "Fast Moving Consumer Goods",
+   "close": 301.0,
+   "r1": 0.64,
+   "r5": 2.0,
+   "r20": 16.71,
+   "off_high": -26.1,
+   "vol_x": 1.3
+  },
+  {
+   "symbol": "COFORGE",
+   "industry": "Information Technology",
+   "close": 2142.3,
+   "r1": 2.66,
+   "r5": 6.58,
+   "r20": 7.49,
+   "off_high": 0.0,
+   "vol_x": 1.6
+  },
+  {
+   "symbol": "TECHM",
+   "industry": "Information Technology",
+   "close": 1777.5,
+   "r1": 1.79,
+   "r5": 0.06,
+   "r20": -0.7,
+   "off_high": -3.1,
+   "vol_x": 1.3,
+   "news": [
+    "2026-11-21: news: ESOP/ESOS/ESPS",
+    "2026-11-21: news: Alteration Of Capital and Fund Raising-XBRL"
+   ]
+  },
+  {
+   "symbol": "HCLTECH",
+   "industry": "Information Technology",
+   "close": 1364.3,
+   "r1": 1.48,
+   "r5": -1.47,
+   "r20": -4.07,
+   "off_high": -21.1,
+   "vol_x": 1.3
+  },
+  {
+   "symbol": "ADANIPORTS",
+   "industry": "Services",
+   "close": 1919.0,
+   "r1": 0.1,
+   "r5": 1.37,
+   "r20": 12.7,
+   "off_high": -1.2,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "LAURUSLABS",
+   "industry": "Healthcare",
+   "close": 2370.7,
+   "r1": 3.32,
+   "r5": 6.79,
+   "r20": 15.14,
+   "off_high": -3.4,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "APOLLOHOSP",
+   "industry": "Healthcare",
+   "close": 9257.0,
+   "r1": 0.62,
+   "r5": 5.54,
+   "r20": 19.75,
+   "off_high": 0.0,
+   "vol_x": 1.4
+  },
+  {
+   "symbol": "HINDALCO",
+   "industry": "Metals & Mining",
+   "close": 900.45,
+   "r1": -3.13,
+   "r5": -2.47,
+   "r20": 3.52,
+   "off_high": -21.7,
+   "vol_x": 1.7,
+   "news": [
+    "2026-11-20: news: Copy of Newspaper Publication"
+   ]
+  },
+  {
+   "symbol": "KALYANKJIL",
+   "industry": "Consumer Durables",
+   "close": 652.9,
+   "r1": 2.22,
+   "r5": -7.8,
+   "r20": 29.34,
+   "off_high": -8.2,
+   "vol_x": 1.3
+  },
+  {
+   "symbol": "ADANIPOWER",
+   "industry": "Power",
+   "close": 207.9,
+   "r1": -1.91,
+   "r5": 1.27,
+   "r20": 14.21,
+   "off_high": -16.5,
+   "vol_x": 1.9
+  },
+  {
+   "symbol": "BEL",
+   "industry": "Capital Goods",
+   "close": 395.8,
+   "r1": -1.54,
+   "r5": -1.4,
+   "r20": 9.34,
+   "off_high": -15.5,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "DIXON",
+   "industry": "Consumer Durables",
+   "close": 13390.0,
+   "r1": 2.06,
+   "r5": 3.88,
+   "r20": 19.97,
+   "off_high": -14.7,
+   "vol_x": 1.3,
+   "news": [
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-20: news: Analyst/Investor Meet Para A-XBRL"
+   ]
+  },
+  {
+   "symbol": "ADANIENT",
+   "industry": "Metals & Mining",
+   "close": 2677.9,
+   "r1": -1.15,
+   "r5": 0.71,
+   "r20": 8.11,
+   "off_high": -16.6,
+   "vol_x": 1.0
+  },
+  {
+   "symbol": "HAL",
+   "industry": "Capital Goods",
+   "close": 4780.0,
+   "r1": -0.6,
+   "r5": -0.19,
+   "r20": 1.16,
+   "off_high": -6.3,
+   "vol_x": 0.5
+  },
+  {
+   "symbol": "BHEL",
+   "industry": "Capital Goods",
+   "close": 415.7,
+   "r1": -4.14,
+   "r5": -3.35,
+   "r20": 7.28,
+   "off_high": -10.4,
+   "vol_x": 1.1
+  },
+  {
+   "symbol": "MEESHO",
+   "industry": "Consumer Services",
+   "close": 253.11,
+   "r1": -2.62,
+   "r5": 0.76,
+   "r20": 17.81,
+   "off_high": -2.6,
+   "vol_x": 1.3,
+   "news": [
+    "2026-11-21: news: General Updates",
+    "2026-11-21: news: Acquisition (including agreement to acquire)-XBRL"
+   ]
+  },
+  {
+   "symbol": "WELCORP",
+   "industry": "Capital Goods",
+   "close": 2152.8,
+   "r1": -1.47,
+   "r5": -2.62,
+   "r20": -8.1,
+   "off_high": -24.3,
+   "vol_x": 0.4,
+   "news": [
+    "2026-11-20: news: Copy of Newspaper Publication",
+    "2026-11-23: news: Investor Presentation",
+    "2026-11-23: news: Investor Presentation"
+   ]
+  },
+  {
+   "symbol": "LENSKART",
+   "industry": "Consumer Services",
+   "close": 714.5,
+   "r1": -4.01,
+   "r5": -2.75,
+   "r20": 9.72,
+   "off_high": -4.0,
+   "vol_x": 1.0,
+   "news": [
+    "2026-11-20: news: General Updates"
+   ]
+  },
+  {
+   "symbol": "TITAN",
+   "industry": "Consumer Durables",
+   "close": 4680.0,
+   "r1": 1.3,
+   "r5": -4.68,
+   "r20": 8.84,
+   "off_high": -9.5,
+   "vol_x": 0.9,
+   "news": [
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-20: news: Analyst/Investor Meet Para A-XBRL",
+    "2026-11-20: news: Analyst/Investor Meet Para A-XBRL"
+   ]
+  },
+  {
+   "symbol": "INDIGO",
+   "industry": "Services",
+   "close": 5523.0,
+   "r1": -1.16,
+   "r5": -0.38,
+   "r20": 19.86,
+   "off_high": -6.7,
+   "vol_x": 0.5
+  },
+  {
+   "symbol": "EICHERMOT",
+   "industry": "Automobile and Auto Components",
+   "close": 8172.5,
+   "r1": 0.73,
+   "r5": 7.55,
+   "r20": 15.66,
+   "off_high": -0.2,
+   "vol_x": 1.3
+  },
+  {
+   "symbol": "POWERINDIA",
+   "industry": "Capital Goods",
+   "close": 30240.0,
+   "r1": 0.3,
+   "r5": -2.09,
+   "r20": 12.63,
+   "off_high": -21.3,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "BAJAJ-AUTO",
+   "industry": "Automobile and Auto Components",
+   "close": 10643.0,
+   "r1": -1.13,
+   "r5": -0.85,
+   "r20": 5.67,
+   "off_high": -13.9,
+   "vol_x": 1.0
+  },
+  {
+   "symbol": "TVSMOTOR",
+   "industry": "Automobile and Auto Components",
+   "close": 4528.2,
+   "r1": -1.35,
+   "r5": 1.69,
+   "r20": 13.32,
+   "off_high": -1.6,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "SWIGGY",
+   "industry": "Consumer Services",
+   "close": 176.97,
+   "r1": -0.69,
+   "r5": -7.2,
+   "r20": -4.73,
+   "off_high": -57.5,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "COALINDIA",
+   "industry": "Oil Gas & Consumable Fuels",
+   "close": 382.0,
+   "r1": -2.05,
+   "r5": -3.9,
+   "r20": -3.89,
+   "off_high": -20.7,
+   "vol_x": 0.8,
+   "news": [
+    "2026-11-21: news: Change in Management",
+    "2026-11-21: news: Change in Directors/KMP/SMP/Auditor/RTA",
+    "2026-11-21: news: Change in Directors/KMP/SMP/Auditor/RTA"
+   ]
+  },
+  {
+   "symbol": "ULTRACEMCO",
+   "industry": "Construction Materials",
+   "close": 12650.0,
+   "r1": -2.23,
+   "r5": 3.1,
+   "r20": 14.48,
+   "off_high": -3.1,
+   "vol_x": 0.8,
+   "news": [
+    "2026-11-20: news: Confirmation of Redemption/Payment of Interest and Principal"
+   ]
+  },
+  {
+   "symbol": "POLICYBZR",
+   "industry": "Financial Services",
+   "close": 1089.1,
+   "r1": 6.48,
+   "r5": 0.73,
+   "r20": 6.46,
+   "off_high": -44.4,
+   "vol_x": 3.0,
+   "news": [
+    "2026-11-20: news: Change in Directors/KMP/SMP/Auditor/RTA",
+    "2026-11-20: news: Change in Directors/KMP/SMP/Auditor/RTA",
+    "2026-11-20: news: Change in Directors/KMP/SMP/Auditor/RTA",
+    "2026-11-20: news: Sale or disposal-XBRL"
+   ]
+  },
+  {
+   "symbol": "TMCV",
+   "industry": "Capital Goods",
+   "close": 453.8,
+   "r1": -0.65,
+   "r5": 5.97,
+   "r20": 18.16,
+   "off_high": -10.2,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "LICI",
+   "industry": "Financial Services",
+   "close": 407.3,
+   "r1": -0.83,
+   "r5": 1.83,
+   "r20": 6.92,
+   "off_high": -11.0,
+   "vol_x": 1.3
+  },
+  {
+   "symbol": "HEROMOTOCO",
+   "industry": "Automobile and Auto Components",
+   "close": 5535.0,
+   "r1": -0.02,
+   "r5": 3.27,
+   "r20": 9.67,
+   "off_high": -12.8,
+   "vol_x": 1.2,
+   "news": [
+    "2026-11-21: news: Pendency of Litigation(s)/dispute(s) or the outcome impacting the Company"
+   ]
+  },
+  {
+   "symbol": "POLYCAB",
+   "industry": "Capital Goods",
+   "close": 7430.0,
+   "r1": -1.85,
+   "r5": -6.61,
+   "r20": -3.99,
+   "off_high": -26.3,
+   "vol_x": 1.3
+  },
+  {
+   "symbol": "GVT&D",
+   "industry": "Capital Goods",
+   "close": 4195.0,
+   "r1": -0.94,
+   "r5": -3.27,
+   "r20": 10.69,
+   "off_high": -24.2,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "SUNPHARMA",
+   "industry": "Healthcare",
+   "close": 1860.0,
+   "r1": -1.32,
+   "r5": -0.4,
+   "r20": 3.35,
+   "off_high": -9.7,
+   "vol_x": 0.7,
+   "news": [
+    "2026-11-21: news: Copy of Newspaper Publication"
+   ]
+  },
+  {
+   "symbol": "POWERGRID",
+   "industry": "Power",
+   "close": 264.85,
+   "r1": -1.54,
+   "r5": 1.01,
+   "r20": 7.05,
+   "off_high": -17.5,
+   "vol_x": 1.2
+  },
+  {
+   "symbol": "PERSISTENT",
+   "industry": "Information Technology",
+   "close": 6282.5,
+   "r1": 2.59,
+   "r5": 5.08,
+   "r20": 7.39,
+   "off_high": -4.3,
+   "vol_x": 2.2,
+   "news": [
+    "2026-11-23: news: Updates"
+   ]
+  },
+  {
+   "symbol": "CHOLAFIN",
+   "industry": "Financial Services",
+   "close": 1831.0,
+   "r1": -2.33,
+   "r5": -1.02,
+   "r20": 25.09,
+   "off_high": -5.0,
+   "vol_x": 1.0
+  },
+  {
+   "symbol": "PINELABS",
+   "industry": "Financial Services",
+   "close": 160.46,
+   "r1": 0.44,
+   "r5": -5.44,
+   "r20": 3.62,
+   "off_high": -35.9,
+   "vol_x": 0.4
+  },
+  {
+   "symbol": "JIOFIN",
+   "industry": "Financial Services",
+   "close": 219.7,
+   "r1": -2.34,
+   "r5": -2.79,
+   "r20": 7.05,
+   "off_high": -28.7,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "PFC",
+   "industry": "Financial Services",
+   "close": 324.25,
+   "r1": -2.6,
+   "r5": -2.57,
+   "r20": 2.61,
+   "off_high": -32.6,
+   "vol_x": 1.2
+  },
+  {
+   "symbol": "NTPC",
+   "industry": "Power",
+   "close": 315.45,
+   "r1": -1.88,
+   "r5": -1.81,
+   "r20": 5.86,
+   "off_high": -23.1,
+   "vol_x": 1.1
+  },
+  {
+   "symbol": "SOLARINDS",
+   "industry": "Chemicals",
+   "close": 18178.0,
+   "r1": -2.84,
+   "r5": -3.41,
+   "r20": -2.7,
+   "off_high": -19.0,
+   "vol_x": 1.1
+  },
+  {
+   "symbol": "MAXHEALTH",
+   "industry": "Healthcare",
+   "close": 1089.55,
+   "r1": 0.79,
+   "r5": 7.89,
+   "r20": 30.49,
+   "off_high": -7.8,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "KAYNES",
+   "industry": "Capital Goods",
+   "close": 2809.0,
+   "r1": -3.47,
+   "r5": -5.74,
+   "r20": -15.05,
+   "off_high": -53.0,
+   "vol_x": 1.1,
+   "news": [
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-20: news: Analyst/Investor Meet Para A-XBRL",
+    "2026-11-20: news: Analyst/Investor Meet Para A-XBRL"
+   ]
+  },
+  {
+   "symbol": "INDHOTEL",
+   "industry": "Consumer Services",
+   "close": 906.0,
+   "r1": -0.66,
+   "r5": 2.26,
+   "r20": 13.89,
+   "off_high": -0.7,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "VEDL",
+   "industry": "Metals & Mining",
+   "close": 235.53,
+   "r1": -1.05,
+   "r5": -6.91,
+   "r20": 3.53,
+   "off_high": -70.1,
+   "vol_x": 1.0
+  },
+  {
+   "symbol": "HINDUNILVR",
+   "industry": "Fast Moving Consumer Goods",
+   "close": 2019.1,
+   "r1": -1.63,
+   "r5": 0.94,
+   "r20": 11.26,
+   "off_high": -18.5,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "TMPV",
+   "industry": "Automobile and Auto Components",
+   "close": 259.0,
+   "r1": -2.76,
+   "r5": -1.3,
+   "r20": -1.78,
+   "off_high": -35.4,
+   "vol_x": 0.8
+  },
+  {
+   "symbol": "SAIL",
+   "industry": "Metals & Mining",
+   "close": 162.0,
+   "r1": -1.29,
+   "r5": -4.0,
+   "r20": -4.59,
+   "off_high": -21.4,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "VAML",
+   "industry": "Metals & Mining",
+   "close": 361.9,
+   "r1": -1.0,
+   "r5": -6.06,
+   "r20": 3.34,
+   "off_high": -27.0,
+   "vol_x": 1.1
+  },
+  {
+   "symbol": "ONGC",
+   "industry": "Oil Gas & Consumable Fuels",
+   "close": 222.85,
+   "r1": -0.27,
+   "r5": -1.82,
+   "r20": -2.04,
+   "off_high": -26.1,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "SUZLON",
+   "industry": "Capital Goods",
+   "close": 35.86,
+   "r1": -2.98,
+   "r5": -4.19,
+   "r20": -3.39,
+   "off_high": -39.5,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "HINDCOPPER",
+   "industry": "Metals & Mining",
+   "close": 411.25,
+   "r1": -1.86,
+   "r5": -4.48,
+   "r20": -1.62,
+   "off_high": -47.2,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "TRENT",
+   "industry": "Consumer Services",
+   "close": 3208.0,
+   "r1": -1.48,
+   "r5": 0.13,
+   "r20": 17.62,
+   "off_high": -4.1,
+   "vol_x": 0.4,
+   "news": [
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates"
+   ]
+  },
+  {
+   "symbol": "WIPRO",
+   "industry": "Information Technology",
+   "close": 187.29,
+   "r1": 0.86,
+   "r5": -3.23,
+   "r20": -1.34,
+   "off_high": -31.3,
+   "vol_x": 0.8
+  },
+  {
+   "symbol": "ASHOKLEY",
+   "industry": "Capital Goods",
+   "close": 158.7,
+   "r1": -2.85,
+   "r5": -5.25,
+   "r20": 5.85,
+   "off_high": -27.6,
+   "vol_x": 0.8,
+   "news": [
+    "2026-11-20: action: INTERIM DIVIDEND - RE 1 PER SHARE",
+    "2026-11-20: action: INTERIM DIVIDEND - RE 1 PER SHARE",
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-20: news: Analyst/Investor Meet Para A-XBRL"
+   ]
+  },
+  {
+   "symbol": "CUMMINSIND",
+   "industry": "Capital Goods",
+   "close": 4052.8,
+   "r1": -1.15,
+   "r5": -4.26,
+   "r20": -7.59,
+   "off_high": -32.8,
+   "vol_x": 0.4,
+   "news": [
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-20: news: Copy of Newspaper Publication",
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-20: news: Analyst/Investor Meet Para A-XBRL"
+   ]
+  },
+  {
+   "symbol": "HINDZINC",
+   "industry": "Metals & Mining",
+   "close": 528.95,
+   "r1": 1.41,
+   "r5": -3.86,
+   "r20": 6.43,
+   "off_high": -27.3,
+   "vol_x": 1.2
+  },
+  {
+   "symbol": "JSWSTEEL",
+   "industry": "Metals & Mining",
+   "close": 1311.9,
+   "r1": -1.88,
+   "r5": -1.7,
+   "r20": 10.66,
+   "off_high": -3.3,
+   "vol_x": 1.4
+  },
+  {
+   "symbol": "APARINDS",
+   "industry": "Capital Goods",
+   "close": 14184.0,
+   "r1": -1.08,
+   "r5": -4.36,
+   "r20": -4.52,
+   "off_high": -27.5,
+   "vol_x": 0.3
+  },
+  {
+   "symbol": "TDPOWERSYS",
+   "industry": "Capital Goods",
+   "close": 605.3,
+   "r1": -2.21,
+   "r5": -4.74,
+   "r20": -16.87,
+   "off_high": -30.7,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "GRASIM",
+   "industry": "Construction Materials",
+   "close": 3075.2,
+   "r1": -0.92,
+   "r5": -0.3,
+   "r20": 6.26,
+   "off_high": -9.0,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "ADANIGREEN",
+   "industry": "Power",
+   "close": 1391.0,
+   "r1": -3.07,
+   "r5": -1.11,
+   "r20": 17.37,
+   "off_high": -13.3,
+   "vol_x": 1.5,
+   "news": [
+    "2026-11-21: news: Analysts/Institutional Investor Meet/Con. Call Updates",
+    "2026-11-21: news: Analyst/Investor Meet Para A-XBRL"
+   ]
+  },
+  {
+   "symbol": "CGPOWER",
+   "industry": "Capital Goods",
+   "close": 790.6,
+   "r1": -0.18,
+   "r5": -3.43,
+   "r20": -2.8,
+   "off_high": -19.0,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "CHENNPETRO",
+   "industry": "Oil Gas & Consumable Fuels",
+   "close": 1443.8,
+   "r1": 1.24,
+   "r5": 1.39,
+   "r20": -5.1,
+   "off_high": -11.2,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "DRREDDY",
+   "industry": "Healthcare",
+   "close": 1380.1,
+   "r1": -0.73,
+   "r5": 0.16,
+   "r20": 12.25,
+   "off_high": -1.5,
+   "vol_x": 0.2
+  },
+  {
+   "symbol": "UNIONBANK",
+   "industry": "Financial Services",
+   "close": 208.2,
+   "r1": -4.87,
+   "r5": 1.26,
+   "r20": 14.9,
+   "off_high": -4.9,
+   "vol_x": 1.2,
+   "news": [
+    "2026-11-20: news: General Updates",
+    "2026-11-21: news: Confirmation of Redemption/Payment of Interest and Principal"
+   ]
+  },
+  {
+   "symbol": "PNB",
+   "industry": "Financial Services",
+   "close": 149.75,
+   "r1": -3.59,
+   "r5": 3.57,
+   "r20": 23.87,
+   "off_high": -3.6,
+   "vol_x": 0.8
+  },
+  {
+   "symbol": "OFSS",
+   "industry": "Information Technology",
+   "close": 9675.0,
+   "r1": -0.93,
+   "r5": -2.89,
+   "r20": -2.4,
+   "off_high": -22.8,
+   "vol_x": 1.4
+  },
+  {
+   "symbol": "DLF",
+   "industry": "Realty",
+   "close": 794.1,
+   "r1": 1.16,
+   "r5": 5.21,
+   "r20": 20.87,
+   "off_high": 0.0,
+   "vol_x": 1.1
+  },
+  {
+   "symbol": "VBL",
+   "industry": "Fast Moving Consumer Goods",
+   "close": 427.15,
+   "r1": -0.08,
+   "r5": -2.25,
+   "r20": 4.69,
+   "off_high": -21.5,
+   "vol_x": 0.5,
+   "news": [
+    "2026-11-20: news: Allotment of Securities",
+    "2026-11-20: news: Alteration Of Capital and Fund Raising-XBRL"
+   ]
+  },
+  {
+   "symbol": "CANBK",
+   "industry": "Financial Services",
+   "close": 133.75,
+   "r1": -3.72,
+   "r5": 1.02,
+   "r20": 15.14,
+   "off_high": -15.8,
+   "vol_x": 1.2
+  },
+  {
+   "symbol": "ADANIENSOL",
+   "industry": "Power",
+   "close": 1470.0,
+   "r1": -1.46,
+   "r5": 1.2,
+   "r20": 20.49,
+   "off_high": -15.6,
+   "vol_x": 2.0,
+   "news": [
+    "2026-11-21: news: General Updates",
+    "2026-11-22: news: General Updates"
+   ]
+  },
+  {
+   "symbol": "FEDERALBNK",
+   "industry": "Financial Services",
+   "close": 359.8,
+   "r1": -3.67,
+   "r5": -0.61,
+   "r20": 4.47,
+   "off_high": -3.7,
+   "vol_x": 2.4
+  },
+  {
+   "symbol": "BANKBARODA",
+   "industry": "Financial Services",
+   "close": 275.58,
+   "r1": -3.98,
+   "r5": 1.99,
+   "r20": 19.35,
+   "off_high": -15.1,
+   "vol_x": 1.1,
+   "news": [
+    "2026-11-23: news: General Updates",
+    "2026-11-23: news: Notice Of Shareholders Meetings-XBRL",
+    "2026-11-23: news: Notice Of Shareholders Meetings-XBRL"
+   ]
+  },
+  {
+   "symbol": "INDUSINDBK",
+   "industry": "Financial Services",
+   "close": 963.0,
+   "r1": -3.99,
+   "r5": 5.3,
+   "r20": 15.33,
+   "off_high": -9.9,
+   "vol_x": 1.0,
+   "news": [
+    "2026-11-20: news: General Updates"
+   ]
+  },
+  {
+   "symbol": "BHARATFORG",
+   "industry": "Automobile and Auto Components",
+   "close": 1722.0,
+   "r1": -1.6,
+   "r5": 0.41,
+   "r20": 0.63,
+   "off_high": -24.0,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "YESBANK",
+   "industry": "Financial Services",
+   "close": 17.73,
+   "r1": -1.01,
+   "r5": -1.61,
+   "r20": 11.79,
+   "off_high": -30.4,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "IFCI",
+   "industry": "Financial Services",
+   "close": 58.77,
+   "r1": -1.76,
+   "r5": -5.32,
+   "r20": -1.79,
+   "off_high": -42.7,
+   "vol_x": 0.6,
+   "news": [
+    "2026-11-21: news: Appointment",
+    "2026-11-21: news: Change in Directors/KMP/SMP/Auditor/RTA"
+   ]
+  },
+  {
+   "symbol": "NESTLEIND",
+   "industry": "Fast Moving Consumer Goods",
+   "close": 1305.9,
+   "r1": -1.44,
+   "r5": 0.69,
+   "r20": 11.14,
+   "off_high": -15.2,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "SYRMA",
+   "industry": "Capital Goods",
+   "close": 1491.1,
+   "r1": -1.62,
+   "r5": 2.48,
+   "r20": -3.32,
+   "off_high": -18.9,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "OLAELEC",
+   "industry": "Automobile and Auto Components",
+   "close": 32.06,
+   "r1": -1.63,
+   "r5": -4.95,
+   "r20": 7.08,
+   "off_high": -32.3,
+   "vol_x": 0.3
+  },
+  {
+   "symbol": "MUTHOOTFIN",
+   "industry": "Financial Services",
+   "close": 2543.3,
+   "r1": -0.28,
+   "r5": -8.42,
+   "r20": 6.16,
+   "off_high": -37.8,
+   "vol_x": 1.2,
+   "news": [
+    "2026-11-23: news: Confirmation of Redemption/Payment of Interest and Principal"
+   ]
+  },
+  {
+   "symbol": "BANDHANBNK",
+   "industry": "Financial Services",
+   "close": 172.4,
+   "r1": -1.53,
+   "r5": -0.29,
+   "r20": 15.02,
+   "off_high": -20.5,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "MOTHERSON",
+   "industry": "Automobile and Auto Components",
+   "close": 165.76,
+   "r1": -0.46,
+   "r5": 1.71,
+   "r20": 7.81,
+   "off_high": -2.9,
+   "vol_x": 0.5
+  },
+  {
+   "symbol": "ANGELONE",
+   "industry": "Financial Services",
+   "close": 337.0,
+   "r1": -3.24,
+   "r5": -3.2,
+   "r20": 20.79,
+   "off_high": -5.0,
+   "vol_x": 0.5
+  },
+  {
+   "symbol": "HDFCAMC",
+   "industry": "Financial Services",
+   "close": 2682.0,
+   "r1": -0.56,
+   "r5": 1.21,
+   "r20": 19.2,
+   "off_high": -6.3,
+   "vol_x": 1.2
+  },
+  {
+   "symbol": "NATIONALUM",
+   "industry": "Metals & Mining",
+   "close": 298.65,
+   "r1": -1.5,
+   "r5": -6.36,
+   "r20": -4.4,
+   "off_high": -32.4,
+   "vol_x": 1.9
+  },
+  {
+   "symbol": "SBILIFE",
+   "industry": "Financial Services",
+   "close": 1804.9,
+   "r1": -1.18,
+   "r5": -1.25,
+   "r20": 10.05,
+   "off_high": -14.4,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "NAUKRI",
+   "industry": "Consumer Services",
+   "close": 1187.5,
+   "r1": 0.83,
+   "r5": 1.5,
+   "r20": -0.76,
+   "off_high": -14.9,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "ASIANPAINT",
+   "industry": "Consumer Durables",
+   "close": 2580.4,
+   "r1": -1.07,
+   "r5": 0.29,
+   "r20": 11.85,
+   "off_high": -13.1,
+   "vol_x": 0.5,
+   "news": [
+    "2026-11-20: news: Trading Plan under PIT"
+   ]
+  },
+  {
+   "symbol": "LICHSGFIN",
+   "industry": "Financial Services",
+   "close": 606.0,
+   "r1": -1.45,
+   "r5": 0.08,
+   "r20": 21.83,
+   "off_high": -2.7,
+   "vol_x": 1.2
+  },
+  {
+   "symbol": "WOCKPHARMA",
+   "industry": "Healthcare",
+   "close": 2152.3,
+   "r1": -1.47,
+   "r5": 7.37,
+   "r20": 15.42,
+   "off_high": -10.3,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "DATAPATTNS",
+   "industry": "Capital Goods",
+   "close": 4225.0,
+   "r1": 0.24,
+   "r5": 0.84,
+   "r20": 11.96,
+   "off_high": -14.3,
+   "vol_x": 0.4
+  },
+  {
+   "symbol": "INDUSTOWER",
+   "industry": "Telecommunication",
+   "close": 380.25,
+   "r1": -1.74,
+   "r5": -4.03,
+   "r20": -2.25,
+   "off_high": -20.4,
+   "vol_x": 0.4
+  },
+  {
+   "symbol": "ZYDUSLIFE",
+   "industry": "Healthcare",
+   "close": 1199.5,
+   "r1": -0.04,
+   "r5": 0.63,
+   "r20": 3.37,
+   "off_high": -3.7,
+   "vol_x": 0.4,
+   "news": [
+    "2026-11-21: news: Copy of Newspaper Publication"
+   ]
+  },
+  {
+   "symbol": "KEI",
+   "industry": "Capital Goods",
+   "close": 3800.6,
+   "r1": -0.72,
+   "r5": -5.46,
+   "r20": -2.54,
+   "off_high": -35.3,
+   "vol_x": 1.1
+  },
+  {
+   "symbol": "AUROPHARMA",
+   "industry": "Healthcare",
+   "close": 1796.5,
+   "r1": -0.14,
+   "r5": 0.14,
+   "r20": 14.3,
+   "off_high": -3.2,
+   "vol_x": 1.0,
+   "news": [
+    "2026-11-21: news: General Updates"
+   ]
+  },
+  {
+   "symbol": "SONACOMS",
+   "industry": "Automobile and Auto Components",
+   "close": 886.0,
+   "r1": -0.73,
+   "r5": -1.45,
+   "r20": 13.31,
+   "off_high": -4.3,
+   "vol_x": 1.1
+  },
+  {
+   "symbol": "HDFCLIFE",
+   "industry": "Financial Services",
+   "close": 574.95,
+   "r1": -2.33,
+   "r5": -4.89,
+   "r20": 9.78,
+   "off_high": -27.0,
+   "vol_x": 0.8
+  },
+  {
+   "symbol": "REDINGTON",
+   "industry": "Services",
+   "close": 331.3,
+   "r1": 0.0,
+   "r5": -2.72,
+   "r20": -12.16,
+   "off_high": -21.9,
+   "vol_x": 0.5
+  },
+  {
+   "symbol": "LTM",
+   "industry": "Information Technology",
+   "close": 4215.0,
+   "r1": 1.17,
+   "r5": 0.36,
+   "r20": 3.44,
+   "off_high": -34.2,
+   "vol_x": 1.3
+  },
+  {
+   "symbol": "TORNTPHARM",
+   "industry": "Healthcare",
+   "close": 4763.7,
+   "r1": 1.58,
+   "r5": 1.55,
+   "r20": 4.7,
+   "off_high": -7.0,
+   "vol_x": 1.7
+  },
+  {
+   "symbol": "TATAPOWER",
+   "industry": "Power",
+   "close": 328.0,
+   "r1": -3.44,
+   "r5": -5.07,
+   "r20": -5.77,
+   "off_high": -29.0,
+   "vol_x": 1.0
+  },
+  {
+   "symbol": "DMART",
+   "industry": "Consumer Services",
+   "close": 3405.4,
+   "r1": -2.42,
+   "r5": -1.51,
+   "r20": 7.84,
+   "off_high": -26.4,
+   "vol_x": 0.8,
+   "news": [
+    "2026-11-21: news: Updates"
+   ]
+  },
+  {
+   "symbol": "WAAREEENER",
+   "industry": "Capital Goods",
+   "close": 2390.0,
+   "r1": -2.89,
+   "r5": -2.09,
+   "r20": 3.06,
+   "off_high": -31.8,
+   "vol_x": 0.7,
+   "news": [
+    "2026-11-20: news: Updates"
+   ]
+  },
+  {
+   "symbol": "BAJAJFINSV",
+   "industry": "Financial Services",
+   "close": 1880.1,
+   "r1": -0.63,
+   "r5": 1.73,
+   "r20": 13.6,
+   "off_high": -10.7,
+   "vol_x": 1.0
+  },
+  {
+   "symbol": "AUBANK",
+   "industry": "Financial Services",
+   "close": 983.5,
+   "r1": -0.14,
+   "r5": 1.25,
+   "r20": 5.42,
+   "off_high": -12.9,
+   "vol_x": 1.7
+  },
+  {
+   "symbol": "ABB",
+   "industry": "Capital Goods",
+   "close": 6868.5,
+   "r1": -0.95,
+   "r5": -0.38,
+   "r20": 11.86,
+   "off_high": -10.9,
+   "vol_x": 0.4,
+   "news": [
+    "2026-11-20: news: Analysts/Institutional Investor Meet/Con. Call Updates"
+   ]
+  },
+  {
+   "symbol": "LODHA",
+   "industry": "Realty",
+   "close": 1219.0,
+   "r1": 0.02,
+   "r5": 2.2,
+   "r20": 24.39,
+   "off_high": -7.4,
+   "vol_x": 0.7,
+   "news": [
+    "2026-11-22: news: Cessation",
+    "2026-11-22: news: Change in Directors/KMP/SMP/Auditor/RTA"
+   ]
+  },
+  {
+   "symbol": "CIPLA",
+   "industry": "Healthcare",
+   "close": 1399.9,
+   "r1": -1.07,
+   "r5": 0.39,
+   "r20": 4.63,
+   "off_high": -8.6,
+   "vol_x": 0.5
+  },
+  {
+   "symbol": "IDFCFIRSTB",
+   "industry": "Financial Services",
+   "close": 85.4,
+   "r1": -2.13,
+   "r5": 5.04,
+   "r20": 19.04,
+   "off_high": -2.8,
+   "vol_x": 1.8,
+   "news": [
+    "2026-11-20: news: Rumour Verification - Regulation 30(11)"
+   ]
+  },
+  {
+   "symbol": "HINDPETRO",
+   "industry": "Oil Gas & Consumable Fuels",
+   "close": 385.0,
+   "r1": -2.86,
+   "r5": -0.5,
+   "r20": 12.1,
+   "off_high": -22.9,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "CDSL",
+   "industry": "Financial Services",
+   "close": 1395.0,
+   "r1": -2.45,
+   "r5": -2.71,
+   "r20": 16.64,
+   "off_high": -14.9,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "RECLTD",
+   "industry": "Financial Services",
+   "close": 292.95,
+   "r1": -1.73,
+   "r5": -1.61,
+   "r20": -0.34,
+   "off_high": -24.0,
+   "vol_x": 0.6
+  },
+  {
+   "symbol": "TATACONSUM",
+   "industry": "Fast Moving Consumer Goods",
+   "close": 1133.0,
+   "r1": -1.98,
+   "r5": 1.39,
+   "r20": 17.54,
+   "off_high": -10.9,
+   "vol_x": 0.5,
+   "news": [
+    "2026-11-20: news: Copy of Newspaper Publication"
+   ]
+  },
+  {
+   "symbol": "NYKAA",
+   "industry": "Consumer Services",
+   "close": 357.0,
+   "r1": -1.92,
+   "r5": -1.07,
+   "r20": 8.23,
+   "off_high": -2.2,
+   "vol_x": 0.7
+  },
+  {
+   "symbol": "MARICO",
+   "industry": "Fast Moving Consumer Goods",
+   "close": 919.5,
+   "r1": 0.27,
+   "r5": 0.64,
+   "r20": 19.96,
+   "off_high": -0.6,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "RBLBANK",
+   "industry": "Financial Services",
+   "close": 393.5,
+   "r1": -1.21,
+   "r5": 3.04,
+   "r20": 12.91,
+   "off_high": -8.1,
+   "vol_x": 1.7,
+   "news": [
+    "2026-11-20: news: Shareholders meeting",
+    "2026-11-20: news: ESOP/ESOS/ESPS",
+    "2026-11-20: news: Alteration Of Capital and Fund Raising-XBRL",
+    "2026-11-21: news: Copy of Newspaper Publication"
+   ]
+  },
+  {
+   "symbol": "LUPIN",
+   "industry": "Healthcare",
+   "close": 1975.6,
+   "r1": -1.91,
+   "r5": -0.06,
+   "r20": 0.8,
+   "off_high": -21.4,
+   "vol_x": 1.2
+  },
+  {
+   "symbol": "CGCL",
+   "industry": "Financial Services",
+   "close": 232.61,
+   "r1": -0.92,
+   "r5": -3.59,
+   "r20": 0.68,
+   "off_high": -16.9,
+   "vol_x": 0.9,
+   "news": [
+    "2026-11-20: news: General Updates",
+    "2026-11-20: news: Allotment of Securities"
+   ]
+  },
+  {
+   "symbol": "ENRIN",
+   "industry": "Capital Goods",
+   "close": 2976.5,
+   "r1": 1.1,
+   "r5": -3.89,
+   "r20": 8.04,
+   "off_high": -23.1,
+   "vol_x": 0.9
+  },
+  {
+   "symbol": "AZAD",
+   "industry": "Capital Goods",
+   "close": 2289.7,
+   "r1": -2.2,
+   "r5": -4.53,
+   "r20": -10.53,
+   "off_high": -27.6,
+   "vol_x": 0.7
+  }
+ ]
+}

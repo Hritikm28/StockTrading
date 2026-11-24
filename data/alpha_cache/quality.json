@@ -464,7 +464,7 @@
   "sector": "Industrials"
  },
  "BAGMANE.NS": {
-  "fetched": "2026-11-16",
+  "fetched": "2026-11-24",
   "missing": true
  },
  "BAJAJ-AUTO.NS": {
@@ -676,7 +676,7 @@
   "sector": "Healthcare"
  },
  "BIRET.NS": {
-  "fetched": "2026-11-16",
+  "fetched": "2026-11-24",
   "missing": true
  },
  "BLS.NS": {
@@ -1208,7 +1208,7 @@
   "sector": "Healthcare"
  },
  "DUMMYHEG.NS": {
-  "fetched": "2026-11-16",
+  "fetched": "2026-11-24",
   "missing": true
  },
  "ECLERX.NS": {
@@ -1268,7 +1268,7 @@
   "sector": "Consumer Defensive"
  },
  "EMBASSY.NS": {
-  "fetched": "2026-11-16",
+  "fetched": "2026-11-24",
   "missing": true
  },
  "EMCURE.NS": {
@@ -4068,7 +4068,7 @@
   "sector": "Consumer Cyclical"
  },
  "ZOMATO.NS": {
-  "fetched": "2026-11-16",
+  "fetched": "2026-11-24",
   "missing": true
  },
  "ZYDUSLIFE.NS": {

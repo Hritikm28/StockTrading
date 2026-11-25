@@ -1,4 +1,7 @@
 filed,trade_date,symbol,category,instrument,txn,mode,value_inr,shares,pre_pct,post_pct,revised,link,ctx
+2026-09-17,2026-11-20,SANGHVIMOV,Other,Equity,Buy,Market Purchase,3661400.0,10000.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_1741_WebXMLFile_20261125_105935574.xml,Disclosure1
+2026-09-17,2026-11-20,SANGHVIMOV,Other,Equity,Buy,Market Purchase,14645600.0,40000.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_1741_WebXMLFile_20261125_105935574.xml,Disclosure2
+2026-09-17,2026-11-23,SANGHVIMOV,Other,Equity,Buy,Market Purchase,9158695.0,24302.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_1741_WebXMLFile_20261125_105935574.xml,Disclosure3
 2026-11-03,2026-10-30,SWANCORP,Promoter Group,Equity,Pledge,Pledge Creation,1939275000.0,8500000.0,0.1225,0.1225,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_5939_WebXMLFile_20261104_190947300.xml,Disclosure1
 2026-11-03,2026-10-30,SWANCORP,Promoter Group,Equity,Pledge,Pledge Creation,1939275000.0,8500000.0,0.1225,0.1225,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_5939_WebXMLFile_20261104_190919421.xml,Disclosure1
 2026-11-03,2026-10-30,SWANCORP,Promoter Group,Equity,Pledge,Pledge Creation,1939275000.0,8500000.0,0.1225,0.1225,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_5939_WebXMLFile_20261104_190303586.xml,Disclosure1
@@ -544,3 +547,36 @@ filed,trade_date,symbol,category,instrument,txn,mode,value_inr,shares,pre_pct,po
 2026-11-24,2026-11-20,SENCO,KMP,Equity,Sell,Market Sale,11147850.0,35000.0,0.0003,0.0001,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_20714_WebXMLFile_20261124_160255599.xml,Disclosure2
 2026-11-24,2026-11-19,SHRIKANHA,Promoter and Director,Equity,Buy,Market Purchase,309269.0,14400.0,0.1698,0.1708,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_26512_WebXMLFile_20261124_003039329.xml,Disclosure1
 2026-11-24,2026-11-19,THOMASCOOK,Promoter,Equity,Buy,Market Purchase,12874239.0,115000.0,0.6519,0.6521,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_602_WebXMLFile_20261124_155007616.xml,Disclosure1
+2026-11-25,2026-11-19,360ONE,Designated Person,Equity,Sell,Market Sale,2305850.0,1905.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_17593_WebXMLFile_20261125_154836990.xml,Disclosure1
+2026-11-25,2026-11-19,360ONE,Designated Person,Equity,Sell,Market Sale,5464937.0,4554.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_17593_WebXMLFile_20261125_154836990.xml,Disclosure2
+2026-11-25,2026-11-19,360ONE,Designated Person,Equity,Sell,Market Sale,7871565.0,6500.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_17593_WebXMLFile_20261125_154836990.xml,Disclosure3
+2026-11-25,2026-11-19,360ONE,Designated Person,Equity,Sell,Market Sale,1212250.0,1000.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_17593_WebXMLFile_20261125_154836990.xml,Disclosure4
+2026-11-25,2026-11-19,360ONE,Designated Person,Equity,Sell,Market Sale,5567472.0,4600.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_17593_WebXMLFile_20261125_154836990.xml,Disclosure5
+2026-11-25,2026-11-23,ACEVECTOR,Promoter and Director,Equity,Buy,Market Purchase,2488209.0,128500.0,0.1056,0.1058,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_20276_WebXMLFile_20261125_164759479.xml,Disclosure1
+2026-11-25,2026-11-23,ACEVECTOR,Promoter and Director,Equity,Buy,Market Purchase,2490413.0,128500.0,0.0948,0.095,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_20276_WebXMLFile_20261125_164759479.xml,Disclosure2
+2026-11-25,2026-11-19,ARVINDFASN,Designated Person,Equity,Sell,Market Sale,725960.0,2000.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_17278_WebXMLFile_20261125_155206187.xml,Disclosure1
+2026-11-25,2026-11-25,AURUM,Promoter,Equity,Buy,Market Purchase,5313658.0,25000.0,0.382,0.3823,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_12987_WebXMLFile_20261125_185636866.xml,Disclosure1
+2026-11-25,2026-11-25,BALUFORGE,Promoter and Director,Equity,Buy,Market Purchase,32496211.0,65000.0,0.4985,0.4991,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_21961_WebXMLFile_20261125_170859352.xml,Disclosure1
+2026-11-25,2026-11-23,CAMLINFINE,Promoter and Director,Equity,Pledge,Pledge Creation,69640000.0,1000000.0,0.103,0.103,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_11353_WebXMLFile_20261125_111422766.xml,Disclosure1
+2026-11-25,2026-11-23,DAMCAPITAL,Connected Person,Equity,Buy,Market Purchase,4876522.0,34000.0,0.0117,0.0122,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_24411_WebXMLFile_20261125_151948079.xml,Disclosure1
+2026-11-25,2026-11-18,FSL,Trust,Equity,Sell,Market Sale,1376759.0,5043.0,0.0072,0.0072,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2535_WebXMLFile_20261125_164755232.xml,Disclosure1
+2026-11-25,2026-11-19,FSL,Trust,Equity,Sell,Market Sale,2720291.0,9947.0,0.0072,0.0072,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2535_WebXMLFile_20261125_164755232.xml,Disclosure2
+2026-11-25,2026-11-20,FSL,Trust,Equity,Sell,Off Market,1258590.0,125859.0,0.0072,0.007,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2535_WebXMLFile_20261125_164755232.xml,Disclosure3
+2026-11-25,2026-11-23,ITALIANE,Promoter and Director,Equity,Sell,Market Sale,2445000.0,100000.0,0.3596,0.3528,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_22662_WebXMLFile_20261125_181051161.xml,Disclosure1
+2026-11-25,2026-11-23,JSWSTEEL,Other,Equity,Sell,Market Sale,145277.0,111.0,0.0016,0.0016,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2266_WebXMLFile_20261125_180311130.xml,Disclosure1
+2026-11-25,2026-11-23,JSWSTEEL,Other,Equity,Sell,Market Sale,228965.0,175.0,0.0016,0.0016,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2266_WebXMLFile_20261125_180311130.xml,Disclosure2
+2026-11-25,2026-11-23,NAUKRI,Designated Person,Equity,Sell,Market Sale,449297.0,375.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2460_WebXMLFile_20261125_150759869.xml,Disclosure1
+2026-11-25,2026-11-25,OBSCP,Promoter,Equity,Buy,Market Purchase,19664424.0,28200.0,0.0003,0.0013,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_24150_WebXMLFile_20261125_160835733.xml,Disclosure1
+2026-11-25,2026-11-23,ORIENTCER,Director,Equity,Buy,Market Purchase,242792.0,6550.0,0.0003,0.0003,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2342_WebXMLFile_20261125_150002916.xml,Disclosure1
+2026-11-25,2026-11-23,ORIENTCER,Director,Equity,Buy,Market Purchase,242792.0,6550.0,0.0003,0.0003,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2342_WebXMLFile_20261125_145115302.xml,Disclosure1
+2026-11-25,2026-11-25,PDSL,Trust,Equity,Buy,Market Purchase,2468809.0,5900.0,0.0019,0.002,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_10866_WebXMLFile_20261125_164545226.xml,Disclosure1
+2026-11-25,2026-11-23,REMSONSIND,Promoter,Equity,Buy,Inheritance,5.0,1581430.0,0.0435,0.0888,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_1286_WebXMLFile_20261125_113309845.xml,Disclosure1
+2026-11-25,2026-11-23,REMSONSIND,Promoter,Equity,Buy,Inheritance,5.0,1581430.0,0.0435,0.0888,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_1286_WebXMLFile_20261125_111936050.xml,Disclosure1
+2026-11-25,2026-11-20,RKFORGE,Promoter,Equity,Buy,Market Purchase,24381509.0,32132.0,0.3423,0.3425,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2188_WebXMLFile_20261125_125844096.xml,Disclosure1
+2026-11-25,2026-11-19,RUBICON,Employee,Equity,Sell,Market Sale,9143298.0,5300.0,0.0001,0.0001,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_24193_WebXMLFile_20261125_105433566.xml,Disclosure1
+2026-11-25,2026-11-17,SASKEN,Employee,Equity,Sell,Market Sale,273461.0,150.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2320_WebXMLFile_20261125_185857731.xml,Disclosure1
+2026-11-25,2026-11-19,SASKEN,Employee,Equity,Sell,Market Sale,187005.0,100.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_2320_WebXMLFile_20261125_185857731.xml,Disclosure2
+2026-11-25,2026-11-23,TATACONSUM,Designated Person,Equity,Buy,ESOP,2563000.0,2563.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_1098_WebXMLFile_20261125_173804582.xml,Disclosure1
+2026-11-25,2026-11-23,TATACONSUM,Designated Person,Equity,Buy,ESOP,10260026.0,10001.0,0.0,0.0,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_1098_WebXMLFile_20261125_173804582.xml,Disclosure2
+2026-11-25,2026-11-23,VILAS,KMP,Equity,Buy,Market Purchase,1393300.0,5000.0,0.7305,0.7307,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_23192_WebXMLFile_20261125_151459030.xml,Disclosure1
+2026-11-25,2026-11-23,VILAS,KMP,Equity,Buy,Market Purchase,1393300.0,5000.0,0.7305,0.7307,False,https://nsearchives.nseindia.com/corporate/xbrl/IT_23192_WebXMLFile_20261125_151112400.xml,Disclosure1

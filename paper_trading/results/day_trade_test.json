@@ -1,13 +1,59 @@
 {
  "about": "The Claude day-trade test, started 2026-11-24 at the owner's request: can\nClaude, researching the market each morning, pick stocks that beat random\npicks within one trading day? Practice only: nothing is bought.",
- "days": [],
+ "days": [
+  {
+   "date": "2026-11-24",
+   "status": "holiday"
+  },
+  {
+   "date": "2026-11-25",
+   "made_at": "2026-11-25T02:13:16Z",
+   "cost_pct": 0.182,
+   "universe_n": 148,
+   "all_avg_pct": -0.697,
+   "all_hit_rate": 0.236,
+   "status": "scored",
+   "picks": [
+    {
+     "symbol": "HINDPETRO",
+     "net_pct": 0.721,
+     "open": 387.5,
+     "close": 391.0
+    },
+    {
+     "symbol": "ITC",
+     "net_pct": 2.524,
+     "open": 301.1,
+     "close": 309.25
+    },
+    {
+     "symbol": "SUNPHARMA",
+     "net_pct": 0.682,
+     "open": 1884.7,
+     "close": 1901.0
+    }
+   ],
+   "avg_pct": 1.309,
+   "hits": 1,
+   "excess_pct": 2.006
+  }
+ ],
  "summary": {
-  "days_scored": 0,
+  "days_scored": 1,
   "days_missed": 0,
-  "since": null,
+  "since": "2026-11-24",
   "hit_pct": 1.0,
   "cost_pct": 0.182,
-  "verdict": "NOT_STARTED",
-  "verdict_text": "No picks graded yet."
+  "avg_pct": 1.309,
+  "all_avg_pct": -0.697,
+  "excess_pct": 2.006,
+  "t_stat": 0.0,
+  "hit_rate": 0.333,
+  "all_hit_rate": 0.236,
+  "beat_days": 1,
+  "value": 101309,
+  "all_value": 99303,
+  "verdict": "TOO_EARLY",
+  "verdict_text": "Only 1 day(s) graded; luck dominates until there are a few months of results."
  }
 }

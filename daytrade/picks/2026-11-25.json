@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-25",
+  "made_at": "2026-11-25T07:43:16+05:30",
+  "pack_as_of": "2026-11-24",
+  "market_view": "Expect a soft, risk-off open: the Nasdaq fell about 1.5% overnight and Asian tech is selling off this morning (Kospi down about 4.5%, Nikkei down about 1.4%). Defensive and domestic names that gain from cheaper crude should hold up best through the day.",
+  "picks": [
+    {"symbol": "HINDPETRO", "reason": "Brent has fallen about 5% over the week to near $88, which widens marketing margins for oil refiners and marketers. The stock is 23% below its 52-week high and has risen 8.8% over 20 days, and it is a domestic name that is not exposed to the global tech sell-off.", "confidence": 2, "expected_move_pct": 1.2},
+    {"symbol": "ITC", "reason": "ITC is a defensive large-cap with a strong 20-day uptrend (+15.6%) and above-normal volume (1.3x). On risk-off days money tends to rotate into FMCG, and the stock is still 26% below its high.", "confidence": 2, "expected_move_pct": 1.0},
+    {"symbol": "SUNPHARMA", "reason": "Sun Pharma is a defensive export earner, and a weak rupee near 93 to the dollar helps its US revenue. It is only 7% below its high with a steady 20-day trend, and it is the kind of large-cap defensive that funds rotate into when tech sells off.", "confidence": 2, "expected_move_pct": 1.0}
+  ],
+  "sources": [
+    "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-nov-24-221148355.html",
+    "https://www.cnbc.com/2026/11/24/stock-market-today-live-updates-.html",
+    "https://www.indiaipo.in/news/detail/global-market-live-kospi-surges-7-nikkei-taiwan-jump-after-nvidia-powers-us-tech-rally",
+    "https://www.kotakneo.com/indices/global-indices/gift-nifty/",
+    "https://www.investify.pk/crude-oil-price",
+    "https://insights.dsij.in/dsijarticledetail/overnight-digest-stocks-to-watch-on-wednesday-november-25-2026-60603",
+    "https://cleartax.in/s/nse-holidays-2026"
+  ]
+}

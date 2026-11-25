@@ -288,3 +288,17 @@ def test_stored_bars_are_never_replaced_by_yahoo():
                          index=pd.to_datetime(['2026-11-19', '2026-11-20', '2026-11-23']))
     m = q.merge_bars(stored, yahoo)
     assert list(m['Close']) == [188.0, 190.0, 96.0]
+
+
+def test_a_bar_stored_for_a_holiday_is_removed(data):
+    days = pd.bdate_range('2026-10-01', '2026-11-24')        # includes the holiday
+    store(data, 'AAA', [100.0] * len(days), days)
+    store(data, 'BBB', [50.0] * len(days), days)
+    seed_state(data, P, {'AAA': 100.0, 'BBB': 50.0})
+    wed = date(2026, 11, 25)
+    feed = Feed({D: bhav(D, {'AAA': (100.0, 100.0), 'BBB': (50.0, 50.0)}),
+                 wed: bhav(wed, {'AAA': (101.0, 100.0), 'BBB': (51.0, 50.0)})})
+    assert op.update(wed, data, fetch=feed, verbose=False) == []
+    a = read(data, 'AAA')
+    assert pd.Timestamp('2026-11-24') not in a.index          # NSE: no session
+    assert a.loc['2026-11-25', 'Close'] == 101.0

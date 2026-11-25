@@ -371,6 +371,13 @@ def update(upto: date, data_dir=DATA_DIR, fetch: Callable = None,
             if d == upto:
                 break                   # maybe not published yet: ask again
             done.add(d.isoformat())     # no session that day
+            # A bar stored for it is a copy of the day before (Yahoo, or the
+            # older NSE step, on the 2026-11-24 Guru Nanak Jayanti holiday)
+            ts = pd.Timestamp(d)
+            for s, df in frames.items():
+                if ts in df.index:
+                    frames[s] = df[df.index != ts]
+                    changed.add(s)
             continue
         if _follows(last.get('date'), d, done):
             prev = last.get('close')

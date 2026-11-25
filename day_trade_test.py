@@ -109,12 +109,21 @@ def build_pack(as_of: date, symbols: Iterable[str], frames: Dict[str, pd.DataFra
                 continue
             if as_of < d <= as_of + timedelta(days=RESULTS_DAYS):
                 results[r['symbol']] = min(d, results.get(r['symbol'], d))
+    # A day almost no stock moved is a holiday bar (2026-11-24 was stored as
+    # a copy of 2026-11-23 before NSE's file showed there was no session).
+    dates = sorted({d for df in frames.values() for d in df.index[-5:]})
+    flat = set()
+    for d in dates:
+        moved = [df.at[d, 'Close'] != df['Close'].shift(1).get(d)
+                 for df in frames.values() if d in df.index and len(df) > 1]
+        if len(moved) >= 10 and sum(moved) < 0.1 * len(moved):
+            flat.add(d)
     stocks = []
     for s in symbols:
         s = s.replace('.NS', '')
         if s in blocked or s not in frames:
             continue
-        facts = stock_facts(frames[s])
+        facts = stock_facts(frames[s][~frames[s].index.isin(flat)])
         if facts is None:
             continue
         row = {'symbol': s, 'industry': industry_of(s), **facts}

@@ -504,8 +504,9 @@ def run_update(verbose: bool = True):
         print(f"Updating market data for {len(UNIVERSE)} stocks...")
         print(f"Target date: {today}  (latest closed session: {expected})")
 
-    # Step 1: Try bhav copy for same-day prices (works after 6 PM)
-    bhav_updated = update_from_bhav(verbose=verbose)
+    # Step 1 (update_from_bhav, EQ series only) is retired: official_prices
+    # (step 3) writes NSE's bars for every series, and on the 2026-11-24
+    # holiday this step stored a copy of the day before as that day.
 
     # Step 1b: index closes straight from NSE (Yahoo's can arrive a day late)
     try:

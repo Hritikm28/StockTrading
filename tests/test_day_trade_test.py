@@ -180,3 +180,14 @@ def test_email_lines():
     assert dt.daily_html(res, '2026-11-26') == ''
     assert 'too early' in dt.weekly_html(res).lower() or 'luck' in dt.weekly_html(res)
     assert dt.weekly_html({}) == ''
+
+
+def test_pack_ignores_a_holiday_copy_of_the_day_before():
+    idx = pd.bdate_range('2025-11-01', '2026-11-24')
+    frames = {}
+    for i in range(12):
+        c = np.linspace(100, 200, len(idx)) + i
+        c[-1] = c[-2]                                   # 24 Nov: a copy of 23 Nov
+        frames[f'S{i}'] = pd.DataFrame({'Close': c, 'Volume': 1000.0}, index=idx)
+    p = dt.build_pack(date(2026, 11, 24), list(frames), frames)
+    assert all(s['r1'] > 0 for s in p['stocks'])          # 23 Nov's real move

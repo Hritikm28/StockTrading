@@ -1,0 +1,36 @@
+name: Grade today's Claude picks now (temporary)
+on:
+  push:
+    branches: [claude/gifted-mendel-59vd8y]
+    paths: [.github/workflows/probe_data.yml]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -q pandas pyarrow numpy requests
+      - run: |
+          git fetch --no-tags origin +refs/heads/daily-picks:refs/remotes/origin/daily-picks
+          python -u - <<'PY'
+          import json
+          from datetime import date
+          import pandas as pd
+          import bhav_history as bh
+          import day_trade_test as dt
+          day = date(2026, 11, 25)
+          doc, made_at = dt.picks_from_git()['2026-11-25']
+          rows = bh.fetch_day(day)
+          print('bhav rows', None if rows is None else len(rows))
+          uni = json.load(open('daytrade/pack.json'))['universe']
+          g = dt.grade_day(day, doc, made_at, rows, uni)
+          print(json.dumps(g, indent=1))
+          px = rows.set_index('symbol')
+          nets = sorted(((s, (px.at[s, 'close'] / px.at[s, 'open'] - 1) * 100 - dt.COST_PCT)
+                         for s in uni if s in px.index), key=lambda x: -x[1])
+          print('best 5', [(s, round(v, 2)) for s, v in nets[:5]])
+          print('worst 5', [(s, round(v, 2)) for s, v in nets[-5:]])
+          PY

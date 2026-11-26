@@ -36,24 +36,56 @@
    "avg_pct": 1.309,
    "hits": 1,
    "excess_pct": 2.006
+  },
+  {
+   "date": "2026-11-26",
+   "made_at": "2026-11-26T02:13:03Z",
+   "cost_pct": 0.182,
+   "universe_n": 148,
+   "all_avg_pct": -0.095,
+   "all_hit_rate": 0.23,
+   "status": "scored",
+   "picks": [
+    {
+     "symbol": "HDFCBANK",
+     "net_pct": 1.337,
+     "open": 849.1,
+     "close": 862.0
+    },
+    {
+     "symbol": "BAJAJFINSV",
+     "net_pct": -2.061,
+     "open": 1922.0,
+     "close": 1885.9
+    },
+    {
+     "symbol": "TRENT",
+     "net_pct": -1.9,
+     "open": 3319.6,
+     "close": 3262.6
+    }
+   ],
+   "avg_pct": -0.875,
+   "hits": 1,
+   "excess_pct": -0.78
   }
  ],
  "summary": {
-  "days_scored": 1,
+  "days_scored": 2,
   "days_missed": 0,
   "since": "2026-11-24",
   "hit_pct": 1.0,
   "cost_pct": 0.182,
-  "avg_pct": 1.309,
-  "all_avg_pct": -0.697,
-  "excess_pct": 2.006,
-  "t_stat": 0.0,
+  "avg_pct": 0.217,
+  "all_avg_pct": -0.396,
+  "excess_pct": 0.613,
+  "t_stat": 0.44,
   "hit_rate": 0.333,
-  "all_hit_rate": 0.236,
+  "all_hit_rate": 0.233,
   "beat_days": 1,
-  "value": 101309,
-  "all_value": 99303,
+  "value": 100423,
+  "all_value": 99209,
   "verdict": "TOO_EARLY",
-  "verdict_text": "Only 1 day(s) graded; luck dominates until there are a few months of results."
+  "verdict_text": "Only 2 day(s) graded; luck dominates until there are a few months of results."
  }
 }

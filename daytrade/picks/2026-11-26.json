@@ -1,0 +1,19 @@
+{
+  "date": "2026-11-26",
+  "made_at": "2026-11-26T07:43:03+05:30",
+  "pack_as_of": "2026-11-25",
+  "market_view": "GIFT Nifty points to a roughly flat open after Wednesday's 1.85% Nifty rally, which was led by foreign buying in private banks and FMCG. US markets are shut for Thanksgiving and the Nasdaq cut its intraday losses, so I expect a range-bound day with leadership staying in domestic large-caps.",
+  "picks": [
+    {"symbol": "HDFCBANK", "reason": "Foreign investors have bought about Rs 1.2 lakh crore over 20 days and private banks led Wednesday's rally, with HDFC Bank up 3.5%. It is still 16% below its 52-week high, so there is room for flows to keep lifting the index heavyweight.", "confidence": 2, "expected_move_pct": 1.0},
+    {"symbol": "BAJAJFINSV", "reason": "Bajaj Finserv rose 2.4% on 4.6 times normal volume, the heaviest relative volume in the universe, after an analyst meet. Futures open interest has also been building, which points to fresh long positions that could carry the move into today.", "confidence": 2, "expected_move_pct": 1.2},
+    {"symbol": "TRENT", "reason": "Trent is a strong domestic-consumption name, up 20.5% over 20 days and closing 0.7% below its 52-week high on 1.8 times normal volume. A breakout to a new high while foreign money flows in favours continuation.", "confidence": 2, "expected_move_pct": 1.2}
+  ],
+  "sources": [
+    "https://hdfcsky.com/news/stock-markets-defy-weak-asia-sensex-jumps-1502-pts-nifty-climbs-to-25819-as-banks-fmcg-rally-november-25-2026",
+    "https://hdfcsky.com/news/gift-nifty-signals-flat-open-for-sensex-nifty-on-thursday-after-sharp-rally",
+    "https://www.kotakneo.com/indices/global-indices/gift-nifty/",
+    "https://finance.yahoo.com/markets/stocks/articles/stock-market-today-nov-25-221745503.html",
+    "https://www.marketsmojo.com/news/stocks-in-action/bajaj-finserv-ltd-sees-sharp-open-interest-surge-amid-bullish-market-momentum-4274353",
+    "https://cleartax.in/s/nse-holidays-2026"
+  ]
+}

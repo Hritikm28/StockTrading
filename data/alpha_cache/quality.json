@@ -1671,6 +1671,10 @@
   "roe": 0.12252,
   "sector": "Industrials"
  },
+ "HEGRAPHITE.NS": {
+  "fetched": "2026-11-27",
+  "missing": true
+ },
  "HEROMOTOCO.NS": {
   "de": 6.007,
   "fetched": "2026-11-09",
@@ -3612,7 +3616,7 @@
   "sector": "Financial Services"
  },
  "TATAMTRDVR.NS": {
-  "fetched": "2026-11-20",
+  "fetched": "2026-11-27",
   "missing": true
  },
  "TATAPOWER.NS": {
@@ -3808,8 +3812,12 @@
   "sector": "Industrials"
  },
  "TTML.NS": {
-  "fetched": "2026-11-20",
-  "missing": true
+  "de": null,
+  "fetched": "2026-11-27",
+  "pm": 0.24906999,
+  "roa": 0.25096,
+  "roe": null,
+  "sector": "Communication Services"
  },
  "TVSMOTOR.NS": {
   "de": 320.877,

@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-27",
+  "made_at": "2026-11-27T07:42:46+05:30",
+  "pack_as_of": "2026-11-26",
+  "market_view": "GIFT Nifty is roughly flat near 26,000 after two up days, and foreign buying continues (about Rs 1.28 lakh crore over 20 days). I expect a range-bound open, with money still rotating into IT and other large-caps that have lagged.",
+  "picks": [
+    {"symbol": "INFY", "reason": "Nifty IT has risen four sessions in a row on foreign buying and a rotation out of the US AI trade, and Infosys gained 4.7% yesterday on 1.5 times normal volume. It is still 30% below its 52-week high, so it has more room to catch up than HCLTech, which jumped 6.4%.", "confidence": 2, "expected_move_pct": 1.2},
+    {"symbol": "TORNTPHARM", "reason": "Torrent Pharma had the heaviest relative volume in the universe yesterday (4.7 times normal) on a 2.5% gain, and it is up 8.9% over five days. It closed only 2% below its 52-week high, so a breakout looks likely.", "confidence": 2, "expected_move_pct": 1.2},
+    {"symbol": "LODHA", "reason": "Realty was the second-best sector yesterday, and Lodha rose 4.9% on twice normal volume. With a 25% gain over 20 days and a close 4% below its high, the stock shows strong momentum heading into a new high.", "confidence": 2, "expected_move_pct": 1.2}
+  ],
+  "sources": [
+    "https://www.kotakneo.com/indices/global-indices/gift-nifty/",
+    "https://wellstrack.com/news/article/160920/gift-nifty-today-sensex-nifty-eye-positive-opening-hdfc-sky",
+    "https://upstox.com/news/market-news/stocks/tcs-infosys-wipro-nifty-it-gains-7-as-it-stocks-rally-for-fourth-straight-session-growth-challenges-ahead/article-203995/",
+    "https://www.marketcalls.in/futures-and-options/post-market-report-26-november-2026.html",
+    "https://www.5paisa.com/blog/post-market-update-sensex-gains-390-points-nifty-nears-26000-november-26-2026",
+    "https://www.zeebiz.com/market-news/news-stocks-to-watch-today-nov-27-heg-igi-zydus-lifesciences-nse-exide-industries-and-more-406063",
+    "https://www.angelone.in/news/market-updates/stock-market-nse-bse-holidays-this-month-november-2026"
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "trained": "2026-11-21",
+  "trained": "2026-11-28",
   "horizon_days": 5,
   "label": "cross-sectional pctile of 5d fwd return",
   "objective": "rank-regression",
@@ -35,10 +35,10 @@
     "rs_63d"
   ],
   "metrics": {
-    "val_ic": 0.035,
-    "top_decile_edge_5d_pct": 0.257,
-    "n_train": 128942,
-    "n_val": 28491,
-    "split_date": "2026-08-20"
+    "val_ic": 0.0296,
+    "top_decile_edge_5d_pct": 0.327,
+    "n_train": 130911,
+    "n_val": 28475,
+    "split_date": "2026-08-26"
   }
 }
